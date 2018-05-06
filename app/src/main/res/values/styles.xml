@@ -12,6 +12,7 @@
         <item name="colorPrimary">@color/LoginPrimary</item>
         <item name="colorPrimaryDark">@color/LoginPrimaryDark</item>
         <item name="colorAccent">@color/LoginAccent</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>
