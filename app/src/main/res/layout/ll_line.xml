@@ -9,7 +9,7 @@
         <View
             android:layout_width="265dp"
             android:layout_height="1dip"
-            android:background="#c6c6c6"/>
+            android:background="#c6c6c6" />
 
 
 </LinearLayout>

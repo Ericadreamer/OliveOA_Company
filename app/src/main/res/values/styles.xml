@@ -15,4 +15,10 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <!--<style name="loginerror" >
+        <item name="android:textColor">#00FFFF</item>
+        <item name="android:left">50dp</item>
+
+    </style>-->
+
 </resources>

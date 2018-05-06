@@ -1,6 +1,7 @@
 package com.example.login;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.erica.oliveoa_company.MainActivity;
 import com.example.erica.oliveoa_company.R;
 
 
@@ -24,6 +26,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextInputLayout mLayoutUsername, mLayoutPwd;
     private EditText mEtUser, mEtPwd;
     private Button mBtnLogin;
+    private View loadingLayout1,loadingLayout2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mEtPwd = (EditText) findViewById(R.id.password);
 
         mBtnLogin = (Button) findViewById(R.id.login_btn);
+
+        //直线隐藏
+        loadingLayout1 =findViewById(R.id.ll_control1);
+        loadingLayout2 =findViewById(R.id.ll_control2);
 
         //设置监听事件
         mBtnLogin.setOnClickListener(this);
@@ -78,33 +85,51 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
          */
         private void Login() {
             if (!isNameValid()) {
+                loadingLayout1.setVisibility(View.GONE);//隐藏直线
                 mLayoutUsername.setError("请填写正确用户名！");
                 return;
             }
             if (!isPasswordValid()) {
+                loadingLayout2.setVisibility(View.GONE);//隐藏直线
                 mLayoutPwd.setError("请填写正确密码！");
                 return;
             }
 
+            String idvalu1e = mEtUser.getText().toString().trim();
+            String pwdvalue = mEtPwd.getText().toString().trim();
+
+            if (idvalu1e.equals("IT_OLIVE")&&pwdvalue.equals("123456")){
+
+                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
+            }else{
+                Toast.makeText(getApplicationContext(), "手机号码或密码错误，请重新登录", Toast.LENGTH_SHORT).show();
+            }
             mLayoutUsername.setErrorEnabled(false);
             mLayoutPwd.setErrorEnabled(false);
-            Toast.makeText(getApplicationContext(), "OK! I'm performing login.", Toast.LENGTH_SHORT).show();
+            loadingLayout1.setVisibility(View.VISIBLE);//显示直线
+            loadingLayout2.setVisibility(View.VISIBLE);//显示直线
             //showMessage(getString(R.string.login_success));
+
+
         }
 
         /**
-         * 检查输入的用户名是否为空以及是否存在
+         * 检查输入的用户名是否为空
          *
          * @return
          */
         public boolean isNameValid() {
             String name = mEtUser.getText().toString().trim();
             if (TextUtils.isEmpty(name)) {
+                loadingLayout1.setVisibility(View.GONE);//隐藏直线
                 mLayoutUsername.setErrorEnabled(true);
                 mLayoutUsername.setError("用户名不得为空！");
                 mEtUser.requestFocus();
                 return false;
             }
+            loadingLayout1.setVisibility(View.VISIBLE);//显示直线
             mLayoutUsername.setErrorEnabled(false);
             return true;
         }
@@ -117,11 +142,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         public boolean isPasswordValid() {
             String pwd = mEtPwd.getText().toString().trim();
             if (TextUtils.isEmpty(pwd)) {
+                loadingLayout2.setVisibility(View.GONE);//隐藏直线
                 mLayoutPwd.setErrorEnabled(true);
                 mLayoutPwd.setError("密码不得为空！");
                 mEtPwd.requestFocus();
                 return false;
             }
+            loadingLayout2.setVisibility(View.VISIBLE);//显示直线
             mLayoutPwd.setErrorEnabled(false);
             return true;
         }
