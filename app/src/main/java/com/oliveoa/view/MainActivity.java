@@ -1,7 +1,9 @@
-package com.example.erica.oliveoa_company;
+package com.oliveoa.com.oliveoa.view;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.erica.oliveoa_company.R;
 
 public class MainActivity extends AppCompatActivity {
 

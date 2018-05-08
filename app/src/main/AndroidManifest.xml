@@ -15,10 +15,10 @@
         android:theme="@android:style/Theme.NoTitleBar"
         android:supportsRtl="true">
         <activity
-            android:name=".MainActivity"
+            android:name="com.oliveoa.com.oliveoa.view.MainActivity"
             android:theme="@style/AppTheme" />
         <activity
-            android:name="com.example.login.LoginActivity"
+            android:name="com.oliveoa.com.oliveoa.view.LoginActivity"
             android:exported="true"
             android:theme="@style/LoginTheme" />
     </application>

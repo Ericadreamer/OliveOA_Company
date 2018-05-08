@@ -1,4 +1,4 @@
-package com.example.login;
+package com.oliveoa.com.oliveoa.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.erica.oliveoa_company.MainActivity;
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.com.oliveoa.controller.LoginService;
 
 
 /**
@@ -97,14 +97,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             String idvalu1e = mEtUser.getText().toString().trim();
             String pwdvalue = mEtPwd.getText().toString().trim();
-
-            if (idvalu1e.equals("IT_OLIVE")&&pwdvalue.equals("123456")){
+            LoginService loginService = new LoginService();
+            if (loginService.login(idvalu1e,pwdvalue)){
 
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);
                 startActivity(intent);
                 finish();
             }else{
-                Toast.makeText(getApplicationContext(), "手机号码或密码错误，请重新登录", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "用户名或密码错误，请重新登录", Toast.LENGTH_SHORT).show();
             }
             mLayoutUsername.setErrorEnabled(false);
             mLayoutPwd.setErrorEnabled(false);
