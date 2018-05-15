@@ -1,9 +1,26 @@
-package com.oliveoa.com.oliveoa.controller;
+package com.oliveoa.controller;
 
+import android.support.v4.widget.TextViewCompat;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.oliveoa.common.Const;
+import com.oliveoa.common.HttpResponseObject;
+import com.oliveoa.jsonbean.CompanyLoginJsonBean;
+import com.oliveoa.pojo.CompanyInfo;
+
+import java.io.IOException;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class LoginService {
-    public boolean login(String username,String password){
+    /*public static void main(String args[]){
+        login("123","1234");
+    }*/
+    public static  HttpResponseObject<CompanyInfo> login(String username,String password){
         /*
          * 1.建立http连接
          * 2.传入参数
@@ -13,8 +30,40 @@ public class LoginService {
          * 6.返回true or false
          *
          */
+        OkHttpClient client = new OkHttpClient();
+        FormBody body = new FormBody.Builder()
+                .add("username", username)
+                .add("password", password)
+                .build();
+        Request request = new Request.Builder() .url(Const.COMPANY_LOGIN).post(body).build();
 
-        //Const.COMPANY_LOGIN;
-        return true;
+       /* new Thread(){
+            @Override
+            public void run() {
+                //子线程操作
+
+            }
+        }.start();*/
+        try {
+            Response response = client.newCall(request).execute();
+            //System.out.println(response.body().string());
+            String json = response.body().string();
+            Gson gson = new Gson();
+            java.lang.reflect.Type type = new TypeToken<CompanyLoginJsonBean>(){}.getType();
+            CompanyLoginJsonBean companyLoginJsonBean = gson.fromJson(json, type);
+            //CompanyLoginJsonBean companyLoginJsonBean = new CompanyLoginJsonBean(-1,"nothing",null);
+            System.out.println(companyLoginJsonBean);
+
+            HttpResponseObject<CompanyInfo> httpResponseObject = new HttpResponseObject<>(companyLoginJsonBean.getStatus(),companyLoginJsonBean.getMsg(),companyLoginJsonBean.getData());
+            return httpResponseObject;
+        } catch (IOException e) {
+            //todo handler IOException
+            throw  new RuntimeException(e);
+        }
+
+
+
+
     }
+
 }

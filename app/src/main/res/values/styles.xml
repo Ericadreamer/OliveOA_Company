@@ -15,6 +15,10 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="LoginTheme.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/errorParimary</item>
+    </style>
+
     <style name="MainTheme" parent="AppTheme" />
 
     <!--<style name="loginerror" >

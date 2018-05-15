@@ -6,4 +6,5 @@
     <color name="LoginPrimary">#edb674</color>
     <color name="LoginPrimaryDark">#373c3e</color>
     <color name="LoginAccent">#808080</color>
+    <color name="errorParimary">#99141d</color>
 </resources>

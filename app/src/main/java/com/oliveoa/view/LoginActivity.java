@@ -1,4 +1,4 @@
-package com.oliveoa.com.oliveoa.view;
+package com.oliveoa.view;
 
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +15,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
-import com.oliveoa.com.oliveoa.controller.LoginService;
-
+import com.oliveoa.common.HttpResponseObject;
+import com.oliveoa.controller.LoginService;
+import com.oliveoa.pojo.CompanyInfo;
 
 /**
  *   登录内容
@@ -98,14 +99,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             String idvalu1e = mEtUser.getText().toString().trim();
             String pwdvalue = mEtPwd.getText().toString().trim();
             LoginService loginService = new LoginService();
-            if (loginService.login(idvalu1e,pwdvalue)){
-
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+            HttpResponseObject<CompanyInfo> httpResponseObject = loginService.login(idvalu1e,pwdvalue);
+            System.out.println(httpResponseObject);
+            if (true){
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
             }else{
                 Toast.makeText(getApplicationContext(), "用户名或密码错误，请重新登录", Toast.LENGTH_SHORT).show();
             }
+
+
             mLayoutUsername.setErrorEnabled(false);
             mLayoutPwd.setErrorEnabled(false);
             loadingLayout1.setVisibility(View.VISIBLE);//显示直线
