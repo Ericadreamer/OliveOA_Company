@@ -19,9 +19,9 @@ public class HttpResponseObject<T> {
         return status;
     }
 
-   /* public String getMsg() {
+    public String getMsg() {
         return msg;
-    }*/
+    }
 
     public T getData() {
         return data;
