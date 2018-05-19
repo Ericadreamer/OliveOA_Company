@@ -2,6 +2,7 @@ package com.oliveoa.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Looper;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -95,21 +96,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mLayoutPwd.setError("请填写正确密码！");
                 return;
             }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    String idvalu1e = mEtUser.getText().toString().trim();
+                    String pwdvalue = mEtPwd.getText().toString().trim();
+                    LoginService loginService = new LoginService();
+                    HttpResponseObject<CompanyInfo> httpResponseObject = loginService.login(idvalu1e,pwdvalue);
+                    System.out.println("httpResponseObject.getStatus() = "+httpResponseObject.getStatus());
 
-            String idvalu1e = mEtUser.getText().toString().trim();
-            String pwdvalue = mEtPwd.getText().toString().trim();
-            LoginService loginService = new LoginService();
-            HttpResponseObject<CompanyInfo> httpResponseObject = loginService.login(idvalu1e,pwdvalue);
-            System.out.println(httpResponseObject);
-            if (true){
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }else{
-                Toast.makeText(getApplicationContext(), "用户名或密码错误，请重新登录", Toast.LENGTH_SHORT).show();
-            }
+                    if (httpResponseObject.getStatus()==0){
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Looper.prepare();//解决子线程弹toast问题
+                        Toast.makeText(getApplicationContext(), "用户名或密码错误，请重新登录", Toast.LENGTH_SHORT).show();
+                        Looper.loop();// 进入loop中的循环，查看消息队列
 
-
+                    }
+                }
+            }).start();
             mLayoutUsername.setErrorEnabled(false);
             mLayoutPwd.setErrorEnabled(false);
             loadingLayout1.setVisibility(View.VISIBLE);//显示直线

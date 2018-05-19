@@ -1,6 +1,7 @@
 package com.oliveoa.controller;
 
 import android.support.v4.widget.TextViewCompat;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -11,6 +12,8 @@ import com.oliveoa.pojo.CompanyInfo;
 
 import java.io.IOException;
 
+import okhttp3.Call;
+import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -20,7 +23,8 @@ public class LoginService {
     /*public static void main(String args[]){
         login("123","1234");
     }*/
-    public static  HttpResponseObject<CompanyInfo> login(String username,String password){
+
+    public HttpResponseObject<CompanyInfo> login( String username, String password) {
         /*
          * 1.建立http连接
          * 2.传入参数
@@ -30,40 +34,35 @@ public class LoginService {
          * 6.返回true or false
          *
          */
-        OkHttpClient client = new OkHttpClient();
-        FormBody body = new FormBody.Builder()
-                .add("username", username)
-                .add("password", password)
-                .build();
-        Request request = new Request.Builder() .url(Const.COMPANY_LOGIN).post(body).build();
-
-       /* new Thread(){
-            @Override
-            public void run() {
-                //子线程操作
-
-            }
-        }.start();*/
         try {
+            OkHttpClient client = new OkHttpClient();
+            FormBody body = new FormBody.Builder()
+                    .add("username", username)
+                    .add("password", password)
+                    .build();
+            Request request = new Request.Builder().url(Const.COMPANY_LOGIN).post(body).build();
             Response response = client.newCall(request).execute();
             //System.out.println(response.body().string());
             String json = response.body().string();
             Gson gson = new Gson();
-            java.lang.reflect.Type type = new TypeToken<CompanyLoginJsonBean>(){}.getType();
+            java.lang.reflect.Type type = new TypeToken<CompanyLoginJsonBean>() {
+            }.getType();
             CompanyLoginJsonBean companyLoginJsonBean = gson.fromJson(json, type);
             //CompanyLoginJsonBean companyLoginJsonBean = new CompanyLoginJsonBean(-1,"nothing",null);
-            System.out.println(companyLoginJsonBean);
-
-            HttpResponseObject<CompanyInfo> httpResponseObject = new HttpResponseObject<>(companyLoginJsonBean.getStatus(),companyLoginJsonBean.getMsg(),companyLoginJsonBean.getData());
+            System.out.println("companyLoginJsonBean = " + companyLoginJsonBean);
+            HttpResponseObject<CompanyInfo> httpResponseObject = new HttpResponseObject<>(companyLoginJsonBean.getStatus(), companyLoginJsonBean.getMsg(), companyLoginJsonBean.getData());
             return httpResponseObject;
         } catch (IOException e) {
             //todo handler IOException
-            throw  new RuntimeException(e);
+            //throw new RuntimeException(e);
+            e.printStackTrace();
         }
-
-
-
-
+        return null;
     }
 
 }
+
+
+
+
+
