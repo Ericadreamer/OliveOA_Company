@@ -6,9 +6,8 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <!--开启设备访问网络权限-->
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    <!-- 开启设备访问网络权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,13 +18,12 @@
         android:theme="@android:style/Theme.NoTitleBar">
         <activity
             android:name="com.oliveoa.view.MainActivity"
-            android:theme="@style/AppTheme" />
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
         <activity
             android:name="com.oliveoa.view.LoginActivity"
             android:exported="true"
             android:theme="@style/LoginTheme" />
-
-
     </application>
 
 </manifest>

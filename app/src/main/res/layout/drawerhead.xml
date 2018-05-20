@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:gravity="left|center_vertical"
+    android:background="@color/colorWhite">
+    <ImageView
+        android:id="@+id/person"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginLeft="18dp"
+        android:src="@drawable/caihong"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="20dp"
+        >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        android:layout_marginTop="24dp"
+        android:textColor="#000"
+        android:text="ATeam"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:layout_marginTop="12dp"
+        android:textColor="#8C878C"
+        android:layout_marginBottom="18dp"
+        android:text="ID:123456"/>
+    </LinearLayout>
+
+</LinearLayout>

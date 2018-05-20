@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:checkableBehavior="single">
+        <item android:id="@+id/nav_name"
+            android:icon="@drawable/companginfo"
+            android:title="公司资料"
+            />
+        <item android:id="@+id/nav_log"
+            android:icon="@drawable/log"
+            android:title="员工登陆日志"/>
+        <item android:id="@+id/nav_advise"
+            android:icon="@drawable/problem"
+            android:title="意见反馈"/>
+        <item android:id="@+id/nav_aboutus"
+            android:icon="@drawable/aboutus"
+            android:title="关于我们"/>
+        <item android:id="@+id/nav_update"
+            android:icon="@drawable/update"
+            android:title="版本更新"/>
+        <item android:id="@+id/nav_exit"
+            android:icon="@drawable/exit"
+            android:title="退出登录"/>
+    </group>
+</menu>
