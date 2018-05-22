@@ -1,6 +1,10 @@
 package com.oliveoa.view;
 
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -46,7 +50,32 @@ public class MainActivity extends Activity implements View.OnClickListener {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 //item.setChecked(true);
-                Toast.makeText(MainActivity.this,item.getTitle().toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this,item.getTitle().toString(), Toast.LENGTH_SHORT).show();
+                //
+                // startActivity(intent);
+                // finish();
+                int id = item.getItemId();
+                String string = null;
+                switch (id){
+                    case R.id.nav_name:
+
+                    //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        break;
+                    case R.id.nav_advise:
+
+                        break;
+                    case R.id.nav_aboutus:
+
+                        break;
+                    case R.id.nav_update:
+                        Toast.makeText(getApplicationContext(), "您的版本已是最新版本！", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.nav_exit:
+
+                        break;
+
+
+                }
                 drawerLayout.closeDrawer(navigationView);
                 return true;
             }
@@ -107,4 +136,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         }
     }
+
+
+
 }

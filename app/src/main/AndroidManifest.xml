@@ -24,6 +24,18 @@
             android:name="com.oliveoa.view.LoginActivity"
             android:exported="true"
             android:theme="@style/LoginTheme" />
+        <activity
+            android:name="com.oliveoa.view.CompanyinfoActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme"/>
+        <activity
+            android:name="com.oliveoa.view.AdviseActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme"/>
+        <activity
+            android:name="com.oliveoa.view.AboutusActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme"/>
     </application>
 
 </manifest>

@@ -172,7 +172,7 @@
         app:headerLayout="@layout/drawerhead"
         app:menu="@menu/menu_navigation"
         app:itemIconTint="@null"
-
+        app:theme="@style/MenuStyle"
         >
 
     </android.support.design.widget.NavigationView>

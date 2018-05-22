@@ -15,4 +15,5 @@
         completions."
     </string>
     <string name="title_activity_base_event">BaseEventActivity</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>
