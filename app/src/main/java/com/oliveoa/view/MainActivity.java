@@ -5,15 +5,18 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -23,6 +26,10 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.common.HttpResponseObject;
+import com.oliveoa.controller.LoginService;
+import com.oliveoa.jsonbean.LogoutJsonBean;
+import com.oliveoa.pojo.CompanyInfo;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class MainActivity extends Activity implements View.OnClickListener {
@@ -71,7 +78,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         Toast.makeText(getApplicationContext(), "您的版本已是最新版本！", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.nav_exit:
-
+                         logout();
                         break;
 
 
@@ -82,6 +89,31 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
 
 }
+
+    private void logout() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+
+                LoginService loginService = new LoginService();
+                LogoutJsonBean logoutJsonBean = loginService.logout(s);
+                //System.out.println("logoutisSuccess = "+ logoutJsonBean.getStatus());
+
+                if (logoutJsonBean.getStatus()==0){
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Looper.prepare();//解决子线程弹toast问题
+                    Toast.makeText(getApplicationContext(), "网络错误，请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();// 进入loop中的循环，查看消息队列
+
+                }
+            }
+        }).start();
+    }
 
 
     @Override
@@ -136,7 +168,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         }
     }
-
 
 
 }

@@ -6,11 +6,13 @@ public class CompanyLoginJsonBean {
     private int status;
     private String msg;
     private CompanyInfo data;
+//    private String cookies;
 
     public CompanyLoginJsonBean(int status, String msg, CompanyInfo data) {
         this.status = status;
         this.msg = msg;
         this.data = data;
+//        this.cookies = cookies;
     }
 
     public int getStatus() {
@@ -37,6 +39,7 @@ public class CompanyLoginJsonBean {
         this.data = data;
     }
 
+
     @Override
     public String toString() {
         return "CompanyLoginJsonBean{" +
@@ -45,5 +48,7 @@ public class CompanyLoginJsonBean {
                 ", data=" + data +
                 '}';
     }
+
+
 }
 

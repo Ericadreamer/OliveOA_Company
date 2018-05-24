@@ -2,6 +2,7 @@ package com.oliveoa.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Looper;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -103,9 +105,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     String pwdvalue = mEtPwd.getText().toString().trim();
                     LoginService loginService = new LoginService();
                     HttpResponseObject<CompanyInfo> httpResponseObject = loginService.login(idvalu1e,pwdvalue);
-                    System.out.println("httpResponseObject.getStatus() = "+httpResponseObject.getStatus());
+                    Log.i("info_respons.cookies",httpResponseObject.getCookies().toString()+"");
+
 
                     if (httpResponseObject.getStatus()==0){
+                        saveCompanyinfo(httpResponseObject);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
@@ -164,8 +168,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             return true;
         }
 
+        /**
+         *  数据存储到SharedPreferences文件中
+         *
+         */
+        public void saveCompanyinfo( HttpResponseObject<CompanyInfo> company){
+            SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
+            editor.putString("sessionid",company.getCookies());
+            editor.apply();
+        }
 
-        //动态监听输入过程
+    //动态监听输入过程
         private class MyTextWatcher implements TextWatcher {
 
             private View view;
