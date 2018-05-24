@@ -27,15 +27,31 @@
         <activity
             android:name="com.oliveoa.view.CompanyinfoActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme"/>
+            android:theme="@style/HomeTheme" />
         <activity
             android:name="com.oliveoa.view.AdviseActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme"/>
+            android:theme="@style/HomeTheme" />
         <activity
             android:name="com.oliveoa.view.AboutusActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme"/>
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.NullDepartmentActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.DepartmentActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.CreateDepartmentActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity android:name="com.oliveoa.view.RedactDepartmentActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+
     </application>
 
 </manifest>
