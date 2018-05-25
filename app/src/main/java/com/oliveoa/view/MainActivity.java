@@ -65,8 +65,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 String string = null;
                 switch (id){
                     case R.id.nav_name:
-
-                    //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        companyinfo();
+                        //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         break;
                     case R.id.nav_advise:
 
@@ -89,6 +89,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
 
 }
+    private void companyinfo(){
+        Intent intent = new Intent(MainActivity.this, CompanyinfoActivity.class);
+        startActivity(intent);
+        finish();
+    }
 
     private void logout() {
         new Thread(new Runnable() {

@@ -3,48 +3,61 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f0f0f0"
     android:layout_gravity="center_vertical"
-    android:gravity="center">
+    android:background="#f0f0f0"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
+
             <ImageView
                 android:id="@+id/info_back"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/back"
-                android:background="@color/colorPrimary"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="15dp"/>
+                android:layout_margin="15dp"
+                android:background="@color/colorPrimary"
+                android:src="@drawable/back" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:text="公司资料"
                 android:textAlignment="center"
-                android:layout_weight="1"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_gravity="center_vertical" />
+                android:textStyle="bold" />
+
             <ImageView
                 android:id="@+id/info_edit"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:src="@drawable/edit"
-                android:background="@color/colorPrimary"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="15dp"/>/>
+                android:layout_margin="15dp"
+                android:background="@color/colorPrimary"
+                android:src="@drawable/save" />/>
 
         </LinearLayout>
+
+        <!--<TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="公司资料"
+        android:textSize="22sp"
+        android:textColor="#c5c5c5"
+        android:gravity="center"/>-->
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -59,25 +72,26 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:textColor="@color/textcolordark"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:text="登录名称" />
+                android:textColor="#000"
+                android:textSize="18sp"
+                tools:text="登录名称" />
 
-            <TextView
+            <EditText
                 android:id="@+id/content_username"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:layout_marginRight="20dp"
-                android:text="IT_OLIVE"
                 android:singleLine="true"
+                android:text="IT_OLIVE"
                 android:textColor="@color/textcolor"
                 android:textColorHint="@color/textcolor"
-                android:textSize="@dimen/activity_companyinfo_text"
-                 />
+                android:textSize="16sp" />
+            <!--android:hint="请输入姓名"-->
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -93,24 +107,24 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:textColor="#101010"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:text="公司全称" />
+                android:textSize="18sp"
+                tools:text="公司全称" />
 
-            <TextView
+            <EditText
                 android:id="@+id/content_allname"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:layout_marginRight="20dp"
+                android:singleLine="true"
                 android:text="橄榄科技有限公司"
                 android:textColor="@color/textcolor"
-                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -126,24 +140,24 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:textColor="#101010"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:text="公司电话" />
+                android:textSize="18sp"
+                tools:text="公司电话" />
 
-            <TextView
+            <EditText
                 android:id="@+id/content_tel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:layout_marginRight="20dp"
+                android:singleLine="true"
                 android:text="13822866200"
                 android:textColor="@color/textcolor"
-                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -159,24 +173,24 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:textColor="#101010"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:text="传真机" />
+                android:textSize="18sp"
+                tools:text="传真机" />
 
-            <TextView
+            <EditText
                 android:id="@+id/content_fax"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:layout_marginRight="20dp"
+                android:singleLine="true"
                 android:text="0754-83894652"
                 android:textColor="@color/textcolor"
-                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -192,24 +206,24 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:textColor="#101010"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:text="邮编号码" />
+                android:textSize="18sp"
+                tools:text="邮编号码" />
 
-            <TextView
+            <EditText
                 android:id="@+id/content_zip"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:layout_marginRight="20dp"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/textcolor"
-                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -225,24 +239,24 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:textColor="#101010"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:text="公司地址" />
+                android:textSize="18sp"
+                tools:text="公司地址" />
 
-            <TextView
+            <EditText
                 android:id="@+id/content_address"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:layout_marginRight="20dp"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/textcolor"
-                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -258,24 +272,24 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:textColor="#101010"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:text="公司网址" />
+                android:textSize="18sp"
+                tools:text="公司网址" />
 
-            <TextView
+            <EditText
                 android:id="@+id/content_website"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:layout_marginRight="20dp"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/textcolor"
-                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -291,24 +305,24 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
                 android:textColor="#101010"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:text="公司邮箱" />
+                android:textSize="18sp"
+                tools:text="公司邮箱" />
 
-            <TextView
+            <EditText
                 android:id="@+id/content_email"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:layout_marginRight="20dp"
+                android:singleLine="true"
                 android:text=""
                 android:textColor="@color/textcolor"
-                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -322,24 +336,22 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="10dp"
                 android:textColor="#101010"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:text="公司简介" />
+                android:textSize="18sp"
+                tools:text="公司简介" />
 
-            <TextView
+            <EditText
                 android:id="@+id/content_intro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="20dp"
                 android:layout_weight="1"
                 android:background="@null"
-                android:layout_margin="20dp"
-                android:text="这是一家很厉害的公司."
+                android:text="这是一家很厉害的公司"
                 android:textColor="@color/textcolor"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                />
+                android:textSize="16sp" />
         </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
 </LinearLayout>

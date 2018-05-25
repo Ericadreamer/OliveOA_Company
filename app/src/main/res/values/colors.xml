@@ -10,5 +10,7 @@
     <color name="colorWhite">#fff</color>
     <color name="colorline">#f17807</color>
     <color name="bodyline">#bab9b9</color>
+    <color name="textcolor">#898989</color>
+    <color name="textcolordark">#101010</color>
 
 </resources>
