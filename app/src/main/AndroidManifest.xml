@@ -62,7 +62,8 @@
             android:theme="@style/HomeTheme" />
         <activity android:name="com.oliveoa.view.RedactDepartmentActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme" />
+            android:theme="@style/HomeTheme"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name="com.oliveoa.view.CompanyinfoEditActivity"
             android:exported="true"
             android:theme="@style/HomeTheme"

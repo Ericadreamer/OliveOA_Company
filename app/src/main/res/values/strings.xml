@@ -16,4 +16,7 @@
     </string>
     <string name="title_activity_base_event">BaseEventActivity</string>
     <string name="title_activity_test">TestActivity</string>
+
+    <!--部门管理-->
+
 </resources>
