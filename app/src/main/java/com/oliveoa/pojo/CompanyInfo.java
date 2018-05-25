@@ -1,8 +1,11 @@
 package com.oliveoa.pojo;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /* JSON 数据抽象为实体类 */
-public class CompanyInfo {
+public class CompanyInfo implements Parcelable {
     private String username;
     private String password;
     private String fullname;
@@ -29,6 +32,54 @@ public class CompanyInfo {
         this.email = email;
         this.introduction = introduction;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+         parcel.writeString(username);
+         parcel.writeString(password);
+         parcel.writeString(fullname);
+         parcel.writeString(telephone);
+         parcel.writeString(fax);
+         parcel.writeString(zipcode);
+         parcel.writeString(website);
+         parcel.writeString(introduction);
+         parcel.writeString(email);
+         parcel.writeString(address);
+    }
+
+    //创建带参Parcel构造器
+    public CompanyInfo(Parcel source){
+        //这里read字段的顺序要与write的顺序一致
+        username=source.readString();
+        password=source.readString();
+        fullname=source.readString();
+        telephone=source.readString();
+        fax=source.readString();
+        zipcode=source.readString();
+        website=source.readString();
+        introduction=source.readString();
+        email=source.readString();
+        address=source.readString();
+
+    }
+
+    //创建常量Creator，并实现该接口的两个方法
+    public static final Parcelable.Creator<CompanyInfo> CREATOR = new Creator<CompanyInfo>(){
+        @Override
+        public CompanyInfo createFromParcel(Parcel source) {
+            return new CompanyInfo(source);
+        }
+
+        @Override
+        public CompanyInfo[] newArray(int size) {
+            return new CompanyInfo[size];
+        }
+    };
 
     public String getUsername() {
         return username;
@@ -108,6 +159,10 @@ public class CompanyInfo {
 
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
+    }
+
+    public static Creator<CompanyInfo> getCREATOR() {
+        return CREATOR;
     }
 
     @Override

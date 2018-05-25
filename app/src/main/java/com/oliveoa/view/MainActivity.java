@@ -23,14 +23,19 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.common.HttpResponseObject;
+import com.oliveoa.controller.CompanyInfoService;
 import com.oliveoa.controller.LoginService;
+import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.LogoutJsonBean;
 import com.oliveoa.pojo.CompanyInfo;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+
+import java.io.Serializable;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
@@ -89,10 +94,31 @@ public class MainActivity extends Activity implements View.OnClickListener {
         });
 
 }
-    private void companyinfo(){
-        Intent intent = new Intent(MainActivity.this, CompanyinfoActivity.class);
-        startActivity(intent);
-        finish();
+    public void companyinfo(){
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                    String s = pref.getString("sessionid","");
+
+                    CompanyInfoService companyInfoService = new CompanyInfoService();
+                    CompanyLoginJsonBean companyloginJsonBean = companyInfoService.companyinfo(s);
+                    CompanyInfo company = companyloginJsonBean.getData();
+
+                    if (companyloginJsonBean.getStatus()==0){
+                        Intent intent = new Intent(MainActivity.this, CompanyinfoActivity.class);
+                        intent.putExtra("ParcelableCompany",company);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Looper.prepare();
+                        Toast.makeText(getApplicationContext(), "数据加载失败，请重试", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                    }
+
+                }
+            }).start();
+
     }
 
     private void logout() {

@@ -1,5 +1,8 @@
 package com.oliveoa.jsonbean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.oliveoa.pojo.CompanyInfo;
 
 public class CompanyLoginJsonBean {
@@ -48,7 +51,6 @@ public class CompanyLoginJsonBean {
                 ", data=" + data +
                 '}';
     }
-
 
 }
 
