@@ -21,8 +21,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.NoTitleBar"
-       >
+        android:theme="@android:style/Theme.NoTitleBar">
         <activity
             android:name="com.oliveoa.view.MainActivity"
             android:exported="true"
@@ -33,6 +32,7 @@
             android:theme="@style/LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -60,15 +60,19 @@
             android:name="com.oliveoa.view.CreateDepartmentActivity"
             android:exported="true"
             android:theme="@style/HomeTheme" />
-        <activity android:name="com.oliveoa.view.RedactDepartmentActivity"
+        <activity
+            android:name="com.oliveoa.view.RedactDepartmentActivity"
             android:exported="true"
             android:theme="@style/HomeTheme"
-            android:windowSoftInputMode="adjustResize"/>
-        <activity android:name="com.oliveoa.view.CompanyinfoEditActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.oliveoa.view.CompanyinfoEditActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme"
-            />
-
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.PasswordActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme"/>
     </application>
 
 </manifest>

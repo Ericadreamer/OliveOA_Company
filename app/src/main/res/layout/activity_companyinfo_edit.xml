@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,16 +8,13 @@
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
         <LinearLayout
+            android:id="@+id/toorbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_alignParentTop="true">
 
             <ImageView
                 android:id="@+id/info_back"
@@ -50,14 +47,14 @@
 
         </LinearLayout>
 
-        <!--<TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="公司资料"
-        android:textSize="22sp"
-        android:textColor="#c5c5c5"
-        android:gravity="center"/>-->
-
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toorbar">
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -85,7 +82,6 @@
                 android:background="@null"
                 android:gravity="center_vertical|end"
                 android:singleLine="true"
-                android:hint="IT_OLIVE"
                 android:textColor="@color/textcolor"
                 android:textColorHint="@color/textcolor"
                 android:textSize="@dimen/activity_companyinfo_text" />
@@ -118,7 +114,6 @@
                 android:background="@null"
                 android:gravity="center_vertical|end"
                 android:singleLine="true"
-                android:hint="橄榄科技有限公司"
                 android:textColor="@color/textcolor"
                 android:textColorHint="#898989"
                 android:textSize="@dimen/activity_companyinfo_text" />
@@ -151,7 +146,6 @@
                 android:background="@null"
                 android:gravity="center_vertical|end"
                 android:singleLine="true"
-                android:hint="13822866200"
                 android:textColor="@color/textcolor"
                 android:textColorHint="#898989"
                 android:textSize="@dimen/activity_companyinfo_text"/>
@@ -184,7 +178,6 @@
                 android:background="@null"
                 android:gravity="center_vertical|end"
                 android:singleLine="true"
-                android:hint="0754-83894652"
                 android:textColor="@color/textcolor"
                 android:textColorHint="#898989"
                 android:textSize="16sp" />
@@ -326,6 +319,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
+            android:layout_marginBottom="20dp"
             android:background="@color/colorWhite"
             android:orientation="vertical">
 
@@ -352,6 +346,7 @@
                 android:textColorHint="#898989"
                 android:textSize="@dimen/activity_companyinfo_text" />
         </LinearLayout>
+         </LinearLayout>
+        </ScrollView>
 
-    </LinearLayout>
-</LinearLayout>
+</RelativeLayout>

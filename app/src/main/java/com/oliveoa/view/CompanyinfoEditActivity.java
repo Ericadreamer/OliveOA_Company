@@ -51,29 +51,29 @@ public class CompanyinfoEditActivity extends AppCompatActivity {
     private void initView() {
         if (companyInfo != null) {
             EditText tname = (EditText) findViewById(R.id.content_username);
-            tname.setHint(companyInfo.getUsername());
+            tname.setText(companyInfo.getUsername());
             EditText tfullname = (EditText)findViewById(R.id.content_allname);
-            tfullname.setHint(companyInfo.getFullname());
+            tfullname.setText(companyInfo.getFullname());
             EditText ttel = (EditText)findViewById(R.id.content_tel);
-            ttel.setHint(companyInfo.getTelephone());
+            ttel.setText(companyInfo.getTelephone());
             EditText tfax = (EditText)findViewById(R.id.content_fax);
-            tfax.setHint(companyInfo.getFax());
+            tfax.setText(companyInfo.getFax());
             EditText tzip = (EditText)findViewById(R.id.content_zip);
-            tzip.setHint(companyInfo.getZipcode());
+            tzip.setText(companyInfo.getZipcode());
             EditText taddress = (EditText)findViewById(R.id.content_address);
-            taddress.setHint(companyInfo.getAddress());
+            taddress.setText(companyInfo.getAddress());
             EditText tweb = (EditText)findViewById(R.id.content_website);
-            tweb.setHint(companyInfo.getWebsite());
+            tweb.setText(companyInfo.getWebsite());
             EditText temail = (EditText)findViewById(R.id.content_email);
-            temail.setHint(companyInfo.getEmail());
+            temail.setText(companyInfo.getEmail());
             EditText tintro = (EditText)findViewById(R.id.content_intro);
-            tintro.setHint(companyInfo.getIntroduction());
+            tintro.setText(companyInfo.getIntroduction());
         }
     }
 
     public boolean save() {
 
-        
+
         return true;
     }
 

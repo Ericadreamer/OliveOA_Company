@@ -6,9 +6,9 @@
             android:icon="@drawable/companginfo"
             android:title="公司资料"
             />
-       <!-- <item android:id="@+id/nav_log"
+        <item android:id="@+id/nav_log"
             android:icon="@drawable/log"
-            android:title="员工登陆日志"/>-->
+            android:title="修改密码"/>
         <item android:id="@+id/nav_advise"
             android:icon="@drawable/problem"
             android:title="意见反馈"/>
