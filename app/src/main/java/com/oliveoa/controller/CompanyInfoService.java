@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.oliveoa.common.Const;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
+import com.oliveoa.jsonbean.UpdateCompanyInfoJsonBean;
+import com.oliveoa.pojo.CompanyInfo;
 
 import java.io.IOException;
 
@@ -52,5 +54,50 @@ public class CompanyInfoService{
             }
             return null;
         }
+
+    public UpdateCompanyInfoJsonBean updatecompanyinfo (String s, CompanyInfo company) {
+
+        try {
+            Log.i("info_Login","知道了session："+s);
+            Log.d("updateinfo",company.toString());
+            FormBody body = new FormBody.Builder()
+                    .add("fullname",company.getFullname())
+                    .add("telephone",company.getTelephone())
+                    .add("fax",company.getFax())
+                    .add("zipcode",company.getZipcode())
+                    .add("address",company.getAddress())
+                    .add("website",company.getWebsite())
+                    .add("email",company.getEmail())
+                    .add("introduction",company.getIntroduction())
+                    .build();
+            Log.d("updateinfobody",body.toString());
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Cookie",s)
+                    .url(Const.COMPANY_INFO_UPDATE)
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            String json = response.body().string();
+            Gson gson = new Gson();
+            System.out.println(json);
+
+            java.lang.reflect.Type type = new TypeToken<UpdateCompanyInfoJsonBean>() {
+            }.getType();
+            UpdateCompanyInfoJsonBean updateCompanyInfoJsonBean = gson.fromJson(json, type);
+            System.out.println("updateCompanyInfoJsonBean = " + updateCompanyInfoJsonBean);
+
+            return updateCompanyInfoJsonBean;
+
+        } catch (IOException e) {
+            //todo handler IOException
+            //throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
 

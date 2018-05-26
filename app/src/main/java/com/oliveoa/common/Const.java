@@ -8,4 +8,6 @@ public class Const {
     public static  final  String COMPANY_LOGIN = HOSTPATH + "/oliveoa/manage/company/login.do";
     public static  final  String COMPANY_LOGOUT = HOSTPATH + "/oliveoa/manage/company/logout.do";
     public static  final  String COMPANY_INFO = HOSTPATH + "/oliveoa/manage/company/get_companyInfo.do";
+    public static  final  String COMPANY_INFO_UPDATE =  HOSTPATH + "/oliveoa/manage/company/update_companyInfo.do";
+    public static  final  String COMPANY_INFO_PASSWORD =  HOSTPATH + "/oliveoa/manage/company/update_password";
 }

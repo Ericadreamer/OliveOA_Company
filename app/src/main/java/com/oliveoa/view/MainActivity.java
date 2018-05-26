@@ -133,6 +133,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 //System.out.println("logoutisSuccess = "+ logoutJsonBean.getStatus());
 
                 if (logoutJsonBean.getStatus()==0){
+                    pref.edit().remove("sessionid").commit();//移除指定数值
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
                     finish();

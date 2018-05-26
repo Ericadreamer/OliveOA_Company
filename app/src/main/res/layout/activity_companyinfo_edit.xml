@@ -3,9 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center_vertical"
     android:background="#f0f0f0"
-    android:gravity="center"
     android:orientation="vertical">
 
         <LinearLayout
@@ -73,7 +71,7 @@
                 android:textSize="@dimen/activity_companyinfo_text"
                 android:text="登录名称" />
 
-            <EditText
+            <TextView
                 android:id="@+id/content_username"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -341,7 +339,6 @@
                 android:layout_margin="20dp"
                 android:layout_weight="1"
                 android:background="@null"
-                android:hint="这是一家很厉害的公司"
                 android:textColor="@color/textcolor"
                 android:textColorHint="#898989"
                 android:textSize="@dimen/activity_companyinfo_text" />
