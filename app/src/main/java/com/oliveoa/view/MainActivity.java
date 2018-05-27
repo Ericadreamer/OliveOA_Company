@@ -71,7 +71,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 switch (id){
                     case R.id.nav_name:
                         companyinfo();
-                        //Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        break;
+                    case R.id.nav_password:
+                        updatepassword();
                         break;
                     case R.id.nav_advise:
 
@@ -121,6 +123,32 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     }
 
+    public void updatepassword(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+
+                CompanyInfoService companyInfoService = new CompanyInfoService();
+                CompanyLoginJsonBean companyloginJsonBean = companyInfoService.companyinfo(s);
+                CompanyInfo company = companyloginJsonBean.getData();
+
+                if (companyloginJsonBean.getStatus()==0){
+                    Intent intent = new Intent(MainActivity.this,PasswordActivity.class);
+                    intent.putExtra("CompanyPassword",company.getPassword());
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(), "数据加载失败，请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+
+            }
+        }).start();
+
+    }
     private void logout() {
         new Thread(new Runnable() {
             @Override

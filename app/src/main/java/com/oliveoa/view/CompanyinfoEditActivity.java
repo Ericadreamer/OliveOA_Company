@@ -3,6 +3,7 @@ package com.oliveoa.view;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Looper;
+import android.os.PatternMatcher;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,6 +20,12 @@ import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.UpdateCompanyInfoJsonBean;
 import com.oliveoa.pojo.CompanyInfo;
 
+import static com.oliveoa.util.Validator.isEmail;
+import static com.oliveoa.util.Validator.isFixPhone;
+import static com.oliveoa.util.Validator.isMobile;
+import static com.oliveoa.util.Validator.isUrl;
+import static com.oliveoa.util.Validator.isZipCode;
+
 public class CompanyinfoEditActivity extends AppCompatActivity {
 
     private CompanyInfo companyInfo;
@@ -33,7 +40,7 @@ public class CompanyinfoEditActivity extends AppCompatActivity {
         // Log.d("name",companyInfo.getUsername());
         initView();
         ImageView back = (ImageView)findViewById(R.id.info_back);
-        ImageView edit = (ImageView)findViewById(R.id.info_edit);
+        ImageView save = (ImageView)findViewById(R.id.info_save);
 
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
@@ -44,7 +51,7 @@ public class CompanyinfoEditActivity extends AppCompatActivity {
             }
         });
 
-        edit.setOnClickListener(new View.OnClickListener() {   //点击保存键，提示保存是否成功
+        save.setOnClickListener(new View.OnClickListener() {   //点击保存键，提示保存是否成功
             @Override
             public void onClick(View view) {
                 save();
@@ -87,8 +94,17 @@ public class CompanyinfoEditActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(companyInfo.getFullname())||TextUtils.isEmpty(companyInfo.getTelephone())||TextUtils.isEmpty(companyInfo.getFax())||TextUtils.isEmpty(companyInfo.getZipcode())||TextUtils.isEmpty(companyInfo.getAddress())||TextUtils.isEmpty(companyInfo.getEmail())||TextUtils.isEmpty(companyInfo.getWebsite())||TextUtils.isEmpty(companyInfo.getIntroduction())) {
             Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else if(!isMobile(companyInfo.getTelephone())){
+            Toast.makeText(getApplicationContext(), "公司电话格式输入错误！请以手机格式重新输入", Toast.LENGTH_SHORT).show();
+        } else if(!isFixPhone(companyInfo.getFax())){
+            Toast.makeText(getApplicationContext(), "传真机格式输入错误！请以固话格式重新输入", Toast.LENGTH_SHORT).show();
+        } else if(!isZipCode(companyInfo.getZipcode())){
+            Toast.makeText(getApplicationContext(), "邮编号码格式输入错误！请重新输入", Toast.LENGTH_SHORT).show();
+        } else if(!isUrl(companyInfo.getWebsite())){
+            Toast.makeText(getApplicationContext(), "网址格式输入错误！请以http://开头重新输入", Toast.LENGTH_SHORT).show();
+        } else if(!isEmail(companyInfo.getEmail())) {
+            Toast.makeText(getApplicationContext(), "邮箱格式输入错误！请重新输入", Toast.LENGTH_SHORT).show();
+        } else {
             new Thread(new Runnable() {
                 @Override
                 public void run() {

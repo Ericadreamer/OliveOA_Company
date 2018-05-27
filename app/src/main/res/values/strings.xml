@@ -16,6 +16,7 @@
     </string>
     <string name="title_activity_base_event">BaseEventActivity</string>
     <string name="title_activity_test">TestActivity</string>
+    <string name="passwordtip">提示：密码为6-18位只含字母、数字的组合</string>
 
     <!--部门管理-->
 

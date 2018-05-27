@@ -62,7 +62,7 @@ public class CompanyInfoService{
             Log.d("updateinfo",company.toString());
             FormBody body = new FormBody.Builder()
                     .add("fullname",company.getFullname())
-                    .add("telephone",company.getTelephone())
+                    .add("telphone",company.getTelephone())
                     .add("fax",company.getFax())
                     .add("zipcode",company.getZipcode())
                     .add("address",company.getAddress())
@@ -76,6 +76,44 @@ public class CompanyInfoService{
             Request request = new Request.Builder()
                     .addHeader("Cookie",s)
                     .url(Const.COMPANY_INFO_UPDATE)
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            String json = response.body().string();
+            Gson gson = new Gson();
+            System.out.println(json);
+
+            java.lang.reflect.Type type = new TypeToken<UpdateCompanyInfoJsonBean>() {
+            }.getType();
+            UpdateCompanyInfoJsonBean updateCompanyInfoJsonBean = gson.fromJson(json, type);
+            System.out.println("updateCompanyInfoJsonBean = " + updateCompanyInfoJsonBean);
+
+            return updateCompanyInfoJsonBean;
+
+        } catch (IOException e) {
+            //todo handler IOException
+            //throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public UpdateCompanyInfoJsonBean updatepassword (String s, String pwd) {
+
+        try {
+            Log.i("info_Login","知道了session："+s);
+            Log.d("updatepwd",pwd);
+            FormBody body = new FormBody.Builder()
+                    .add("newPassword",pwd)
+                    .build();
+            Log.d("updatepwdbody",body.toString());
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Cookie",s)
+                    .url(Const.COMPANY_INFO_PASSWORD)
                     .post(body)
                     .build();
 
