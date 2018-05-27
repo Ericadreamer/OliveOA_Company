@@ -12,6 +12,7 @@
     <color name="bodyline">#bab9b9</color>
     <color name="textcolor">#898989</color>
     <color name="textcolordark">#101010</color>
+    <color name="backgroundcolor">#f0f0f0</color> <!--背景色-->
 
     <color name="orange_main">#ec6f1a</color>   <!--主橙色-->
     <color name="orange_light">#ffd39b</color>  <!--浅橙色-->
