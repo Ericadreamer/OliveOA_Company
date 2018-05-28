@@ -17,6 +17,8 @@
     <string name="title_activity_base_event">BaseEventActivity</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="passwordtip">提示：密码为6-18位只含字母、数字的组合</string>
+    <string name="appintro">&#160;&#160;&#160;&#160;&#160;&#160;&#160;Olive 公司端是一款针对Olive公司所开发的一款基于Android的微OA系统，主要建设公司组织架构，以及员工、资产管理等</string>
+    <string name="teamintro">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;我们是一群朝气蓬勃的95后团队Olive，可乐撞上曼妥思喷涌出气泡喷泉，而我们集结一起则绽放出比烟火更壮丽的青春色彩。有意思的人一起做有意思的事，因为年轻，我们无畏！</string>
 
     <!--部门管理-->
 

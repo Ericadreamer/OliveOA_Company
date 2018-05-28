@@ -19,6 +19,7 @@
     <color name="orange_deep">#ff6f3a</color>   <!--深橙色-->
     <color name="orange_most">#C76114</color>
     <color name="orange_litter">#80aa6136</color>
+    <color name="orange_background">#f1992b</color>
 
     <color name="line">#e0e0e0</color>
     <color name="tv_gray_litter">#FAF0E6</color>

@@ -72,7 +72,11 @@
         <activity
             android:name="com.oliveoa.view.PasswordActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme"/>
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.EmployeelistActivity"
+            android:exported="true"
+            android:theme="@style/EmployeeTheme" ></activity>
     </application>
 
 </manifest>

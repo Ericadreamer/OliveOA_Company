@@ -76,10 +76,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         updatepassword();
                         break;
                     case R.id.nav_advise:
-
+                        Intent intent = new Intent(MainActivity.this,AdviseActivity.class);
+                        startActivity(intent);
+                        finish();
                         break;
                     case R.id.nav_aboutus:
-
+                        intent = new Intent(MainActivity.this,AboutusActivity.class);
+                        startActivity(intent);
+                        finish();
                         break;
                     case R.id.nav_update:
                         Toast.makeText(getApplicationContext(), "您的版本已是最新版本！", Toast.LENGTH_SHORT).show();

@@ -44,14 +44,155 @@
 
         </LinearLayout>
 
-        <TextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="关于我们"
-            android:textSize="22sp"
-            android:textColor="#c5c5c5"
-            android:gravity="center"/>
+            android:layout_height="@dimen/dp_180"
+            android:background="@color/colorPrimary">
 
+            <ImageView
+                android:id="@+id/oliveoa"
+                android:layout_width="@dimen/dp_160"
+                android:layout_height="@dimen/dp_120"
+                android:layout_centerInParent="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/oliveoa"/>
+            <View
+                android:layout_width="@dimen/dp_150"
+                android:layout_height="@dimen/dp_3"
+                android:background="@color/orange_light"
+                android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/companyname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/oliveoa"
+                android:layout_centerInParent="true"
+                android:text="Olive 公司端"
+                android:textSize="@dimen/text_size_medium"
+                android:textColor="@color/colorWhite"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/companyname"
+                android:layout_centerInParent="true"
+                android:text="For Android v1.0"
+                android:textSize="@dimen/text_size_small"
+                android:textColor="@color/colorWhite"/>
+
+        </RelativeLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:id="@+id/title_appintro"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_weight="1"
+                    android:text="应用介绍"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_size_large" />
+
+                <ImageView
+                    android:id="@+id/turn_over_icon"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/down" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/content_appintro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@color/colorWhite">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_20"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_medium"
+                    android:text="@string/appintro" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="5dp">
+
+            <LinearLayout
+                android:id="@+id/title_teamintro"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/colorWhite"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_weight="1"
+                    android:text="开发团队"
+                    android:textColor="#000"
+                    android:textSize="@dimen/text_size_large" />
+
+                <ImageView
+                    android:id="@+id/turn_over_icon1"
+                    android:layout_width="@dimen/dp_30"
+                    android:layout_height="@dimen/dp_30"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:layout_marginTop="5dp"
+                    android:src="@drawable/down" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/content_teamintro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@color/colorWhite">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_20"
+                    android:textColor="@color/textcolordark"
+                    android:textSize="@dimen/text_size_medium"
+                    android:text="@string/teamintro" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+       </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </LinearLayout>
