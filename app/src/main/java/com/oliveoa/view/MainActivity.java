@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private DrawerLayout drawerLayout;
     private SystemBarTintManager tintManager;
     private NavigationView navigationView;
-    private RadioButton departionicon
+    private RadioButton departionicon;
     ImageView menu;
 
     @Override

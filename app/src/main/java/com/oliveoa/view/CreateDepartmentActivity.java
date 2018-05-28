@@ -20,7 +20,7 @@ public class CreateDepartmentActivity extends AppCompatActivity {
 
 
         ImageView back = (ImageView)findViewById(R.id.null_back);
-        TextView save = (TextView)findViewById(R.id.creat_save);
+        TextView save = (TextView)findViewById(R.id.info_save);
 
 
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
