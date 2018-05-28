@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="创建部门"
+                android:text="部门详情"
                 android:textAlignment="center"
                 android:layout_weight="1"
                 android:textColor="#ffffff"
@@ -44,21 +44,56 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="15dp"
-                android:background="@color/colorPrimary"
-                android:src="@drawable/save" />
+                android:background="@color/colorPrimary" />
 
 
         </LinearLayout>
 
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/toorbar">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/dp_10">
+            android:orientation="vertical">
+        //部门
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_depart"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_36"
+                android:text="部门"
+                android:gravity="center"
+                android:textColor="@color/textcolor"
+                android:layout_marginLeft="@dimen/dp_16"/>
+            <Button
+                android:id="@+id/depart_edit"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical|end"
+                android:layout_marginRight="20dp"
+                android:text="编辑"
+                android:singleLine="true"
+                android:textColor="@color/orange_main"
+                android:textSize="@dimen/activity_companyinfo_text" />
+        </LinearLayout>
+        //部门列表
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
             //部门编号
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
+                android:layout_marginTop="1dp"
                 android:background="@color/colorWhite"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
@@ -73,30 +108,30 @@
                     android:textSize="@dimen/activity_companyinfo_text"
                     android:text="部门编号" />
 
-                <EditText
-                    android:id="@+id/edit_num"
+                <TextView
+                    android:id="@+id/text_num"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginRight="20dp"
                     android:layout_weight="1"
                     android:background="@null"
                     android:gravity="center_vertical|end"
-                    android:singleLine="true"
+                    android:layout_marginRight="20dp"
+                    android:text="0001"
                     android:textColor="@color/textcolor"
+                    android:singleLine="true"
                     android:textColorHint="#898989"
-                    android:textSize="@dimen/activity_companyinfo_text"
-                    android:hint="请输入部门编号"/>
-            </LinearLayout>
+                    android:textSize="@dimen/activity_companyinfo_text"/>
 
             </LinearLayout>
-            //部门名称
+
+        //部门名称
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
             android:background="@color/colorWhite"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:layout_marginTop="1dp">
+            android:layout_marginTop="@dimen/dp_1">
 
             <TextView
                 android:id="@+id/department_name"
@@ -108,21 +143,21 @@
                 android:textSize="@dimen/activity_companyinfo_text"
                 android:text="部门名称" />
 
-            <EditText
-                android:id="@+id/edit_name"
+            <TextView
+                android:id="@+id/text_name"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:singleLine="true"
+                android:layout_marginRight="20dp"
+                android:text="产品部"
                 android:textColor="@color/textcolor"
+                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:hint="请输入部门名称"/>
+                android:textSize="@dimen/activity_companyinfo_text"/>
         </LinearLayout>
-            //部门电话
+        //部门电话
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -141,21 +176,21 @@
                 android:textSize="@dimen/activity_companyinfo_text"
                 android:text="部门电话" />
 
-            <EditText
-                android:id="@+id/edit_tel"
+            <TextView
+                android:id="@+id/text_tel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:singleLine="true"
+                android:layout_marginRight="20dp"
+                android:text="0758-6666666"
                 android:textColor="@color/textcolor"
+                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:hint="请输入部门电话"/>
+                android:textSize="@dimen/activity_companyinfo_text"/>
         </LinearLayout>
-            //部门传真
+        //部门传真
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -174,21 +209,21 @@
                 android:textSize="@dimen/activity_companyinfo_text"
                 android:text="部门传真" />
 
-            <EditText
-                android:id="@+id/edit_fax"
+            <TextView
+                android:id="@+id/text_fax"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:singleLine="true"
+                android:layout_marginRight="20dp"
+                android:text="23445642"
                 android:textColor="@color/textcolor"
+                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:hint="请输入部门传真"/>
+                android:textSize="@dimen/activity_companyinfo_text"/>
         </LinearLayout>
-            //上级部门
+        //上级部门
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -207,21 +242,96 @@
                 android:textSize="@dimen/activity_companyinfo_text"
                 android:text="上级部门" />
 
-            <EditText
-                android:id="@+id/edit_superior"
+            <TextView
+                android:id="@+id/text_superior"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
-                android:singleLine="true"
+                android:layout_marginRight="20dp"
+                android:text="人事部"
                 android:textColor="@color/textcolor"
+                android:singleLine="true"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:hint="请输入上级部门"/>
+                android:textSize="@dimen/activity_companyinfo_text"/>
         </LinearLayout>
         </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"></LinearLayout>
+        //部门
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_36"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_duty"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="@dimen/dp_36"
+                android:text="职务"
+                android:gravity="center"
+                android:textColor="@color/textcolor"
+                android:layout_marginLeft="@dimen/dp_16"/>
+            <Button
+                android:id="@+id/duty_edit"
+                android:layout_width="@dimen/dp_60"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical|end"
+                android:layout_marginRight="20dp"
+                android:text="编辑"
+                android:singleLine="true"
+                android:textColor="@color/orange_main"
+                android:textSize="@dimen/activity_companyinfo_text" />
+        </LinearLayout>
+        //职务列表
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            //职务1
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_marginTop="1dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/duty_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#101010"
+                    android:textSize="@dimen/activity_companyinfo_text"
+                    android:text="主管" />
+
+                <TextView
+                    android:id="@+id/duty_num"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical|end"
+                    android:layout_marginRight="20dp"
+                    android:text="1"
+                    android:textColor="@color/textcolor"
+                    android:singleLine="true"
+                    android:textColorHint="#898989"
+                    android:textSize="@dimen/activity_companyinfo_text"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
 
 
 </LinearLayout>

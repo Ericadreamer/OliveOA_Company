@@ -76,7 +76,15 @@
         <activity
             android:name="com.oliveoa.view.EmployeelistActivity"
             android:exported="true"
-            android:theme="@style/EmployeeTheme" ></activity>
+            android:theme="@style/EmployeeTheme" />
+        <activity
+            android:name="com.oliveoa.view.RedactDutyActivity"
+            android:exported="true"
+            android:theme="@style/EmployeeTheme"/>
+        <activity
+            android:name="com.oliveoa.view.DepartmentInfoActivity"
+            android:exported="true"
+            android:theme="@style/EmployeeTheme"></activity>
     </application>
 
 </manifest>

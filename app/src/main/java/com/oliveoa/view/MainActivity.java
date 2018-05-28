@@ -42,6 +42,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private DrawerLayout drawerLayout;
     private SystemBarTintManager tintManager;
     private NavigationView navigationView;
+    private RadioButton departionicon
     ImageView menu;
 
     @Override
@@ -200,6 +201,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
             int statusColor = Color.parseColor("#373B3E");
             tintManager.setStatusBarTintColor(statusColor);
             tintManager.setStatusBarTintEnabled(true);
+            departionicon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
 
             //设置图标大小
            //公文查看
