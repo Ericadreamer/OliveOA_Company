@@ -42,7 +42,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private DrawerLayout drawerLayout;
     private SystemBarTintManager tintManager;
     private NavigationView navigationView;
-    private RadioButton departionicon;
+    private RadioButton departionbtn,staffbtn,propertybtn,documentbtn;
     ImageView menu;
 
     @Override
@@ -201,12 +201,50 @@ public class MainActivity extends Activity implements View.OnClickListener {
             int statusColor = Color.parseColor("#373B3E");
             tintManager.setStatusBarTintColor(statusColor);
             tintManager.setStatusBarTintEnabled(true);
-            departionicon.setOnClickListener(new View.OnClickListener() {
+
+            //部门管理
+            departionbtn = (RadioButton)findViewById(R.id.departionicon);
+            departionbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
                     startActivity(intent);
                     finish();
+                }
+            });
+
+            //员工管理
+            staffbtn = (RadioButton)findViewById(R.id.stafficon);
+            staffbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(MainActivity.this, EmployeelistActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+
+            //资产管理
+            propertybtn = (RadioButton)findViewById(R.id.moneyicon);
+            propertybtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
+//                    startActivity(intent);
+//                    finish();
+                    Toast.makeText(getApplicationContext(), "资产管理", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            //公文查看
+            documentbtn = (RadioButton)findViewById(R.id.fileicon);
+            documentbtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+//                    Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
+//                    startActivity(intent);
+//                    finish();
+                    Toast.makeText(getApplicationContext(), "公文查看", Toast.LENGTH_SHORT).show();
                 }
             });
 

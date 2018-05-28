@@ -1,19 +1,20 @@
 package com.oliveoa.view;
 
-
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.Toast;
+
+import java.util.ArrayList;
 
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.pojo.Group;
 import com.oliveoa.pojo.Item;
 import com.oliveoa.util.MyBaseExpandableListAdapter;
 
-import java.util.ArrayList;
 
 public class EmployeelistActivity extends AppCompatActivity {
 
@@ -21,16 +22,16 @@ public class EmployeelistActivity extends AppCompatActivity {
     private ArrayList<ArrayList<Item>> iData = null;
     private ArrayList<Item> lData = null;
     private Context mContext;
-    private ExpandableListView exlist_lol;
+    private ExpandableListView exlist_staff;
     private MyBaseExpandableListAdapter myAdapter = null;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_employeelist);
         mContext = EmployeelistActivity.this;
-        exlist_lol = (ExpandableListView) findViewById(R.id.exlist_staff);
+        exlist_staff = (ExpandableListView) findViewById(R.id.exlist_staff);
 
 
         //数据准备
@@ -60,10 +61,10 @@ public class EmployeelistActivity extends AppCompatActivity {
         iData.add(lData);
 
         myAdapter = new MyBaseExpandableListAdapter(gData,iData,mContext);
-        exlist_lol.setAdapter(myAdapter);
+        exlist_staff.setAdapter(myAdapter);
 
         //为列表设置点击事件
-        exlist_lol.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        exlist_staff.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
                 Toast.makeText(mContext, "你点击了：" + iData.get(groupPosition).get(childPosition).getiName(), Toast.LENGTH_SHORT).show();
