@@ -80,9 +80,13 @@
         <activity
             android:name="com.oliveoa.view.RedactDutyActivity"
             android:exported="true"
-            android:theme="@style/EmployeeTheme"/>
+            android:theme="@style/EmployeeTheme" />
         <activity
             android:name="com.oliveoa.view.DepartmentInfoActivity"
+            android:exported="true"
+            android:theme="@style/EmployeeTheme" />
+        <activity
+            android:name="com.oliveoa.view.AddDutyActivity"
             android:exported="true"
             android:theme="@style/EmployeeTheme"></activity>
     </application>

@@ -45,11 +45,17 @@
                 android:layout_margin="20dp"/>
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/depart_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         //部门
         <LinearLayout
+            android:id="@+id/depart_item"
             android:layout_width="match_parent"
             android:layout_height="70dp"
-            android:background="#fff">
+            android:background="#fff"
+            android:layout_marginBottom="@dimen/dp_1">
 
             <ImageView
                 android:layout_width="50dp"
@@ -83,17 +89,7 @@
 
 
         </LinearLayout>
-        //直线
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="visible">
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@color/bodyline"/>
         </LinearLayout>
-
     </LinearLayout>
 
 
