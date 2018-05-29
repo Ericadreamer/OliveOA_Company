@@ -10,16 +10,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.pojo.DepartmentInfo;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DepartmentInfoActivity extends AppCompatActivity {
 
+    private DepartmentInfo departmentInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_info);
+
+        departmentInfo = getIntent().getParcelableExtra("ParcelableCompany");
+        // Log.d("name",companyInfo.getUsername());
+        initView();
 
         ImageView back = (ImageView)findViewById(R.id.null_back);
         TextView edit = (TextView)findViewById(R.id.depart_edit);
@@ -53,6 +60,23 @@ public class DepartmentInfoActivity extends AppCompatActivity {
             }
         });
     }
+
+    //初始化
+    public void initView() {
+        if(departmentInfo !=null){
+            TextView tid = (TextView) findViewById(R.id.text_num);
+            tid.setText(departmentInfo.getId());
+            TextView tname = (TextView) findViewById(R.id.text_name);
+            tname.setText(departmentInfo.getName());
+            TextView ttelephone = (TextView) findViewById(R.id.text_tel);
+            ttelephone.setText(departmentInfo.getTelephone());
+            TextView tfax = (TextView) findViewById(R.id.text_fax);
+            tfax.setText(departmentInfo.getFax());
+            TextView tdpid = (TextView) findViewById(R.id.text_superior);
+            tdpid.setText(departmentInfo.getDpid());
+        }
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

@@ -15,13 +15,14 @@ import java.util.TimerTask;
 
 public class AddDutyActivity extends AppCompatActivity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_duty);
 
         ImageView back = (ImageView)findViewById(R.id.null_back);
-
+        ImageView save = (ImageView)findViewById(R.id.info_save);
 
 
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
@@ -32,7 +33,23 @@ public class AddDutyActivity extends AppCompatActivity {
                 finish();
             }
         });
+        save.setOnClickListener(new View.OnClickListener() {   //点击保存键，提示保存是否成功
+            @Override
+            public void onClick(View view) {
+                save();
+            }
+        });
     }
+
+    public void initView() {
+
+    }
+
+    public void save() {
+
+
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
