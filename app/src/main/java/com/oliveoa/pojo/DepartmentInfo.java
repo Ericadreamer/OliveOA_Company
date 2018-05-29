@@ -11,11 +11,11 @@ public class DepartmentInfo implements Parcelable {
     private String name;
     private String telephone;
     private String fax;
-    private String orderby;
+    private int orderby;
     private String createtime;
     private String updatetime;
 
-    public DepartmentInfo(String dcid, String dpid, String id, String name, String telephone, String fax, String orderby, String createtime, String updatetime) {
+    public DepartmentInfo(String dcid, String dpid, String id, String name, String telephone, String fax, int orderby, String createtime, String updatetime) {
         this.dcid = dcid;
         this.dpid = dpid;
         this.id = id;
@@ -36,7 +36,7 @@ public class DepartmentInfo implements Parcelable {
         name = in.readString();
         telephone = in.readString();
         fax = in.readString();
-        orderby = in.readString();
+        orderby = in.readInt();
         createtime = in.readString();
         updatetime = in.readString();
     }
@@ -67,7 +67,7 @@ public class DepartmentInfo implements Parcelable {
         parcel.writeString(name);
         parcel.writeString(telephone);
         parcel.writeString(fax);
-        parcel.writeString(orderby);
+        parcel.writeInt(orderby);
         parcel.writeString(createtime);
         parcel.writeString(updatetime);
     }
@@ -120,11 +120,11 @@ public class DepartmentInfo implements Parcelable {
         this.fax = fax;
     }
 
-    public String getOrderby() {
+    public int getOrderby() {
         return orderby;
     }
 
-    public void setOrderby(String orderby) {
+    public void setOrderby(int orderby) {
         this.orderby = orderby;
     }
 
@@ -157,7 +157,7 @@ public class DepartmentInfo implements Parcelable {
                 ", name='" + name + '\'' +
                 ", telephone='" + telephone + '\'' +
                 ", fax='" + fax + '\'' +
-                ", orderby='" + orderby + '\'' +
+                ", orderby=" + orderby +
                 ", createtime='" + createtime + '\'' +
                 ", updatetime='" + updatetime + '\'' +
                 '}';

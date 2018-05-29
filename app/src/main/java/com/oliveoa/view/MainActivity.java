@@ -30,8 +30,10 @@ import android.widget.Toast;
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.common.HttpResponseObject;
 import com.oliveoa.controller.CompanyInfoService;
+import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.LoginService;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
+import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.LogoutJsonBean;
 import com.oliveoa.pojo.CompanyInfo;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -210,9 +212,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
             departionbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
-                    startActivity(intent);
-                    finish();
+                    departioninfo();
+
                 }
             });
 
@@ -282,6 +283,32 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         }
     }
+    private void departioninfo() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+
+                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
+                Log.d("departmentInfoJsonBean",departmentInfoJsonBean.toString());
+
+                if (departmentInfoJsonBean.getStatus()==0){
+                    pref.edit().remove("sessionid").commit();//移除指定数值
+                    Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Looper.prepare();//解决子线程弹toast问题
+                    Toast.makeText(getApplicationContext(), "网络错误，请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();// 进入loop中的循环，查看消息队列
+
+                }
+            }
+        }).start();
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

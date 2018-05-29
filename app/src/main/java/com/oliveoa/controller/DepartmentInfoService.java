@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.oliveoa.common.Const;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
-import com.oliveoa.jsonbean.UpdateCompanyInfoJsonBean;
+import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 
@@ -18,7 +18,13 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class DepartmentInfoService {
-    public CompanyLoginJsonBean departmentInfo (String s) {
+//    public static void main(String args[]){
+//
+//        departmentInfo("JSESSIONID=A98AAD9C0D3504AFA021E9E402E85028");
+//    }
+
+
+    public DepartmentInfoJsonBean departmentInfo(String s) {
 
         try {
             Log.i("info_Login","知道了session："+s);
@@ -34,15 +40,13 @@ public class DepartmentInfoService {
             Response response = client.newCall(request).execute();
             //System.out.println(response.body().string());
 
-            //Headers headers = response.headers();
-            //Log.i("info_respons.headers",headers+"");
 
             String json = response.body().string();
             Gson gson = new Gson();
             System.out.println(json);
-            java.lang.reflect.Type type = new TypeToken<CompanyLoginJsonBean>() {
+            java.lang.reflect.Type type = new TypeToken<DepartmentInfoJsonBean>() {
             }.getType();
-            CompanyLoginJsonBean departmentinfoJsonBean = gson.fromJson(json, type);
+            DepartmentInfoJsonBean departmentinfoJsonBean = gson.fromJson(json, type);
             System.out.println("departmentinfoJsonBean = " + departmentinfoJsonBean);
 
             return departmentinfoJsonBean;
