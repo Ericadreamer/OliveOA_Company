@@ -3,16 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:padding="5dp">
+    android:background="@color/colorWhite"
+    android:padding="0.5dp">
 
     <TextView
         android:id="@+id/tv_group_name"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="@dimen/dp_50"
         android:gravity="center_vertical"
+        android:layout_marginLeft="@dimen/dp_20"
         android:paddingLeft="30dp"
-        android:text="长腿猫猫"
+        android:text="董事长办公室"
         android:textStyle="bold"
-        android:textSize="20sp" />
+        android:textSize="@dimen/dp_18"
+        android:background="@color/colorWhite" />
 
 </LinearLayout>

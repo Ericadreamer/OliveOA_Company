@@ -2,19 +2,20 @@
 <com.mcxtzhang.swipemenulib.SwipeMenuLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_60"
+        android:layout_height="@dimen/dp_48"
         android:clickable="true"
         android:orientation="horizontal"
         android:paddingLeft="5dp"
-        android:background="#fff">
+        android:paddingBottom="@dimen/dp_0.5"
+        android:background="#f0f5f0">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     <ImageView
         android:id="@+id/img_icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:src="@drawable/yonghu"
         android:layout_gravity="center_vertical"
         android:focusable="false"/>
@@ -25,9 +26,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_gravity="center_vertical"
-        android:textColor="@color/textcolordark"
+        android:textColor="@color/textcolor"
         android:focusable="false"
-        android:text="董事长办公室"
+        android:text="员工1"
         android:textSize="18sp" />
 
       </LinearLayout>
@@ -38,7 +39,8 @@
             android:layout_height="match_parent"
             android:background="#d9dee4"
             android:text="编辑"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:onClick="StaffEdit" />
 
         <Button
             android:id="@+id/btnDelete"
@@ -46,7 +48,8 @@
             android:layout_height="match_parent"
             android:background="@color/orange_deep"
             android:text="删除"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            android:onClick="StaffDelete"/>
 
     </com.mcxtzhang.swipemenulib.SwipeMenuLayout>
     <!--<ImageView-->

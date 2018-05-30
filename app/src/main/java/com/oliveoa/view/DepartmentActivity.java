@@ -21,19 +21,39 @@ import java.util.TimerTask;
 public class DepartmentActivity extends AppCompatActivity {
 
     private ArrayList<DepartmentInfo> departmentInfos;
+    private ImageView back,add;
+    private LinearLayout check,depart_list;
+    private int length;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department);
 
-
         departmentInfos = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
         System.out.println(departmentInfos);
 
-        ImageView back = (ImageView)findViewById(R.id.null_back);
-        ImageView add = (ImageView)findViewById(R.id.null_add);
-        LinearLayout check = (LinearLayout)findViewById(R.id.depart_item);
+        initView();
 
+    }
+
+    public void initView(){
+        back = (ImageView)findViewById(R.id.null_back);
+        add = (ImageView)findViewById(R.id.null_add);
+        check = (LinearLayout)findViewById(R.id.depart_item);
+        depart_list =(LinearLayout)findViewById(R.id.depart_list);
+
+        for(int i = 0;i < departmentInfos.size(); i ++){
+            LinearLayout depart_item = new LinearLayout(this);
+            ImageView ic = new ImageView(this);
+            ic.setImageDrawable();
+            TextView dname = new TextView(this);
+            TextView did = new TextView(this);
+
+
+            //System.out.println(departmentInfos.get(i));
+        }
+
+        //监听事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
             public void onClick(View view) {
@@ -60,7 +80,10 @@ public class DepartmentActivity extends AppCompatActivity {
                 finish();
             }
         });
+
     }
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

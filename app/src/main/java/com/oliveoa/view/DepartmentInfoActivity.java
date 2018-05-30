@@ -63,18 +63,18 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
     //初始化
     public void initView() {
-        if(departmentInfo != null){
-            TextView tid = (TextView) findViewById(R.id.text_num);
-            tid.setText(departmentInfo.getId());
-            TextView tname = (TextView) findViewById(R.id.text_name);
-            tname.setText(departmentInfo.getName());
-            TextView ttelephone = (TextView) findViewById(R.id.text_tel);
-            ttelephone.setText(departmentInfo.getTelephone());
-            TextView tfax = (TextView) findViewById(R.id.text_fax);
-            tfax.setText(departmentInfo.getFax());
-            TextView tdpid = (TextView) findViewById(R.id.text_superior);
-            tdpid.setText(departmentInfo.getDpid());
-        }
+//        if(departmentInfo != null){
+//            TextView tid = (TextView) findViewById(R.id.text_num);
+//            tid.setText(departmentInfo.getId());
+//            TextView tname = (TextView) findViewById(R.id.text_name);
+//            tname.setText(departmentInfo.getName());
+//            TextView ttelephone = (TextView) findViewById(R.id.text_tel);
+//            ttelephone.setText(departmentInfo.getTelephone());
+//            TextView tfax = (TextView) findViewById(R.id.text_fax);
+//            tfax.setText(departmentInfo.getFax());
+//            TextView tdpid = (TextView) findViewById(R.id.text_superior);
+//            tdpid.setText(departmentInfo.getDpid());
+//        }
     }
 
     public void edit() {

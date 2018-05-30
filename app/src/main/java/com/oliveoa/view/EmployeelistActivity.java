@@ -2,12 +2,14 @@ package com.oliveoa.view;
 
 import android.content.Context;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
+
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -17,9 +19,8 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+
 import com.example.erica.oliveoa_company.R;
-import com.oliveoa.controller.EmployeeInfoService;
-import com.oliveoa.jsonbean.EmployeeInfoJsonBean;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.Group;
 import com.oliveoa.pojo.Item;
@@ -34,17 +35,16 @@ public class EmployeelistActivity extends AppCompatActivity {
     private Context mContext;
     private ExpandableListView exlist_staff;
     private MyBaseExpandableListAdapter myAdapter = null;
-    private Button edit,delete;
     private ImageView back;
-    //private EmployeeInfo employeeInfo;
+    private EmployeeInfo employeeInfo;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employeelist);
+
         //employeeInfo = getIntent().getParcelableExtra("ParcelableEmployeeInfo");
-       // Log.d("ParcelableEmployeeInfo", employeeInfo.toString());
-        initView();
+       //Log.d("ParcelableEmployeeInfo", employeeInfo.toString());
+       initView();
 
     }
 
@@ -52,8 +52,6 @@ public class EmployeelistActivity extends AppCompatActivity {
         mContext = EmployeelistActivity.this;
 
         exlist_staff = (ExpandableListView) findViewById(R.id.exlist_staff);
-        edit =(Button)findViewById(R.id.list).findViewById(R.id.btnEdit);
-        delete =(Button)findViewById(R.id.list).findViewById(R.id.btnDelete);
         back =(ImageView)findViewById(R.id.info_back);
 
         //数据准备
@@ -80,6 +78,10 @@ public class EmployeelistActivity extends AppCompatActivity {
         lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
         lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
         lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
         iData.add(lData);
 
         myAdapter = new MyBaseExpandableListAdapter(gData,iData,mContext);
@@ -99,22 +101,23 @@ public class EmployeelistActivity extends AppCompatActivity {
                 Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
             }
         });
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext, "你点击了编辑", Toast.LENGTH_SHORT).show();
-            }
-        });
-        delete.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(mContext, "你点击了删除", Toast.LENGTH_SHORT).show();
 
-            }
-        });
+    }
 
-
-
+    /**
+     *  对于这种include下还包含着expendlistview，expendlistview下又有两个xml文件，尝试直接在本Activity用findviewbyid获取item_exlist_iten.xml里的button
+     *  ，然而显示空指针，使用inflater虽然能获取到button，但是捆绑监听事件。最后解决方案很简单，直接在item_exlist_iten.xml里的button添加onclick事件就好了……
+     *  然后在本Activity里写好相应的onclick方法
+     *
+     * @param view
+     */
+    //编辑单击触发函数
+    public void StaffEdit(View view){
+        Toast.makeText(mContext, "你点击了编辑", Toast.LENGTH_SHORT).show();
+    }
+    //删除单机触发函数
+    public void StaffDelete(View view){
+        Toast.makeText(mContext, "你点击了删除", Toast.LENGTH_SHORT).show();
     }
 
     @Override
