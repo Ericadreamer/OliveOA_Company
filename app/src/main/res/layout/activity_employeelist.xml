@@ -2,13 +2,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
+    android:background="@color/backgroundcolor"
     >
-
-    <ExpandableListView
-        android:id="@+id/exlist_staff"
+    <LinearLayout
+        android:id="@+id/toorbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:childDivider="#f0f0f0"/>
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        >
+        <ImageView
+            android:id="@+id/info_back"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/back"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="员工管理"
+            android:textAlignment="center"
+            android:layout_weight="1"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical" />
+        <View
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="15dp"/>
+    </LinearLayout>
+    <include
+        layout="@layout/list_main"
+        android:layout_below="@id/toorbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

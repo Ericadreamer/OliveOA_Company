@@ -35,14 +35,15 @@ public class EmployeelistActivity extends AppCompatActivity {
     private ExpandableListView exlist_staff;
     private MyBaseExpandableListAdapter myAdapter = null;
     private Button edit,delete;
-    private EmployeeInfo employeeInfo;
+    private ImageView back;
+    //private EmployeeInfo employeeInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employeelist);
-        employeeInfo = getIntent().getParcelableExtra("ParcelableEmployeeInfo");
-        Log.d("ParcelableEmployeeInfo", employeeInfo.toString());
+        //employeeInfo = getIntent().getParcelableExtra("ParcelableEmployeeInfo");
+       // Log.d("ParcelableEmployeeInfo", employeeInfo.toString());
         initView();
 
     }
@@ -53,6 +54,7 @@ public class EmployeelistActivity extends AppCompatActivity {
         exlist_staff = (ExpandableListView) findViewById(R.id.exlist_staff);
         edit =(Button)findViewById(R.id.btnEdit);
         delete =(Button)findViewById(R.id.btnDelete);
+        back =(ImageView)findViewById(R.id.info_back);
 
         //数据准备
         gData = new ArrayList<Group>();
@@ -91,11 +93,16 @@ public class EmployeelistActivity extends AppCompatActivity {
                 return true;
             }
         });
-        edit.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
+            }
+        });
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(mContext, "你点击了编辑", Toast.LENGTH_SHORT).show();
-
             }
         });
         delete.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页

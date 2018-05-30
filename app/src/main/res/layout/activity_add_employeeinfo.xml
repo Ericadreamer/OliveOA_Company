@@ -143,8 +143,7 @@
                     android:background="@null"
                     android:layout_gravity="end"
                     android:textAlignment="viewEnd"
-                    android:layout_marginRight="@dimen/dp_20"
-                    android:entries="@array/letter" />
+                    android:layout_marginRight="@dimen/dp_20" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
@@ -164,21 +163,15 @@
                     android:textSize="@dimen/activity_companyinfo_text"
                     android:text="担任职务" />
 
-                <EditText
-                    android:id="@+id/content_pcid"
+                <Spinner
+                    android:id="@+id/content_cid"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@null"
                     android:layout_gravity="end"
                     android:textAlignment="viewEnd"
-                    android:drawableRight="@drawable/down"
-                    android:hint="请选择职务"
-                    android:textColor="@color/textcolor"
-                    android:singleLine="true"
-                    android:textColorHint="#898989"
-                    android:textSize="@dimen/activity_companyinfo_text"
-                    />
+                    android:layout_marginRight="@dimen/dp_20" />
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

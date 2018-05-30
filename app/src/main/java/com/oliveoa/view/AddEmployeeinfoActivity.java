@@ -19,7 +19,7 @@ import com.example.erica.oliveoa_company.R;
 
 import java.util.ArrayList;
 
-public class AddEmployeeinfoActivity extends AppCompatActivity {
+public class AddEmployeeinfoActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     private Spinner dcid,sex,pcid;
     private String[] dcidlist;
@@ -35,32 +35,6 @@ public class AddEmployeeinfoActivity extends AppCompatActivity {
     }
 
     public  void initView(){
-
-
-        //设置图标大小
-        //选择部门
-        Resources res = getResources() ;
-        TextView dcidTV = (TextView)findViewById(R.id.content_dcid) ;
-        Drawable dcidDrawable = res.getDrawable(R.drawable.down) ;
-        dcidDrawable.setBounds(0,0,45,45);//这里就可以控制drawable资源的大小了
-        dcidTV.setCompoundDrawables(null,dcidDrawable,null,null);
-        //选择职务
-        TextView pcidTV = (TextView)findViewById(R.id.content_pcid) ;
-        Drawable pcidDrawable = res.getDrawable(R.drawable.down) ;
-        pcidDrawable.setBounds(0,0,45,45);//这里就可以控制drawable资源的大小了
-        pcidTV.setCompoundDrawables(null,pcidDrawable,null,null);
-        //选择性别
-        TextView sexTV = (TextView)findViewById(R.id.content_sex) ;
-        Drawable sexDrawable = res.getDrawable(R.drawable.down) ;
-        sexDrawable.setBounds(0,0,45,45);//这里就可以控制drawable资源的大小了
-        sexTV.setCompoundDrawables(null,sexDrawable,null,null);
-        //选择出生年月
-        TextView birthTV = (TextView)findViewById(R.id.content_birth) ;
-        Drawable birthDrawable = res.getDrawable(R.drawable.down) ;
-        birthDrawable.setBounds(0,0,45,45);//这里就可以控制drawable资源的大小了
-        birthTV.setCompoundDrawables(null,birthDrawable,null,null);
-
-
 
     }
 
@@ -98,13 +72,13 @@ public class AddEmployeeinfoActivity extends AppCompatActivity {
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         switch (parent.getId()){
             case R.id.content_dcid:
-                Log.i("所属部门点击------",dcidlist.get(position));
+                Log.i("所属部门点击------",dcidlist[position]);
                 break;
             case R.id.content_pcid:
-                Log.i("担任职务点击------",pcidlist.get[position]);
+                Log.i("担任职务点击------",pcidlist.get(position));
                 break;
             case R.id.content_sex:
-                String[] letter = getResources().getStringArray(R.array.letter);
+                String[] letter = {"男","女"};
                 Log.i("性别点击------",letter[position]);
                 break;
         }
@@ -115,6 +89,11 @@ public class AddEmployeeinfoActivity extends AppCompatActivity {
      */
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 
@@ -144,12 +123,12 @@ public class AddEmployeeinfoActivity extends AppCompatActivity {
             if(convertView==null){
                 convertView = LayoutInflater.from(AddEmployeeinfoActivity.this).inflate(R.layout.activity_add_employeeinfo, viewGroup, false);
                 holder = new ViewHolder();
-                holder.itemText= (TextView) convertView.findViewById(R.id.activity_add_employeeinfo);
-                convertView.setTag(holder);
+                //holder.itemText= (TextView) convertView.findViewById(R.id.activity_add_employeeinfo);
+                //convertView.setTag(holder);
             }else{
                 holder = (ViewHolder) convertView.getTag();
             }
-            holder.itemText.setText(list2.get(position));
+            holder.itemText.setText(pcidlist.get(position));
             return convertView;
         }
     }
