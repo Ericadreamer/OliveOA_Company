@@ -101,6 +101,7 @@
             android:name="com.oliveoa.view.EmployeeinfoActivity"
             android:exported="true"
             android:theme="@style/HomeTheme" />
+        <activity android:name="com.oliveoa.view.EditDutyInfoActivity"></activity>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package com.oliveoa.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,21 +12,24 @@ import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.pojo.DutyInfo;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DepartmentInfoActivity extends AppCompatActivity {
 
-    private DepartmentInfo departmentInfo;
+    private ArrayList<DepartmentInfo> departmentInfo;
+    private DutyInfo dutyInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_info);
 
-        departmentInfo = getIntent().getParcelableExtra("ParcelableCompany");
-        // Log.d("name",companyInfo.getUsername());
+        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
+        System.out.println(departmentInfo);
         initView();
 
         ImageView back = (ImageView)findViewById(R.id.null_back);
@@ -42,28 +46,24 @@ public class DepartmentInfoActivity extends AppCompatActivity {
             }
         });
 
-        edit.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
+        edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DepartmentInfoActivity.this, RedactDepartmentActivity.class);
-                startActivity(intent);
-                finish();
+                edit();
             }
         });
 
-        add.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
+        add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DepartmentInfoActivity.this, AddDutyActivity.class);
-                startActivity(intent);
-                finish();
+                add();
             }
         });
     }
 
     //初始化
     public void initView() {
-        if(departmentInfo !=null){
+        if(departmentInfo != null){
             TextView tid = (TextView) findViewById(R.id.text_num);
             tid.setText(departmentInfo.getId());
             TextView tname = (TextView) findViewById(R.id.text_name);
@@ -75,6 +75,22 @@ public class DepartmentInfoActivity extends AppCompatActivity {
             TextView tdpid = (TextView) findViewById(R.id.text_superior);
             tdpid.setText(departmentInfo.getDpid());
         }
+    }
+
+    public void edit() {
+        Intent intent = new Intent(DepartmentInfoActivity.this, RedactDepartmentActivity.class);
+        intent.putExtra("ParcelableDepartment",departmentInfo);
+        startActivity(intent);
+        finish();
+
+    }
+
+    public void add() {
+        Intent intent = new Intent(DepartmentInfoActivity.this, AddDutyActivity.class);
+        intent.putExtra("ParcelableDuty",dutyInfo);
+        startActivity(intent);
+        finish();
+
     }
 
     @Override

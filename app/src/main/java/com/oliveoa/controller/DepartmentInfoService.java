@@ -59,6 +59,7 @@ public class DepartmentInfoService {
         return null;
     }
 
+    //更新部门信息
     public UpdateDepartmentInfoJsonBean updatedepartmentinfo (String s, DepartmentInfo department) {
         try {
             Log.i("info_Login","知道了session："+s);
@@ -75,7 +76,7 @@ public class DepartmentInfoService {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .addHeader("Cookie",s)
-                    .url(Const.COMPANY_INFO_UPDATE)
+                    .url(Const.UPDATE_DEPARTMENT_INFO)
                     .post(body)
                     .build();
 
@@ -100,4 +101,156 @@ public class DepartmentInfoService {
         return null;
 
     }
+
+    //检查部门id是否已经存在
+    public UpdateDepartmentInfoJsonBean checkdepartmentid (String s, DepartmentInfo department) {
+        try {
+            Log.i("info_Login","知道了session："+s);
+            Log.d("updateinfo",department.toString());
+            FormBody body = new FormBody.Builder()
+                    .add("id",department.getId())
+                    .build();
+            Log.d("updateinfobody",body.toString());
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Cookie",s)
+                    .url(Const.CHECK_DEPARTMENT_ID)
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            String json = response.body().string();
+            Gson gson = new Gson();
+            System.out.println(json);
+
+            java.lang.reflect.Type type = new TypeToken<UpdateDepartmentInfoJsonBean>() {
+            }.getType();
+            UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = gson.fromJson(json, type);
+            System.out.println("checkdepartmentid = " + updateDepartmentInfoJsonBean);
+
+            return updateDepartmentInfoJsonBean;
+
+        } catch (IOException e) {
+            //todo handler IOException
+            //throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    //添加部门
+    public UpdateDepartmentInfoJsonBean adddepartment (String s, DepartmentInfo department) {
+        try {
+            Log.i("info_Login","知道了session："+s);
+            Log.d("updateinfo",department.toString());
+            FormBody body = new FormBody.Builder()
+                    .add("id",department.getId())
+                    .build();
+            Log.d("updateinfobody",body.toString());
+
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Cookie",s)
+                    .url(Const.ADD_DEPARTMENT)
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            String json = response.body().string();
+            Gson gson = new Gson();
+            System.out.println(json);
+
+            java.lang.reflect.Type type = new TypeToken<UpdateDepartmentInfoJsonBean>() {
+            }.getType();
+            UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = gson.fromJson(json, type);
+            System.out.println("adddepartment = " + updateDepartmentInfoJsonBean);
+
+            return updateDepartmentInfoJsonBean;
+
+        } catch (IOException e) {
+            //todo handler IOException
+            //throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+
+    //获取部门信息
+    public DepartmentInfoJsonBean getdepartmentinfo (String s) {
+
+        try {
+            Log.i("info_Login","知道了session："+s);
+            FormBody body = new FormBody.Builder()
+                    .build();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Cookie",s)
+                    .url(Const.GET_DEPARTMENT_INFO)
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            //System.out.println(response.body().string());
+
+
+            String json = response.body().string();
+            Gson gson = new Gson();
+            System.out.println(json);
+            java.lang.reflect.Type type = new TypeToken<DepartmentInfoJsonBean>() {
+            }.getType();
+            DepartmentInfoJsonBean departmentinfoJsonBean = gson.fromJson(json, type);
+            System.out.println("getdepartmentinfo = " + departmentinfoJsonBean);
+
+            return departmentinfoJsonBean;
+
+        } catch (IOException e) {
+            //todo handler IOException
+            //throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //查找平级部门
+    public DepartmentInfoJsonBean paralleldepartment (String s) {
+
+        try {
+            Log.i("info_Login","知道了session："+s);
+            FormBody body = new FormBody.Builder()
+                    .build();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Cookie",s)
+                    .url(Const.CHECK_CHILDREN_PARALLEL_DEPARTMENT)
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            //System.out.println(response.body().string());
+
+
+            String json = response.body().string();
+            Gson gson = new Gson();
+            System.out.println(json);
+            java.lang.reflect.Type type = new TypeToken<DepartmentInfoJsonBean>() {
+            }.getType();
+            DepartmentInfoJsonBean departmentinfoJsonBean = gson.fromJson(json, type);
+            System.out.println("paralleldepartment = " + departmentinfoJsonBean);
+
+            return departmentinfoJsonBean;
+
+        } catch (IOException e) {
+            //todo handler IOException
+            //throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }
