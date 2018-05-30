@@ -3,6 +3,7 @@ package com.oliveoa.view;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,16 +12,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.pojo.DepartmentInfo;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DepartmentActivity extends AppCompatActivity {
 
+    private ArrayList<DepartmentInfo> departmentInfos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department);
+
+
+        departmentInfos = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
+        System.out.println(departmentInfos);
 
         ImageView back = (ImageView)findViewById(R.id.null_back);
         ImageView add = (ImageView)findViewById(R.id.null_add);

@@ -52,8 +52,8 @@ public class EmployeelistActivity extends AppCompatActivity {
         mContext = EmployeelistActivity.this;
 
         exlist_staff = (ExpandableListView) findViewById(R.id.exlist_staff);
-        edit =(Button)findViewById(R.id.btnEdit);
-        delete =(Button)findViewById(R.id.btnDelete);
+        edit =(Button)findViewById(R.id.list).findViewById(R.id.btnEdit);
+        delete =(Button)findViewById(R.id.list).findViewById(R.id.btnDelete);
         back =(ImageView)findViewById(R.id.info_back);
 
         //数据准备

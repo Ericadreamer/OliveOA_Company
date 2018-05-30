@@ -300,11 +300,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
                 Log.d("departmentInfoJsonBean",departmentInfoJsonBean.toString());
 
-                DepartmentInfo department = departmentInfoJsonBean.getData();
+                ArrayList<DepartmentInfo> department = departmentInfoJsonBean.getData();
+                System.out.println(department);
 
                 if (departmentInfoJsonBean.getStatus()==0){
                     Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
-                    intent.putExtra("ParcelableDepartment",department);
+                    intent.putParcelableArrayListExtra("ParcelableDepartment",department);
                     startActivity(intent);
                     finish();
                 }else{
