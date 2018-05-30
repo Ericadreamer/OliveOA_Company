@@ -298,7 +298,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:clickable="true"
-                android:paddingBottom="1dp">
+                >
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="45dp"
@@ -333,7 +333,7 @@
                 </LinearLayout>
                 <!-- 以下都是侧滑菜单的内容依序排列 -->
                 <Button
-                    android:id="@+id/btnTop"
+                    android:id="@+id/btnEdit"
                     android:layout_width="60dp"
                     android:layout_height="match_parent"
                     android:background="#d9dee4"

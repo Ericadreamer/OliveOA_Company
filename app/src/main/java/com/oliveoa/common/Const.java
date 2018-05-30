@@ -15,8 +15,10 @@ public class Const {
     public static  final  String ADD_DEPARTMENT = HOSTPATH + "/oliveoa/manage/department/add_department.do";
     public static  final  String GET_DEPARTMENT_INFO = HOSTPATH + "/oliveoa/manage/department/get_departmentByDcid.do";
     public static  final  String CHECK_CHILDREN_PARALLEL_DEPARTMENT = HOSTPATH + "/oliveoa/manage/department/get_children_parallel_department.do";
-    public static  final  String DEPARTMENT_INFO_UPDATE = HOSTPATH + "/oliveoa/manage/department/update_department.do";
     public static  final  String DUTY_ADD = HOSTPATH + "/oliveoa/manage/position/add_position.do";
     public static  final  String DUTY_SEARCH = HOSTPATH + "/oliveoa/manage/position/get_position.do";
     public static  final  String DUTY_UPDATE = HOSTPATH + "/oliveoa/manage/position/update_position.do";
+    public static  final  String EMPLOYEE_INFO_ADD = HOSTPATH + "/oliveoa/manage/employees/add_employee.do";
+    public static  final  String EMPLOYEE_INFO_GETBYPOSITON = HOSTPATH + "/oliveoa/manage/employees/get_employees_by_position.do";
+    public static  final  String EMPLOYEE_INFO_GETBYDEPARTMENT = HOSTPATH + "/oliveoa/manage/employees/get_employees_by_department.do";
 }

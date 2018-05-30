@@ -2,11 +2,15 @@ package com.oliveoa.view;
 
 import android.content.Context;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -14,6 +18,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.controller.EmployeeInfoService;
+import com.oliveoa.jsonbean.EmployeeInfoJsonBean;
+import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.Group;
 import com.oliveoa.pojo.Item;
 import com.oliveoa.util.MyBaseExpandableListAdapter;
@@ -27,15 +34,25 @@ public class EmployeelistActivity extends AppCompatActivity {
     private Context mContext;
     private ExpandableListView exlist_staff;
     private MyBaseExpandableListAdapter myAdapter = null;
-
+    private Button edit,delete;
+    private EmployeeInfo employeeInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employeelist);
-        mContext = EmployeelistActivity.this;
-        exlist_staff = (ExpandableListView) findViewById(R.id.exlist_staff);
+        employeeInfo = getIntent().getParcelableExtra("ParcelableEmployeeInfo");
+        Log.d("ParcelableEmployeeInfo", employeeInfo.toString());
+        initView();
 
+    }
+
+    public void initView(){
+        mContext = EmployeelistActivity.this;
+
+        exlist_staff = (ExpandableListView) findViewById(R.id.exlist_staff);
+        edit =(Button)findViewById(R.id.btnEdit);
+        delete =(Button)findViewById(R.id.btnDelete);
 
         //数据准备
         gData = new ArrayList<Group>();
@@ -74,9 +91,25 @@ public class EmployeelistActivity extends AppCompatActivity {
                 return true;
             }
         });
+        edit.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, "你点击了编辑", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        delete.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, "你点击了删除", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
 
 
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

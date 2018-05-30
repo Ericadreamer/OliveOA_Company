@@ -80,15 +80,27 @@
         <activity
             android:name="com.oliveoa.view.RedactDutyActivity"
             android:exported="true"
-            android:theme="@style/EmployeeTheme" />
+            android:theme="@style/HomeTheme" />
         <activity
             android:name="com.oliveoa.view.DepartmentInfoActivity"
             android:exported="true"
-            android:theme="@style/EmployeeTheme" />
+            android:theme="@style/HomeTheme" />
         <activity
             android:name="com.oliveoa.view.AddDutyActivity"
             android:exported="true"
-            android:theme="@style/EmployeeTheme"></activity>
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.EditEmployeeinfoActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.AddEmployeeinfoActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.EmployeeinfoActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
     </application>
 
 </manifest>

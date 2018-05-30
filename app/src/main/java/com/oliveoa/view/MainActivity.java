@@ -31,14 +31,20 @@ import com.example.erica.oliveoa_company.R;
 import com.oliveoa.common.HttpResponseObject;
 import com.oliveoa.controller.CompanyInfoService;
 import com.oliveoa.controller.DepartmentInfoService;
+import com.oliveoa.controller.EmployeeInfoService;
 import com.oliveoa.controller.LoginService;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
+import com.oliveoa.jsonbean.EmployeeInfoJsonBean;
 import com.oliveoa.jsonbean.LogoutJsonBean;
 import com.oliveoa.pojo.CompanyInfo;
+import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.pojo.EmployeeInfo;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -222,9 +228,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
             staffbtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent intent = new Intent(MainActivity.this, EmployeelistActivity.class);
-                    startActivity(intent);
-                    finish();
+                    employeeinfo();
                 }
             });
 
@@ -236,7 +240,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 //                    Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
 //                    startActivity(intent);
 //                    finish();
-                    Toast.makeText(getApplicationContext(), "资产管理", Toast.LENGTH_SHORT).show();
+                     propertyinfo();
                 }
             });
 
@@ -283,6 +287,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         }
     }
+
+    //部门管理
     private void departioninfo() {
         new Thread(new Runnable() {
             @Override
@@ -294,9 +300,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
                 Log.d("departmentInfoJsonBean",departmentInfoJsonBean.toString());
 
+                DepartmentInfo department = departmentInfoJsonBean.getData();
+
                 if (departmentInfoJsonBean.getStatus()==0){
-                    pref.edit().remove("sessionid").commit();//移除指定数值
                     Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
+                    intent.putExtra("ParcelableDepartment",department);
                     startActivity(intent);
                     finish();
                 }else{
@@ -309,6 +317,40 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }).start();
     }
 
+    //员工管理
+    private void employeeinfo() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+                String dcid ="001";
+
+                EmployeeInfoService employeeInfoService = new EmployeeInfoService();
+                EmployeeInfoJsonBean employeeInfoJsonBean = employeeInfoService.employeeinfo(s,dcid);
+                Log.d("employeeInfoJsonBean",employeeInfoJsonBean.toString());
+
+                List<EmployeeInfo> employee = employeeInfoJsonBean.getData();
+
+                if (employeeInfoJsonBean.getStatus()==0){
+                    Intent intent = new Intent(MainActivity.this,EmployeelistActivity.class);
+                    intent.putExtra("ParcelableEmployeeInfo",employee.toString());
+                    startActivity(intent);
+                    finish();
+                }else{
+                    Looper.prepare();//解决子线程弹toast问题
+                    Toast.makeText(getApplicationContext(), "网络错误，请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();// 进入loop中的循环，查看消息队列
+
+                }
+            }
+        }).start();
+    }
+
+    //资产管理
+    private void propertyinfo() {
+        Toast.makeText(getApplicationContext(), "资产管理", Toast.LENGTH_SHORT).show();
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 
