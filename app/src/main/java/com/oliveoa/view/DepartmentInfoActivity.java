@@ -22,14 +22,17 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
     private ArrayList<DepartmentInfo> departmentInfo;
     private DutyInfo dutyInfo;
+    private String index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_info);
 
-        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        System.out.println(departmentInfo);
+        //departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
+        //System.out.println(departmentInfo);
+
+
         initView();
 
         ImageView back = (ImageView)findViewById(R.id.null_back);

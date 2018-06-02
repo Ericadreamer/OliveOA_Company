@@ -1,6 +1,7 @@
 package com.oliveoa.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,7 +24,11 @@ public class DepartmentActivity extends AppCompatActivity {
     private ArrayList<DepartmentInfo> departmentInfos;
     private ImageView back,add;
     private LinearLayout check,depart_list;
-    private int length;
+    private String TAG = this.getClass().getSimpleName();
+    //装在所有动态添加的Item的LinearLayout容器
+    private LinearLayout addDPlistView;
+    private TextView tvname,tvid;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,25 +38,17 @@ public class DepartmentActivity extends AppCompatActivity {
         System.out.println(departmentInfos);
 
         initView();
-
+        saveDepartmentinfo();
     }
 
     public void initView(){
         back = (ImageView)findViewById(R.id.null_back);
         add = (ImageView)findViewById(R.id.null_add);
-        check = (LinearLayout)findViewById(R.id.depart_item);
         depart_list =(LinearLayout)findViewById(R.id.depart_list);
+        addDPlistView = (LinearLayout)findViewById(R.id.depart_list);
 
-        for(int i = 0;i < departmentInfos.size(); i ++){
-            LinearLayout depart_item = new LinearLayout(this);
-            ImageView ic = new ImageView(this);
-            ic.setImageDrawable();
-            TextView dname = new TextView(this);
-            TextView did = new TextView(this);
-
-
-            //System.out.println(departmentInfos.get(i));
-        }
+        //默认添加一个Item
+        addViewItem(null);
 
         //监听事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
@@ -71,18 +68,74 @@ public class DepartmentActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-        check.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DepartmentActivity.this, DepartmentInfoActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
     }
 
+    //跳转详情界面
+    public void DepartmentEdit(View view){
+        tvname = (TextView)findViewById(R.id.dname);
+        String dname = tvname.getText().toString().trim();
+        Log.i("dname=",dname);
+        Intent intent = new Intent(DepartmentActivity.this, DepartmentInfoActivity.class);
+        intent.putExtra("dname",dname);
+        startActivity(intent);
+        finish();
+    }
+    //执行删除操作
+    public void DepartmentDelete(View view){
+        Toast.makeText(this,"你点击了删除", Toast.LENGTH_SHORT).show();
+    }
+
+    //添加ViewItem
+    private void addViewItem(View view) {
+        if (departmentInfos == null) {//如果部门列表为0，加载空布局
+            View hotelEvaluateView = View.inflate(this, R.layout.activity_null_department, null);
+            addDPlistView.addView(hotelEvaluateView);
+            //sortHotelViewItem();
+        } else {//如果有部门则按数组大小加载布局
+            for(int i = 0;i <departmentInfos.size(); i ++){
+                View hotelEvaluateView = View.inflate(this, R.layout.activity_department_listitem, null);
+                addDPlistView.addView(hotelEvaluateView);
+                InitDataViewItem();
+            }
+
+
+        }
+    }
+
+    /**
+     * Item加载数据
+     */
+    private void InitDataViewItem() {
+        int i;
+        for (i = 0; i < addDPlistView.getChildCount(); i++) {
+            View childAt = addDPlistView.getChildAt(i);
+            tvname = (TextView)childAt.findViewById(R.id.dname);
+            tvid = (TextView)childAt.findViewById(R.id.did);
+
+            tvname.setText(departmentInfos.get(i).getName());
+            tvid.setText("编号："+departmentInfos.get(i).getId());
+        }
+        Log.e(TAG, "部门名称：" + tvname.getText().toString() + "-----部门编号："
+                + tvid.getText().toString());
+    }
+
+    /**
+     *  数据存储到SharedPreferences文件中
+     *
+     */
+    public void saveDepartmentinfo(){
+        SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
+        for (int i = 0;i<departmentInfos.size();i++){
+        editor.putString("dcid["+i+"]",departmentInfos.get(i).getDcid());
+        editor.putString("dpid["+i+"]",departmentInfos.get(i).getDpid());
+        editor.putString("id["+i+"]",departmentInfos.get(i).getId());
+        editor.putString("name["+i+"]",departmentInfos.get(i).getName());
+        editor.putString("telephone["+i+"]",departmentInfos.get(i).getTelephone());
+        editor.putString("fax["+i+"]",departmentInfos.get(i).getFax());
+        editor.apply();
+        }
+        Log.e(TAG, "" + departmentInfos.toString());
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
