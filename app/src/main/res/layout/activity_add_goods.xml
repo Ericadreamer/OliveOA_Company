@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com.oliveoa.view/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f0f0f0"
+    android:layout_gravity="center_vertical"
+    android:gravity="center"
+    tools:context=".RedactDepartmentActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:windowSoftInputMode="adjustResize">
+
+        //标题栏
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            >
+            <ImageView
+                android:id="@+id/back"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/back"
+                android:background="@color/colorPrimary"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="20dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="创建物品"
+                android:textAlignment="center"
+                android:layout_weight="1"
+                android:textColor="#ffffff"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_gravity="center_vertical" />
+
+            <ImageView
+                android:id="@+id/save"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="15dp"
+                android:background="@color/colorPrimary"
+                android:src="@drawable/save" />
+
+
+        </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toorbar">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="@dimen/dp_10">
+            //物品名称
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/duty_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#101010"
+                    android:textSize="@dimen/activity_companyinfo_text"
+                    android:text="物品名称" />
+
+                <EditText
+                    android:id="@+id/edit_duty_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical|end"
+                    android:singleLine="true"
+                    android:textColor="@color/textcolor"
+                    android:textColorHint="#898989"
+                    android:textSize="@dimen/activity_companyinfo_text"
+                    android:hint="请输入物品名称"/>
+            </LinearLayout>
+
+            //物品总量
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="1dp">
+
+                <TextView
+                    android:id="@+id/department_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#101010"
+                    android:textSize="@dimen/activity_companyinfo_text"
+                    android:text="物品总量" />
+
+                <EditText
+                    android:id="@+id/edit_name"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="20dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:gravity="center_vertical|end"
+                    android:singleLine="true"
+                    android:textColor="@color/textcolor"
+                    android:textColorHint="#898989"
+                    android:textSize="@dimen/activity_companyinfo_text"
+                    android:hint="请输入物品总量"/>
+            </LinearLayout>
+
+            //物品描述
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:layout_marginTop="10dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/goods_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dp_10"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="#101010"
+                        android:textSize="@dimen/activity_companyinfo_text"
+                        android:text="物品描述" />
+
+                    <com.oliveoa.view.LinesEditView
+                        android:layout_margin="10dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        />
+                </LinearLayout>
+                <!--<TextView
+                    android:id="@+id/goods_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#101010"
+                    android:textSize="@dimen/activity_companyinfo_text"
+                    android:text="物品描述" />
+
+                <EditText
+                    android:id="@+id/edit_description"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_142"
+                    android:layout_marginTop="@dimen/dp_10"
+                    android:background="@null"
+                    android:singleLine="true"
+                    android:gravity="top"
+                    android:maxLength="200"
+                    android:paddingBottom="@dimen/dp_27"
+                    android:paddingLeft="@dimen/dp_27"
+                    android:paddingRight="@dimen/dp_27"
+                    android:paddingTop="@dimen/dp_10"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:textColor="@color/textcolor"
+                    android:textColorHint="#898989"
+                    android:textSize="@dimen/activity_companyinfo_text"
+                    android:hint="请输入物品描述"/>-->
+            </LinearLayout>
+
+            //管理岗位
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/colorWhite"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <TextView
+                    android:id="@+id/goods_management"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:textColor="#101010"
+                    android:textSize="@dimen/activity_companyinfo_text"
+                    android:text="管理岗位" />
+
+                <ImageView
+                    android:id="@+id/next"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_18"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/ic_next"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical|end"
+                    android:scaleType="fitEnd"
+                    android:layout_marginRight="@dimen/dp_20"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
+
+    </LinearLayout>
+</RelativeLayout>

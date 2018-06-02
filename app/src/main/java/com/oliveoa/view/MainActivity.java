@@ -352,6 +352,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void propertyinfo() {
         Toast.makeText(getApplicationContext(), "资产管理", Toast.LENGTH_SHORT).show();
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

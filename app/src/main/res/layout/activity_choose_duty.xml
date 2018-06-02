@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com.oliveoa.view/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f0f0f0"
     android:layout_gravity="center_vertical"
-    android:gravity="center">
+    android:gravity="center"
+    tools:context=".RedactDepartmentActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:windowSoftInputMode="adjustResize">
 
+        //标题栏
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,7 +33,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="部门管理"
+                android:text="选择部门职务"
                 android:textAlignment="center"
                 android:layout_weight="1"
                 android:textColor="#ffffff"
@@ -36,41 +41,15 @@
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical" />
             <ImageView
-                android:id="@+id/add"
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/ic_add"
                 android:background="@color/colorPrimary"
                 android:layout_gravity="center_vertical"
                 android:layout_margin="20dp"/>
 
+
+
+
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/null_depart"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/image_null"
-            android:layout_gravity="center"
-            android:layout_marginTop="120dp"
-            />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="还没有部门信息哦,"
-            android:textAlignment="center"
-            android:textColor="@color/textcolor"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:text="点击右上角添加部门吧"
-            android:textAlignment="center"
-            android:textColor="@color/textcolor"/>
-
-
-
     </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

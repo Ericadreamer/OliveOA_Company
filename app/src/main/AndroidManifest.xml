@@ -101,7 +101,34 @@
             android:name="com.oliveoa.view.EmployeeinfoActivity"
             android:exported="true"
             android:theme="@style/HomeTheme" />
-        <activity android:name="com.oliveoa.view.EditDutyInfoActivity"></activity>
+        <activity
+            android:name="com.oliveoa.view.EditDutyInfoActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.NullGoodsActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.AddGoodsActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.GoodsActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.EditGoodsActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.ChooseDutyActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.GoodsInfoActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" ></activity>
     </application>
 
 </manifest>
