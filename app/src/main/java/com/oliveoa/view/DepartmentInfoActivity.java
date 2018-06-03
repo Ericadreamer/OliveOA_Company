@@ -33,12 +33,16 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_department_info);
 
         departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        System.out.println(departmentInfo);
+        Log.e("departmentInfos",departmentInfo.toString());
         index = getIntent().getIntExtra("index",index);
         System.out.println(index);
 
         initView();
 
+      }
+
+    //初始化
+    public void initView() {
         ImageView back = (ImageView)findViewById(R.id.null_back);
         TextView edit = (TextView)findViewById(R.id.depart_edit);
         TextView add = (TextView)findViewById(R.id.duty_add);
@@ -67,10 +71,9 @@ public class DepartmentInfoActivity extends AppCompatActivity {
                 add();
             }
         });
-    }
 
-    //初始化
-    public void initView() {
+
+
         SharedPreferences pref = getSharedPreferences("department",MODE_PRIVATE);
         TextView tid = (TextView) findViewById(R.id.text_num);
         tid.setText(pref.getString("id["+index+"]",""));
@@ -81,15 +84,8 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         TextView tfax = (TextView) findViewById(R.id.text_fax);
         tfax.setText(pref.getString("fax["+index+"]",""));
         TextView tdpid = (TextView) findViewById(R.id.text_superior);
-        if(departmentInfo.get(index).getDpid()==null){
-            tdpid.setText("无");
-        }else {
-            for (int i = 0;i<departmentInfo.size();i++){
-                if(departmentInfo.get(index).getDpid().equals(departmentInfo.get(i).getDcid())){
-                    tdpid.setText(departmentInfo.get(i).getName());
-                }
-        }
-        }
+        tdpid.setText(pref.getString("dpname[" + index + "]", ""));
+
     }
 
     //编辑操作
