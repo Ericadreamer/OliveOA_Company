@@ -65,27 +65,27 @@ public class RedactDepartmentActivity extends AppCompatActivity {
 
     //初始化
     public void initView() {
-        SharedPreferences pref = getSharedPreferences("department",MODE_PRIVATE);
-        EditText tid = (EditText) findViewById(R.id.edit_num);
-        tid.setText(pref.getString("id["+index+"]",""));
-        TextView tname = (TextView) findViewById(R.id.text_name);
-        tname.setText(pref.getString("name["+index+"]",""));
-        TextView ttelephone = (TextView) findViewById(R.id.text_tel);
-        ttelephone.setText(pref.getString("telephone["+index+"]",""));
-        TextView tfax = (TextView) findViewById(R.id.text_fax);
-        tfax.setText(pref.getString("fax["+index+"]",""));
-        TextView tdpid = (TextView) findViewById(R.id.text_superior);
-        if(departmentInfo.get(index).getDpid()==null){
+        SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
+        tid = (EditText) findViewById(R.id.edit_num);
+        tid.setText(pref.getString("id[" + index + "]", ""));
+        tname = (EditText) findViewById(R.id.edit_name);
+        tname.setText(pref.getString("name[" + index + "]", ""));
+        ttelephone = (EditText) findViewById(R.id.edit_tel);
+        ttelephone.setText(pref.getString("telephone[" + index + "]", ""));
+        tfax = (EditText) findViewById(R.id.edit_fax);
+        tfax.setText(pref.getString("fax[" + index + "]", ""));
+        tdpid = (TextView) findViewById(R.id.text_superior);
+        if (departmentInfo.get(index).getDpid() == null) {
             tdpid.setText("无");
-        }else {
-            for (int i = 0;i<departmentInfo.size();i++){
-                if(departmentInfo.get(index).getDpid().equals(departmentInfo.get(i).getDcid())){
+        } else {
+            for (int i = 0; i < departmentInfo.size(); i++) {
+                if (departmentInfo.get(index).getDpid().equals(departmentInfo.get(i).getDcid())) {
                     tdpid.setText(departmentInfo.get(i).getName());
                 }
             }
+        }
     }
-
-    public void save() {
+    public void save(){
         departmentInfo.get(index).setId(tid.getText().toString().trim());
         departmentInfo.get(index).setName(tname.getText().toString().trim());
         departmentInfo.get(index).setTelephone(ttelephone.getText().toString().trim());
