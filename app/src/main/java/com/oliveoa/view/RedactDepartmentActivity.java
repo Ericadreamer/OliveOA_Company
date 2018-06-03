@@ -1,10 +1,8 @@
 package com.oliveoa.view;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Looper;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -43,6 +41,26 @@ public class RedactDepartmentActivity extends AppCompatActivity {
         departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
         index = getIntent().getIntExtra("index",index);
         initView();
+
+        ImageView back = (ImageView)findViewById(R.id.null_back);
+        ImageView save = (ImageView)findViewById(R.id.info_save);
+
+
+        back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentInfoActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        save.setOnClickListener(new View.OnClickListener() {   //点击保存键，提示保存是否成功
+            @Override
+            public void onClick(View view) {
+                save();
+            }
+        });
     }
 
     //初始化
@@ -56,72 +74,17 @@ public class RedactDepartmentActivity extends AppCompatActivity {
         ttelephone.setText(pref.getString("telephone[" + index + "]", ""));
         tfax = (EditText) findViewById(R.id.edit_fax);
         tfax.setText(pref.getString("fax[" + index + "]", ""));
-        tdpid = (TextView) findViewById(R.id.edit_superior);
-        tdpid.setText(pref.getString("dpname[" + index + "]", ""));
-
-        ImageView back = (ImageView)findViewById(R.id.null_back);
-        ImageView save = (ImageView)findViewById(R.id.info_save);
-        ImageView dpselect = (ImageView)findViewById(R.id.depart_select);
-
-        back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(RedactDepartmentActivity.this);
-                dialog.setTitle("提示");
-                dialog.setMessage("是否确定退出编辑,直接返回部门列表页面？");
-                dialog.setCancelable(false);
-                dialog.setNegativeButton("是", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentActivity.class);
-                        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-                        //intent.putExtra("index",index);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-                dialog.setPositiveButton("否", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
-                dialog.show();
+        tdpid = (TextView) findViewById(R.id.text_superior);
+        if (departmentInfo.get(index).getDpid() == null) {
+            tdpid.setText("无");
+        } else {
+            for (int i = 0; i < departmentInfo.size(); i++) {
+                if (departmentInfo.get(index).getDpid().equals(departmentInfo.get(i).getDcid())) {
+                    tdpid.setText(departmentInfo.get(i).getName());
+                }
             }
-        });
-
-        save.setOnClickListener(new View.OnClickListener() {   //点击保存键，提示保存是否成功
-            @Override
-            public void onClick(View view) {
-                save();
-            }
-        });
-
-        tdpid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                departmentSelect();
-            }
-        });
-        dpselect.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                departmentSelect();
-            }
-        });
-
+        }
     }
-
-    //
-    public void departmentSelect(){
-        Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentSelectActivity.class);
-        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-        intent.putExtra("index",index);
-        startActivity(intent);
-        finish();
-    }
-
-    //保存编辑
     public void save(){
         departmentInfo.get(index).setId(tid.getText().toString().trim());
         departmentInfo.get(index).setName(tname.getText().toString().trim());

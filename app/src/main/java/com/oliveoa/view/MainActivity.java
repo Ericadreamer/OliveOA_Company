@@ -258,7 +258,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
             //设置图标大小
            //公文查看
-            Resources res = getResources() ;
+           Resources res = getResources() ;
             RadioButton gwRB = (RadioButton)findViewById(R.id.fileicon) ;
             Drawable gwDrawable = res.getDrawable(R.drawable.liebiao) ;
             gwDrawable.setBounds(0,0,120,120);//这里就可以控制drawable资源的大小了

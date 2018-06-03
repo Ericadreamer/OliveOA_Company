@@ -38,7 +38,8 @@
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical" />
 
-            <View
+            <ImageView
+                android:id="@+id/info_save"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"

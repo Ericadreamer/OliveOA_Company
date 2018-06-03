@@ -36,7 +36,7 @@ public class DepartmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_department);
 
         departmentInfos = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        Log.e("departmentInfos",departmentInfos.toString());
+        System.out.println(departmentInfos);
 
         initView();
         saveDepartmentinfo();
@@ -166,23 +166,6 @@ public class DepartmentActivity extends AppCompatActivity {
         editor.apply();
         }
         Log.e(TAG, "" + departmentInfos.toString());
-        //存储上级部门名称
-        for (int i = 0;i<departmentInfos.size();i++){
-            System.out.println("department["+i+"]"+departmentInfos.get(i).getDpid());
-            for (int j = 0 ;j<departmentInfos.size();j++){
-                System.out.println("department["+j+"]"+departmentInfos.get(j).getDcid());
-                if (!(departmentInfos.get(i).getDpid()==null)){
-                        if (departmentInfos.get(i).getDpid().equals(departmentInfos.get(j).getDcid())) {
-                            editor.putString("dpname[" + i + "]", departmentInfos.get(j).getName());
-                            editor.apply();
-                            System.out.println("dpname[" + i + "]" + departmentInfos.get(j).getName());
-                    }
-                } else {
-                    editor.putString("dpname["+i+"]","无");
-                    editor.apply();
-                }
-            }
-        }
     }
 
     @Override
