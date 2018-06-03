@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
@@ -16,6 +17,7 @@ import java.util.TimerTask;
 public class GoodsInfoActivity extends AppCompatActivity {
 
     private ImageView back,next;
+    private TextView tname,tquantity,tdescription,tduty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,10 @@ public class GoodsInfoActivity extends AppCompatActivity {
     public void initView() {
         back = (ImageView)findViewById(R.id.back);
         next = (ImageView)findViewById(R.id.next);
+        tname = (TextView)findViewById(R.id.goods_name);
+        tquantity = (TextView)findViewById(R.id.goods_quantity);
+        tdescription = (TextView)findViewById(R.id.goods_description);
+        tduty = (TextView)findViewById(R.id.show);
 
         //点击事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页

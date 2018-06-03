@@ -40,11 +40,9 @@ public class EditGoodsActivity extends AppCompatActivity {
         tname = (EditText) findViewById(R.id.edit_goods_name);
         tquantity = (TextView) findViewById(R.id.quantity);
 
-        //LinesEditView linesEditView = new LinesEditView();
-//        tcontent =
-//        String test = tcontent.getContext().toString().trim();
-//        Log.d("test123",test);
-
+        LinesEditView linesEditView = new LinesEditView(EditGoodsActivity.this);
+        String test = linesEditView.getContentText();
+        
         //点击事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
