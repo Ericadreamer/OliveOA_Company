@@ -60,4 +60,6 @@ public class AddGoodsActivity extends AppCompatActivity {
 
     }
 
+
+
 }

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import com.example.erica.oliveoa_company.R;
 public class EditGoodsActivity extends AppCompatActivity {
 
-    private ImageView back,save;
+    private ImageView back,save,next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class EditGoodsActivity extends AppCompatActivity {
 
         back = (ImageView) findViewById(R.id.back);
         save = (ImageView) findViewById(R.id.save);
-
+        next = (ImageView)findViewById(R.id.next);
 
         //点击事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
@@ -37,6 +37,15 @@ public class EditGoodsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 save();
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EditGoodsActivity.this, ChooseDutyActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
 

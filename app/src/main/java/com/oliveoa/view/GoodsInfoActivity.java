@@ -10,7 +10,7 @@ import com.example.erica.oliveoa_company.R;
 
 public class GoodsInfoActivity extends AppCompatActivity {
 
-    private ImageView back;
+    private ImageView back,next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +22,22 @@ public class GoodsInfoActivity extends AppCompatActivity {
 
     public void initView() {
         back = (ImageView)findViewById(R.id.back);
+        next = (ImageView)findViewById(R.id.next);
 
         //点击事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(GoodsInfoActivity.this, GoodsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        next.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GoodsInfoActivity.this, ChooseDutyActivity.class);
                 startActivity(intent);
                 finish();
             }
