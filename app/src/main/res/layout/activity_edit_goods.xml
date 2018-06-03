@@ -76,7 +76,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/duty_name"
+                            android:id="@+id/goods_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -86,7 +86,7 @@
                             android:text="物品名称" />
 
                         <EditText
-                            android:id="@+id/edit_duty_name"
+                            android:id="@+id/edit_goods_name"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginRight="20dp"
@@ -109,7 +109,7 @@
                         android:layout_marginTop="1dp">
 
                         <TextView
-                            android:id="@+id/department_name"
+                            android:id="@+id/goods_quantity"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
@@ -119,7 +119,7 @@
                             android:text="物品总量" />
 
                         <TextView
-                            android:id="@+id/edit_name"
+                            android:id="@+id/quantity"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginRight="20dp"
@@ -156,7 +156,8 @@
                                 android:textSize="@dimen/activity_companyinfo_text"
                                 android:text="物品描述" />
 
-                            <com.oliveoa.view.LinesEditView
+                            <com.oliveoa.util.LinesEditView
+                                android:id="@+id/description"
                                 android:layout_margin="10dp"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
@@ -213,16 +214,29 @@
                             android:textSize="@dimen/activity_companyinfo_text"
                             android:text="管理岗位" />
 
+                        <TextView
+                            android:id="@+id/show"
+                            android:layout_width="@dimen/dp_220"
+                            android:layout_height="match_parent"
+                            android:layout_marginRight="@dimen/dp_15"
+                            android:layout_weight="1"
+                            android:background="@null"
+                            android:gravity="center_vertical|end"
+                            android:singleLine="true"
+                            android:textColor="@color/textcolor"
+                            android:textColorHint="#898989"
+                            android:textSize="@dimen/activity_companyinfo_text"
+                            android:text="技术部主管"/>
+
+
                         <ImageView
                             android:id="@+id/next"
-                            android:layout_width="0dp"
-                            android:layout_height="@dimen/dp_18"
-                            android:layout_marginLeft="20dp"
-                            android:src="@drawable/ic_next"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical|end"
-                            android:scaleType="fitEnd"
-                            android:layout_marginRight="@dimen/dp_20"/>
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="@dimen/dp_20"
+                            android:background="@null"
+                            android:src="@drawable/ic_next" />
                     </LinearLayout>
 
                 </LinearLayout>

@@ -130,7 +130,7 @@
             android:exported="true"
             android:theme="@style/HomeTheme" />
         <activity android:name="com.oliveoa.view.DepartmentSelectActivity" />
-        <activity android:name="com.oliveoa.view.DutySelectActivity"></activity>
+        <activity android:name="com.oliveoa.view.DutySelectActivity" />
     </application>
 
 </manifest>
