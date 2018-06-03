@@ -19,6 +19,7 @@ import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,15 +28,18 @@ import static com.oliveoa.util.Validator.isMobile;
 
 public class RedactDepartmentActivity extends AppCompatActivity {
 
-    private DepartmentInfo departmentInfo;
-    private EditText tid,tname,ttelephone,tfax,tdpid;
+    private ArrayList<DepartmentInfo> departmentInfo;
+    private String TAG = this.getClass().getSimpleName();
+    private EditText tid,tname,ttelephone,tfax;
+    private TextView tdpid;
+    private int index;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_redact_department);
 
-        departmentInfo = getIntent().getParcelableExtra("ParcelableDepartment");
-        // Log.d("name",companyInfo.getUsername());
+        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
+        index = getIntent().getIntExtra("index",index);
         initView();
 
         ImageView back = (ImageView)findViewById(R.id.null_back);
@@ -61,32 +65,38 @@ public class RedactDepartmentActivity extends AppCompatActivity {
 
     //初始化
     public void initView() {
-        if(departmentInfo !=null){
-            TextView tid = (TextView) findViewById(R.id.text_num);
-            tid.setText(departmentInfo.getId());
-            TextView tname = (TextView) findViewById(R.id.text_name);
-            tname.setText(departmentInfo.getName());
-            TextView ttelephone = (TextView) findViewById(R.id.text_tel);
-            ttelephone.setText(departmentInfo.getTelephone());
-            TextView tfax = (TextView) findViewById(R.id.text_fax);
-            tfax.setText(departmentInfo.getFax());
-            TextView tdpid = (TextView) findViewById(R.id.text_superior);
-            tdpid.setText(departmentInfo.getDpid());
-        }
+        SharedPreferences pref = getSharedPreferences("department",MODE_PRIVATE);
+        EditText tid = (EditText) findViewById(R.id.edit_num);
+        tid.setText(pref.getString("id["+index+"]",""));
+        TextView tname = (TextView) findViewById(R.id.text_name);
+        tname.setText(pref.getString("name["+index+"]",""));
+        TextView ttelephone = (TextView) findViewById(R.id.text_tel);
+        ttelephone.setText(pref.getString("telephone["+index+"]",""));
+        TextView tfax = (TextView) findViewById(R.id.text_fax);
+        tfax.setText(pref.getString("fax["+index+"]",""));
+        TextView tdpid = (TextView) findViewById(R.id.text_superior);
+        if(departmentInfo.get(index).getDpid()==null){
+            tdpid.setText("无");
+        }else {
+            for (int i = 0;i<departmentInfo.size();i++){
+                if(departmentInfo.get(index).getDpid().equals(departmentInfo.get(i).getDcid())){
+                    tdpid.setText(departmentInfo.get(i).getName());
+                }
+            }
     }
 
     public void save() {
-        departmentInfo.setId(tid.getText().toString().trim());
-        departmentInfo.setName(tname.getText().toString().trim());
-        departmentInfo.setTelephone(ttelephone.getText().toString().trim());
-        departmentInfo.setFax(tfax.getText().toString().trim());
-        departmentInfo.setDpid(tdpid.getText().toString().trim());
+        departmentInfo.get(index).setId(tid.getText().toString().trim());
+        departmentInfo.get(index).setName(tname.getText().toString().trim());
+        departmentInfo.get(index).setTelephone(ttelephone.getText().toString().trim());
+        departmentInfo.get(index).setFax(tfax.getText().toString().trim());
+        departmentInfo.get(index).setDpid(tdpid.getText().toString().trim());
 
-        if (TextUtils.isEmpty(departmentInfo.getId())||TextUtils.isEmpty(departmentInfo.getName())||TextUtils.isEmpty(departmentInfo.getTelephone())||TextUtils.isEmpty(departmentInfo.getFax())||TextUtils.isEmpty(departmentInfo.getDpid())) {
+        if (TextUtils.isEmpty(departmentInfo.get(index).getId())||TextUtils.isEmpty(departmentInfo.get(index).getName())||TextUtils.isEmpty(departmentInfo.get(index).getTelephone())||TextUtils.isEmpty(departmentInfo.get(index).getFax())) {
             Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
-        } else if(!isMobile(departmentInfo.getTelephone())){
+        } else if(!isMobile(departmentInfo.get(index).getTelephone())){
             Toast.makeText(getApplicationContext(), "公司电话格式输入错误！请以手机格式重新输入", Toast.LENGTH_SHORT).show();
-        } else if(!isFixPhone(departmentInfo.getFax())){
+        } else if(!isFixPhone(departmentInfo.get(index).getFax())){
             Toast.makeText(getApplicationContext(), "传真机格式输入错误！请以固话格式重新输入", Toast.LENGTH_SHORT).show();
         } else {
             new Thread(new Runnable() {
@@ -96,7 +106,7 @@ public class RedactDepartmentActivity extends AppCompatActivity {
                     String s = pref.getString("sessionid", "");
 
                     DepartmentInfoService departmentInfoService = new DepartmentInfoService();
-                    UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = departmentInfoService.updatedepartmentinfo(s, departmentInfo);
+                    UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = departmentInfoService.updatedepartmentinfo(s, departmentInfo.get(index));
                     Log.d("update", updateDepartmentInfoJsonBean.getMsg() + "");
 
                     if (updateDepartmentInfoJsonBean.getStatus() == 0) {
@@ -114,6 +124,23 @@ public class RedactDepartmentActivity extends AppCompatActivity {
         }
 
     }
+
+    /**
+     *  数据存储到SharedPreferences文件中
+     *
+     */
+    public void saveDepartmentinfo(){
+        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
+        for (int i = 0;i<departmentInfo.size();i++){
+            editor.putString("id["+index+"]",departmentInfo.get(index).getId());
+            editor.putString("name["+index+"]",departmentInfo.get(index).getName());
+            editor.putString("telephone["+index+"]",departmentInfo.get(index).getTelephone());
+            editor.putString("fax["+index+"]",departmentInfo.get(index).getFax());
+            editor.apply();
+        }
+        Log.e(TAG, "" + departmentInfo.toString());
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

@@ -2,8 +2,10 @@ package com.oliveoa.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +17,7 @@ import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,16 +25,17 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
     private ArrayList<DepartmentInfo> departmentInfo;
     private DutyInfo dutyInfo;
-    private String index;
+    private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_info);
 
-        //departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        //System.out.println(departmentInfo);
-
+        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
+        System.out.println(departmentInfo);
+        index = getIntent().getIntExtra("index",index);
+        System.out.println(index);
 
         initView();
 
@@ -44,6 +48,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DepartmentInfoActivity.this, DepartmentActivity.class);
+                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
                 startActivity(intent);
                 finish();
             }
@@ -66,23 +71,32 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
     //初始化
     public void initView() {
-//        if(departmentInfo != null){
-//            TextView tid = (TextView) findViewById(R.id.text_num);
-//            tid.setText(departmentInfo.getId());
-//            TextView tname = (TextView) findViewById(R.id.text_name);
-//            tname.setText(departmentInfo.getName());
-//            TextView ttelephone = (TextView) findViewById(R.id.text_tel);
-//            ttelephone.setText(departmentInfo.getTelephone());
-//            TextView tfax = (TextView) findViewById(R.id.text_fax);
-//            tfax.setText(departmentInfo.getFax());
-//            TextView tdpid = (TextView) findViewById(R.id.text_superior);
-//            tdpid.setText(departmentInfo.getDpid());
-//        }
+        SharedPreferences pref = getSharedPreferences("department",MODE_PRIVATE);
+        TextView tid = (TextView) findViewById(R.id.text_num);
+        tid.setText(pref.getString("id["+index+"]",""));
+        TextView tname = (TextView) findViewById(R.id.text_name);
+        tname.setText(pref.getString("name["+index+"]",""));
+        TextView ttelephone = (TextView) findViewById(R.id.text_tel);
+        ttelephone.setText(pref.getString("telephone["+index+"]",""));
+        TextView tfax = (TextView) findViewById(R.id.text_fax);
+        tfax.setText(pref.getString("fax["+index+"]",""));
+        TextView tdpid = (TextView) findViewById(R.id.text_superior);
+        if(departmentInfo.get(index).getDpid()==null){
+            tdpid.setText("无");
+        }else {
+            for (int i = 0;i<departmentInfo.size();i++){
+                if(departmentInfo.get(index).getDpid().equals(departmentInfo.get(i).getDcid())){
+                    tdpid.setText(departmentInfo.get(i).getName());
+                }
+        }
+        }
     }
 
+    //编辑操作
     public void edit() {
         Intent intent = new Intent(DepartmentInfoActivity.this, RedactDepartmentActivity.class);
         intent.putExtra("ParcelableDepartment",departmentInfo);
+        intent.putExtra("index",index);
         startActivity(intent);
         finish();
 

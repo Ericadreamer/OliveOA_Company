@@ -48,13 +48,13 @@
     </LinearLayout>
         <!-- 以下都是侧滑菜单的内容依序排列 -->
         <Button
-            android:id="@+id/btnEdit"
+            android:id="@+id/btnInfo"
             android:layout_width="60dp"
             android:layout_height="match_parent"
             android:background="#d9dee4"
-            android:text="编辑"
-            android:textColor="@android:color/white"
-            android:onClick="DepartmentEdit"/>
+            android:text="详情"
+            android:textColor="@android:color/white"/>
+            <!--android:onClick="DepartmentEdit"/>-->
 
         <Button
             android:id="@+id/btnDelete"
@@ -62,7 +62,7 @@
             android:layout_height="match_parent"
             android:background="@color/orange_deep"
             android:text="删除"
-            android:textColor="@android:color/white"
-            android:onClick="DepartmentDelete"/>
+            android:textColor="@android:color/white"/>
+            <!--android:onClick="DepartmentDelete"/>-->
 
 </com.mcxtzhang.swipemenulib.SwipeMenuLayout>

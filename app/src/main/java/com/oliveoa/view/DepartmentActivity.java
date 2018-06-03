@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ public class DepartmentActivity extends AppCompatActivity {
 
     private ArrayList<DepartmentInfo> departmentInfos;
     private ImageView back,add;
-    private LinearLayout check,depart_list;
+//    private LinearLayout check,depart_list;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
     private LinearLayout addDPlistView;
@@ -44,7 +45,7 @@ public class DepartmentActivity extends AppCompatActivity {
     public void initView(){
         back = (ImageView)findViewById(R.id.null_back);
         add = (ImageView)findViewById(R.id.null_add);
-        depart_list =(LinearLayout)findViewById(R.id.depart_list);
+        //depart_list =(LinearLayout)findViewById(R.id.depart_list);
         addDPlistView = (LinearLayout)findViewById(R.id.depart_list);
 
         //默认添加一个Item
@@ -70,19 +71,48 @@ public class DepartmentActivity extends AppCompatActivity {
         });
     }
 
-    //跳转详情界面
-    public void DepartmentEdit(View view){
-        tvname = (TextView)findViewById(R.id.dname);
-        String dname = tvname.getText().toString().trim();
-        Log.i("dname=",dname);
-        Intent intent = new Intent(DepartmentActivity.this, DepartmentInfoActivity.class);
-        intent.putExtra("dname",dname);
-        startActivity(intent);
-        finish();
-    }
-    //执行删除操作
-    public void DepartmentDelete(View view){
-        Toast.makeText(this,"你点击了删除", Toast.LENGTH_SHORT).show();
+    /**
+     * Item排序
+     */
+    private void sortHotelViewItem() {
+        //获取LinearLayout里面所有的view
+        for (int i = 0; i < addDPlistView.getChildCount(); i++) {
+            final View childAt = addDPlistView.getChildAt(i);
+            //删除操作
+            final Button btn_remove = (Button) childAt.findViewById(R.id.btnDelete);
+            btn_remove.setTag("remove");//设置删除标记
+            btn_remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //从LinearLayout容器中删除当前点击到的ViewItem
+                    addDPlistView.removeView(childAt);
+                }
+
+            });
+            //转到详情页面
+            Button btn_info = (Button) childAt.findViewById(R.id.btnInfo);
+            btn_info.setTag("edit");
+            btn_info.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tvname = (TextView)childAt.findViewById(R.id.dname);
+                    int i ;
+                    String dname = tvname.getText().toString().trim();
+                    Log.i("dname=",dname);
+                    for (i=0;i<departmentInfos.size();i++) {
+                        if(dname.equals(departmentInfos.get(i).getName())){
+                            break;
+                        }
+
+                    }
+                    Intent intent = new Intent(DepartmentActivity.this, DepartmentInfoActivity.class);
+                    intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
+                    intent.putExtra("index",i);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
     }
 
     //添加ViewItem
@@ -96,8 +126,9 @@ public class DepartmentActivity extends AppCompatActivity {
                 View hotelEvaluateView = View.inflate(this, R.layout.activity_department_listitem, null);
                 addDPlistView.addView(hotelEvaluateView);
                 InitDataViewItem();
-            }
 
+            }
+            sortHotelViewItem();
 
         }
     }
@@ -124,7 +155,7 @@ public class DepartmentActivity extends AppCompatActivity {
      *
      */
     public void saveDepartmentinfo(){
-        SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
         for (int i = 0;i<departmentInfos.size();i++){
         editor.putString("dcid["+i+"]",departmentInfos.get(i).getDcid());
         editor.putString("dpid["+i+"]",departmentInfos.get(i).getDpid());

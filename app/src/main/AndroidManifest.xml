@@ -128,7 +128,9 @@
         <activity
             android:name="com.oliveoa.view.GoodsInfoActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme" ></activity>
+            android:theme="@style/HomeTheme" />
+        <activity android:name="com.oliveoa.view.DepartmentSelectActivity" />
+        <activity android:name="com.oliveoa.view.DutySelectActivity"></activity>
     </application>
 
 </manifest>
