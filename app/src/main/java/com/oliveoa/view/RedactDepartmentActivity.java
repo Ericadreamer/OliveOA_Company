@@ -114,6 +114,7 @@ public class RedactDepartmentActivity extends AppCompatActivity {
 
     //
     public void departmentSelect(){
+        saveDepartmentinfo();
         Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentSelectActivity.class);
         intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
         intent.putExtra("index",index);
@@ -123,11 +124,14 @@ public class RedactDepartmentActivity extends AppCompatActivity {
 
     //保存编辑
     public void save(){
+        SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
         departmentInfo.get(index).setId(tid.getText().toString().trim());
         departmentInfo.get(index).setName(tname.getText().toString().trim());
         departmentInfo.get(index).setTelephone(ttelephone.getText().toString().trim());
         departmentInfo.get(index).setFax(tfax.getText().toString().trim());
-        departmentInfo.get(index).setDpid(tdpid.getText().toString().trim());
+        departmentInfo.get(index).setDpid(pref.getString("dpid["+index+"]",""));
+
+        Log.e("departmentInfo111",departmentInfo.get(index).toString());
 
         if (TextUtils.isEmpty(departmentInfo.get(index).getId())||TextUtils.isEmpty(departmentInfo.get(index).getName())||TextUtils.isEmpty(departmentInfo.get(index).getTelephone())||TextUtils.isEmpty(departmentInfo.get(index).getFax())) {
             Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
@@ -169,10 +173,10 @@ public class RedactDepartmentActivity extends AppCompatActivity {
     public void saveDepartmentinfo(){
         SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
         for (int i = 0;i<departmentInfo.size();i++){
-            editor.putString("id["+index+"]",departmentInfo.get(index).getId());
-            editor.putString("name["+index+"]",departmentInfo.get(index).getName());
-            editor.putString("telephone["+index+"]",departmentInfo.get(index).getTelephone());
-            editor.putString("fax["+index+"]",departmentInfo.get(index).getFax());
+            editor.putString("id["+index+"]",tid.getText().toString().trim());
+            editor.putString("name["+index+"]",tname.getText().toString().trim());
+            editor.putString("telephone["+index+"]",ttelephone.getText().toString().trim());
+            editor.putString("fax["+index+"]",tfax.getText().toString().trim());
             editor.apply();
         }
         Log.e(TAG, "" + departmentInfo.toString());

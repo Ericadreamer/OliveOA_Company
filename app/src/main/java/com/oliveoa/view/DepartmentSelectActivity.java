@@ -60,6 +60,10 @@ public class DepartmentSelectActivity extends AppCompatActivity {
                 dialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
+                        editor.putString("dpname[" + index + "]", "无");
+                        editor.putString("dpid[" + index + "]", null);
+                        editor.apply();
                         Intent intent = new Intent(DepartmentSelectActivity.this, RedactDepartmentActivity.class);
                         intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
                         intent.putExtra("index",index);
@@ -92,14 +96,25 @@ public class DepartmentSelectActivity extends AppCompatActivity {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if()
-                    Toast.makeText(getApplicationContext(),"你点击了"+tname.getText().toString(), Toast.LENGTH_SHORT).show();
+                    if(tname.getText().toString().equals(departmentInfo.get(index).getName())){
+                        Toast.makeText(getApplicationContext(),"请选择除正在编辑的部门以外的其他部门", Toast.LENGTH_SHORT).show();
+                    }else{
+                        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
+                        editor.putString("dpname[" + index + "]", tname.getText().toString());
+                        for (int i=0;i<departmentInfo.size();i++){
+                            if(tname.getText().toString().equals(departmentInfo.get(i).getName())){
+                                editor.putString("dpid["+index+"]",departmentInfo.get(i).getDcid());
+                                break;
+                            }
+                        }
+                        editor.apply();
 
-//                    Intent intent = new Intent(DepartmentSelectActivity.this, DepartmentInfoActivity.class);
-//                   intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-//                   intent.putExtra("index",index);
-//                   startActivity(intent);
-//                   finish();
+                        Intent intent = new Intent(DepartmentSelectActivity.this, RedactDepartmentActivity.class);
+                        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
+                        intent.putExtra("index",index);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
 
             });

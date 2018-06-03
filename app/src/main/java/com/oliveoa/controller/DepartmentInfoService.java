@@ -65,6 +65,7 @@ public class DepartmentInfoService {
             Log.i("info_Login","知道了session："+s);
             Log.d("updateinfo",department.toString());
             FormBody body = new FormBody.Builder()
+                    .add("dcid",department.getDcid())
                     .add("id",department.getId())
                     .add("name",department.getName())
                     .add("telephone",department.getTelephone())
