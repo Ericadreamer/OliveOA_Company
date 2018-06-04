@@ -24,7 +24,6 @@ public class DepartmentActivity extends AppCompatActivity {
 
     private ArrayList<DepartmentInfo> departmentInfos;
     private ImageView back,add;
-//    private LinearLayout check,depart_list;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
     private LinearLayout addDPlistView;
@@ -65,6 +64,8 @@ public class DepartmentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DepartmentActivity.this, CreateDepartmentActivity.class);
+                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
+                intent.putExtra("index",departmentInfos.size());
                 startActivity(intent);
                 finish();
             }
@@ -168,9 +169,9 @@ public class DepartmentActivity extends AppCompatActivity {
         Log.e(TAG, "" + departmentInfos.toString());
         //存储上级部门名称
         for (int i = 0;i<departmentInfos.size();i++){
-            System.out.println("department["+i+"]"+departmentInfos.get(i).getDpid());
+            System.out.println("dpid["+i+"]"+departmentInfos.get(i).getDpid());
             for (int j = 0 ;j<departmentInfos.size();j++){
-                System.out.println("department["+j+"]"+departmentInfos.get(j).getDcid());
+                System.out.println("dcid["+j+"]"+departmentInfos.get(j).getDcid());
                 if (!(departmentInfos.get(i).getDpid()==null)){
                         if (departmentInfos.get(i).getDpid().equals(departmentInfos.get(j).getDcid())) {
                             editor.putString("dpname[" + i + "]", departmentInfos.get(j).getName());

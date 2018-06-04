@@ -207,19 +207,27 @@
                 android:textSize="@dimen/activity_companyinfo_text"
                 android:text="上级部门" />
 
-            <EditText
+            <TextView
                 android:id="@+id/edit_superior"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_marginRight="20dp"
                 android:layout_weight="1"
                 android:background="@null"
                 android:gravity="center_vertical|end"
                 android:singleLine="true"
+                android:clickable="true"
+                android:text="无"
                 android:textColor="@color/textcolor"
                 android:textColorHint="#898989"
-                android:textSize="@dimen/activity_companyinfo_text"
-                android:hint="请输入上级部门"/>
+                android:textSize="@dimen/activity_companyinfo_text" />
+            <ImageView
+                android:id="@+id/depart_select"
+                android:layout_width="@dimen/dp_16"
+                android:layout_height="@dimen/dp_16"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginRight="@dimen/dp_20"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_next"/>
         </LinearLayout>
         </LinearLayout>
 

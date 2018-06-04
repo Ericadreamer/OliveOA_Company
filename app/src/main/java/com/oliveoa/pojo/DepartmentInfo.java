@@ -54,6 +54,10 @@ public class DepartmentInfo implements Parcelable {
         }
     };
 
+    public DepartmentInfo() {
+
+    }
+
     @Override
     public int describeContents() {
         return 0;
