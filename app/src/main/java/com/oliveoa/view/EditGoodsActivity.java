@@ -42,7 +42,7 @@ public class EditGoodsActivity extends AppCompatActivity {
 
         LinesEditView linesEditView = new LinesEditView(EditGoodsActivity.this);
         String test = linesEditView.getContentText();
-        
+
         //点击事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override

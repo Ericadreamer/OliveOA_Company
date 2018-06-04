@@ -3,19 +3,31 @@ package com.oliveoa.view;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.pojo.Goods;
+import com.oliveoa.util.GoodsAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
+
 
 public class GoodsActivity extends AppCompatActivity {
 
     private ImageView back;
+    private List<Goods> goodsList = new ArrayList<>();
+    private GoodsAdapter adapter;
+
+    private Goods[] goods = {new Goods("打印机","打印公司文件")};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +35,22 @@ public class GoodsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_goods);
 
         initView();
+
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
+        recyclerView.setLayoutManager(layoutManager);
+        adapter = new GoodsAdapter(goodsList);
+        recyclerView.setAdapter(adapter);
+
+    }
+
+    private void initGoods() {
+        goodsList.clear();
+        for (int i = 0; i < 50; i++) {
+            Random random = new Random();
+            int index = random.nextInt(goods.length);
+            goodsList.add(goods[index]);
+        }
     }
 
     public void initView() {
