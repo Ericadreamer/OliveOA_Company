@@ -70,7 +70,11 @@ public class CreateDepartmentActivity extends AppCompatActivity {
 
         SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
         //tid.setText(pref.getString(""));
-        tdpid.setText("无");
+        tid.setText(pref.getString("id["+index+"]",""));
+        tname.setText(pref.getString("name["+index+"]",""));
+        ttelephone.setText(pref.getString("telephone["+index+"]",""));
+        tfax.setText(pref.getString("fax["+index+"]",""));
+        tdpid.setText(pref.getString("dpname["+index+"]",""));
 
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
@@ -158,7 +162,7 @@ public class CreateDepartmentActivity extends AppCompatActivity {
                     Log.d("checkid", isexist.getMsg() + "");
 
                     if(isexist.getStatus()==0) {
-                        UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = departmentInfoService.updatedepartmentinfo(s, dp);
+                        UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = departmentInfoService.adddepartment(s, dp);
                         Log.d("update", updateDepartmentInfoJsonBean.getMsg() + "");
 
                         if (updateDepartmentInfoJsonBean.getStatus() == 0) {
@@ -166,6 +170,7 @@ public class CreateDepartmentActivity extends AppCompatActivity {
                             Log.e("department_add",departmentInfo.toString());
                             Looper.prepare();
                             Toast.makeText(getApplicationContext(), "创建成功！点击返回键返回部门列表", Toast.LENGTH_SHORT).show();
+                            index++;
                             Looper.loop();
                         } else {
                             Looper.prepare();

@@ -66,6 +66,7 @@ public class DepartmentActivity extends AppCompatActivity {
                 Intent intent = new Intent(DepartmentActivity.this, CreateDepartmentActivity.class);
                 intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
                 intent.putExtra("index",departmentInfos.size());
+                setAddDepartmentinfo(departmentInfos.size());
                 startActivity(intent);
                 finish();
             }
@@ -96,12 +97,14 @@ public class DepartmentActivity extends AppCompatActivity {
             btn_info.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    tvname = (TextView)childAt.findViewById(R.id.dname);
+                    tvid = (TextView)childAt.findViewById(R.id.did);
                     int i ;
-                    String dname = tvname.getText().toString().trim();
-                    Log.i("dname=",dname);
+                    String id = tvid.getText().toString().trim();
+                    id = id.substring(3);
+
+                    Log.i("id=",id);
                     for (i=0;i<departmentInfos.size();i++) {
-                        if(dname.equals(departmentInfos.get(i).getName())){
+                        if(id.equals(departmentInfos.get(i).getId())){
                             break;
                         }
 
@@ -150,9 +153,26 @@ public class DepartmentActivity extends AppCompatActivity {
         Log.e(TAG, "部门名称：" + tvname.getText().toString() + "-----部门编号："
                 + tvid.getText().toString());
     }
+    /**
+     *  新建部门数组空值存储到SharedPreferences文件中
+     *
+     */
+    public void setAddDepartmentinfo(int v){
+        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
+            editor.putString("dcid["+v+"]","");
+            editor.putString("dpid["+v+"]","");
+            editor.putString("id["+v+"]","");
+            editor.putString("name["+v+"]","");
+            editor.putString("telephone["+v+"]","");
+            editor.putString("fax["+v+"]","");
+            editor.putString("dpname[" +v+ "]","无");
+            editor.apply();
+
+    }
+
 
     /**
-     *  数据存储到SharedPreferences文件中
+     *  部门所有数据存储到SharedPreferences文件中
      *
      */
     public void saveDepartmentinfo(){

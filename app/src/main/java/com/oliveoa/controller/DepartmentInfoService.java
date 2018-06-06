@@ -149,6 +149,10 @@ public class DepartmentInfoService {
             Log.d("updateinfo",department.toString());
             FormBody body = new FormBody.Builder()
                     .add("id",department.getId())
+                    .add("name",department.getName())
+                    .add("telephone",department.getTelephone())
+                    .add("fax",department.getFax())
+                    .add("dpid",department.getDpid())
                     .build();
             Log.d("updateinfobody",body.toString());
 
