@@ -50,6 +50,10 @@ public class DutyInfo implements Parcelable {
         }
     };
 
+    public DutyInfo() {
+
+    }
+
     @Override
     public int describeContents() {
         return 0;

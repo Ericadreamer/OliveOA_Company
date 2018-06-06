@@ -78,7 +78,7 @@
             android:exported="true"
             android:theme="@style/EmployeeTheme" />
         <activity
-            android:name="com.oliveoa.view.RedactDutyActivity"
+            android:name="com.oliveoa.view.DutyInfoActivity"
             android:exported="true"
             android:theme="@style/HomeTheme" />
         <activity

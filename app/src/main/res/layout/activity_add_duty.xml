@@ -122,7 +122,8 @@
                 android:textColor="@color/textcolor"
                 android:textColorHint="#898989"
                 android:textSize="@dimen/activity_companyinfo_text"
-                android:hint="请输入限制人数"/>
+                android:hint="请输入限制人数"
+                android:inputType="number"/>
         </LinearLayout>
 
     </LinearLayout>

@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
@@ -14,12 +13,12 @@ import com.example.erica.oliveoa_company.R;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class RedactDutyActivity extends AppCompatActivity {
+public class DutyInfoActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_redact_duty);
+        setContentView(R.layout.activity_dutyinfo);
 
         ImageView back = (ImageView)findViewById(R.id.null_back);
 
@@ -28,7 +27,7 @@ public class RedactDutyActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RedactDutyActivity.this, DepartmentInfoActivity.class);
+                Intent intent = new Intent(DutyInfoActivity.this, DepartmentInfoActivity.class);
                 startActivity(intent);
                 finish();
             }

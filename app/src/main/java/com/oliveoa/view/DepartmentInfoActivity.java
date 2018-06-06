@@ -8,7 +8,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,8 +26,12 @@ import java.util.TimerTask;
 public class DepartmentInfoActivity extends AppCompatActivity {
 
     private ArrayList<DepartmentInfo> departmentInfo;
-    private DutyInfo dutyInfo;
-    private int index;
+    private ArrayList<DutyInfo> dutyInfo;
+    private int index,dutynum;
+    private String TAG = this.getClass().getSimpleName();
+    //装在所有动态添加的Item的LinearLayout容器
+    private LinearLayout addDutylistView;
+    private TextView tname,tnum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,9 +39,14 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_department_info);
 
         departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        Log.e("departmentInfo",departmentInfo.toString());
+        Log.e("departmentInfos",departmentInfo.toString());
         index = getIntent().getIntExtra("index",index);
-        System.out.println(index);
+        Log.e("dpindex", String.valueOf(index));
+
+        dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
+        Log.e("dutyInfos",dutyInfo.toString());
+        dutynum = getIntent().getIntExtra("dutynum",dutynum);
+        Log.e("dtindex", String.valueOf(dutynum));
 
         initView();
 
@@ -46,13 +57,18 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         ImageView back = (ImageView)findViewById(R.id.null_back);
         TextView edit = (TextView)findViewById(R.id.depart_edit);
         TextView add = (TextView)findViewById(R.id.duty_add);
+        addDutylistView = (LinearLayout)findViewById(R.id.duty_list);
 
+        //默认添加一个Item
+        addViewItem(null);
 
+       //监听事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DepartmentInfoActivity.this, DepartmentActivity.class);
                 intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
+                intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
                 startActivity(intent);
                 finish();
             }
@@ -104,6 +120,140 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
 
+    }
+
+    /**
+     * Item排序
+     */
+    private void sortHotelViewItem() {
+        //获取LinearLayout里面所有的view
+        for (int i = 0; i < addDutylistView.getChildCount(); i++) {
+            final View childAt = addDutylistView.getChildAt(i);
+            //删除操作
+            final Button btn_remove = (Button) childAt.findViewById(R.id.btnDelete);
+            btn_remove.setTag("remove");//设置删除标记
+            btn_remove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //从LinearLayout容器中删除当前点击到的ViewItem
+                    addDutylistView.removeView(childAt);
+                }
+
+            });
+            //转到详情页面
+            Button btn_info = (Button) childAt.findViewById(R.id.btnInfo);
+            btn_info.setTag("edit");
+            btn_info.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    tname = (TextView)childAt.findViewById(R.id.duty_name);
+                    int i ;
+                    String dutyname = tname.getText().toString().trim();
+
+                    Log.i("dutyname=",dutyname);
+                    for (i=0;i<dutyInfo.size();i++) {
+                        if(dutyname.equals(dutyInfo.get(i).getName())){
+                            break;
+                        }
+
+                    }
+                    Intent intent = new Intent(DepartmentInfoActivity.this, AddDutyActivity.class);
+                    intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
+                    intent.putExtra("duty_index",i);
+                    startActivity(intent);
+                    finish();
+                }
+            });
+        }
+    }
+
+    //添加ViewItem
+    private void addViewItem(View view) {
+        if (dutyInfo != null) {///如果有部门则按数组大小加载布局
+            for(int i = 0;i <dutyInfo.size(); i ++){
+                View hotelEvaluateView = View.inflate(this, R.layout.activity_department_info_dutyitem, null);
+                addDutylistView.addView(hotelEvaluateView);
+                InitDataViewItem();
+
+            }
+            sortHotelViewItem();
+
+        }
+    }
+
+    /**
+     * Item加载数据
+     */
+    private void InitDataViewItem() {
+        int i;
+        for (i = 0; i < addDutylistView.getChildCount(); i++) {
+            View childAt = addDutylistView.getChildAt(i);
+            tname= (TextView)childAt.findViewById(R.id.duty_name);
+            tnum = (TextView)childAt.findViewById(R.id.duty_num);
+
+            tname.setText(dutyInfo.get(i).getName());
+            tnum.setText(dutyInfo.get(i).getLimit());
+        }
+        Log.e(TAG, "职务名称：" + tname.getText().toString() + "-----人数限制："
+                + tnum.getText().toString());
+    }
+    /**
+     *  新建职务数组空值存储到SharedPreferences文件中
+     *
+     */
+    public void setAddDepartmentinfo(int v){
+        SharedPreferences.Editor editor = getSharedPreferences("duty",MODE_PRIVATE).edit();
+        editor.putString("dcid["+v+"]","");
+        editor.putString("ppid["+v+"]","");
+        editor.putString("name["+v+"]","");
+        editor.putString("limit["+v+"]","");
+        editor.apply();
+
+    }
+
+
+    /**
+     *  职务所有数据存储到SharedPreferences文件中
+     *
+     */
+    public void saveDepartmentinfo(){
+        SharedPreferences.Editor editor = getSharedPreferences("duty",MODE_PRIVATE).edit();
+
+        for (int i = 0;i<dutyInfo.size();i++){
+            editor.putString("pcid["+i+"]",dutyInfo.get(i).getPcid());
+            editor.putString("ppid["+i+"]",dutyInfo.get(i).getPpid());
+            editor.putString("dcid["+i+"]",dutyInfo.get(i).getDcid());
+            editor.putString("name["+i+"]",dutyInfo.get(i).getName());
+            editor.putString("limit["+i+"]", String.valueOf(dutyInfo.get(i).getLimit()));
+            editor.apply();
+        }
+        Log.e(TAG, "" + dutyInfo.toString());
+        //存储所属部门以及管辖上级职务名称
+        for (int i = 0;i<dutyInfo.size();i++){
+            System.out.println("Ppid["+i+"]"+dutyInfo.get(i).getPpid());
+            for (int j = 0 ;j<dutyInfo.size();j++){
+                System.out.println("Dcid["+j+"]"+dutyInfo.get(j).getDcid());
+                if (!(dutyInfo.get(i).getPpid()==null)){
+                    if (dutyInfo.get(i).getPpid().equals(dutyInfo.get(j).getPcid())) {
+                        editor.putString("pname[" + i + "]", dutyInfo.get(j).getName());
+                        editor.apply();
+                        System.out.println("pname[" + i + "]" + dutyInfo.get(j).getName());
+                    }
+                } else {
+                    editor.putString("pname["+i+"]","无");
+                    editor.apply();
+                }
+
+               for (int n =0;n<dutyInfo.size();n++){
+                    for (int m=0;m<departmentInfo.size();m++){
+                        if (dutyInfo.get(n).getDcid().equals(departmentInfo.get(m).getDcid())){
+                            editor.putString("dname["+n+"]",departmentInfo.get(m).getName());
+                            editor.apply();
+                        }
+                    }
+               }
+            }
+        }
     }
 
     @Override
