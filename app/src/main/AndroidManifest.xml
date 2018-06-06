@@ -137,6 +137,9 @@
             android:name="com.oliveoa.view.DutySelectActivity"
             android:exported="true"
             android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.GoodsCardActivity"
+            android:parentActivityName="com.oliveoa.view.GoodsActivity"></activity>
     </application>
 
 </manifest>

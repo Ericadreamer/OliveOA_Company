@@ -1,9 +1,11 @@
 package com.oliveoa.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
@@ -24,33 +26,41 @@ import java.util.TimerTask;
 public class GoodsActivity extends AppCompatActivity {
 
     private ImageView back;
-    private List<Goods> goodsList = new ArrayList<>();
+    private List<Goods> goodsList;
     private GoodsAdapter adapter;
+    private RecyclerView recyclerView;
 
-    private Goods[] goods = {new Goods("打印机","打印公司文件")};
+    //private Goods[] goods = {new Goods("打印机","打印公司文件")};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_goods);
 
-        initView();
+        initGoods();
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        GridLayoutManager layoutManager = new GridLayoutManager(this,2);
+        initView();
+        adapter=new GoodsAdapter((Context) goodsList, GoodsActivity.this);
+
+        LinearLayoutManager layoutManager=new LinearLayoutManager(this);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        //GridLayoutManager layoutManager = new GridLayoutManager(this,2);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new GoodsAdapter(goodsList);
+        recyclerView.setHasFixedSize(true);
+        //adapter = new GoodsAdapter(goodsList);
         recyclerView.setAdapter(adapter);
 
     }
 
     private void initGoods() {
-        goodsList.clear();
+        goodsList = new ArrayList<Goods>();
+        goodsList.add(new Goods("打印机","打印资料文件"));
+        /*goodsList.clear();
         for (int i = 0; i < 50; i++) {
             Random random = new Random();
             int index = random.nextInt(goods.length);
             goodsList.add(goods[index]);
-        }
+        }*/
     }
 
     public void initView() {
