@@ -35,7 +35,7 @@ public class DepartmentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_department);
 
         departmentInfos = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        Log.e("departmentInfos",departmentInfos.toString());
+        Log.e("departmentInfo",departmentInfos.toString());
 
         initView();
         saveDepartmentinfo();

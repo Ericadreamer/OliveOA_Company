@@ -33,7 +33,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_department_info);
 
         departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        Log.e("departmentInfos",departmentInfo.toString());
+        Log.e("departmentInfo",departmentInfo.toString());
         index = getIntent().getIntExtra("index",index);
         System.out.println(index);
 
