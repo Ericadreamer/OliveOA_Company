@@ -31,10 +31,12 @@ import com.example.erica.oliveoa_company.R;
 import com.oliveoa.common.HttpResponseObject;
 import com.oliveoa.controller.CompanyInfoService;
 import com.oliveoa.controller.DepartmentInfoService;
+import com.oliveoa.controller.DutyInfoService;
 import com.oliveoa.controller.EmployeeInfoService;
 import com.oliveoa.controller.LoginService;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
+import com.oliveoa.jsonbean.DutyInfoJsonBean;
 import com.oliveoa.jsonbean.EmployeeInfoJsonBean;
 import com.oliveoa.jsonbean.LogoutJsonBean;
 import com.oliveoa.pojo.CompanyInfo;
@@ -350,7 +352,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     //资产管理
     private void propertyinfo() {
-        Toast.makeText(getApplicationContext(), "资产管理", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), "资产管理", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this,GoodsActivity.class);
+        //intent.putExtra("ParcelableEmployeeInfo",employee.toString());
+        startActivity(intent);
+        finish();
     }
 
     @Override

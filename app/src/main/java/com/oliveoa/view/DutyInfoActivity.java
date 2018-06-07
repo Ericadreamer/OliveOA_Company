@@ -1,43 +1,89 @@
 package com.oliveoa.view;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.pojo.DutyInfo;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DutyInfoActivity extends AppCompatActivity {
+
+    private ArrayList<DutyInfo> dutyInfo;
+    private int index;
+    private String TAG = this.getClass().getSimpleName();
+    private TextView tname,tnum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dutyinfo);
 
+        dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
+        Log.e("dutyInfos",dutyInfo.toString());
+        index = getIntent().getIntExtra("dutynum",index);
+        Log.e("dtindex", String.valueOf(index));
+
+        initView();
+
+
+
+
+    }
+
+    //初始化
+    public void initView() {
         ImageView back = (ImageView)findViewById(R.id.null_back);
+        TextView edit = (TextView)findViewById(R.id.depart_edit);
+        TextView add = (TextView)findViewById(R.id.duty_add);
 
-
-
+        //监听事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DutyInfoActivity.this, DepartmentInfoActivity.class);
+                Intent intent = new Intent(DutyInfoActivity.this, DepartmentActivity.class);
+                intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
                 startActivity(intent);
                 finish();
             }
         });
 
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                edit();
+            }
+        });
+
+
+        SharedPreferences pref = getSharedPreferences("duty",MODE_PRIVATE);
+        tname = (TextView) findViewById(R.id.tv_name);
+        tname.setText(pref.getString("name["+index+"]",""));
+        tnum = (TextView) findViewById(R.id.tv_num);
+        tnum.setText(pref.getString("limit["+index+"]",""));
 
     }
 
-
-    public void save() {
+    //编辑操作
+    public void edit() {
+        Intent intent = new Intent(DutyInfoActivity.this, EditDutyInfoActivity.class);
+        intent.putExtra("ParcelableDuty",dutyInfo);
+        intent.putExtra("index",index);
+        startActivity(intent);
+        finish();
 
     }
 

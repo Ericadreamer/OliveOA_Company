@@ -40,7 +40,7 @@ public class GoodsActivity extends AppCompatActivity {
         initGoods();
 
         initView();
-        adapter=new GoodsAdapter((Context) goodsList, GoodsActivity.this);
+        adapter=new GoodsAdapter(GoodsActivity.this,goodsList);
 
         LinearLayoutManager layoutManager=new LinearLayoutManager(this);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);

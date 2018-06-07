@@ -101,7 +101,7 @@
             android:layout_marginTop="1dp">
 
             <TextView
-                android:id="@+id/department_name"
+                android:id="@+id/duty_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
@@ -111,7 +111,7 @@
                 android:text="限制人数" />
 
             <EditText
-                android:id="@+id/edit_name"
+                android:id="@+id/edit_limit"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_marginRight="20dp"

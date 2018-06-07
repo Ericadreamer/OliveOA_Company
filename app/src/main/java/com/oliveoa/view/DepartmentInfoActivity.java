@@ -27,7 +27,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
     private ArrayList<DepartmentInfo> departmentInfo;
     private ArrayList<DutyInfo> dutyInfo;
-    private int index,dutynum;
+    private int index;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
     private LinearLayout addDutylistView;
@@ -45,8 +45,6 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
         dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
         Log.e("dutyInfos",dutyInfo.toString());
-        dutynum = getIntent().getIntExtra("dutynum",dutynum);
-        Log.e("dtindex", String.valueOf(dutynum));
 
         initView();
 
@@ -115,8 +113,11 @@ public class DepartmentInfoActivity extends AppCompatActivity {
     }
 
     public void add() {
+        setAddDutyinfo(dutyInfo.size());
         Intent intent = new Intent(DepartmentInfoActivity.this, AddDutyActivity.class);
-        intent.putExtra("ParcelableDuty",dutyInfo);
+        intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
+        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
+        intent.putExtra("index",index);
         startActivity(intent);
         finish();
 
@@ -141,8 +142,8 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
             });
             //转到详情页面
-            Button btn_info = (Button) childAt.findViewById(R.id.btnInfo);
-            btn_info.setTag("edit");
+            Button btn_info = (Button) childAt.findViewById(R.id.btnEdit);
+            btn_info.setTag("btnEdit");
             btn_info.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -157,8 +158,9 @@ public class DepartmentInfoActivity extends AppCompatActivity {
                         }
 
                     }
-                    Intent intent = new Intent(DepartmentInfoActivity.this, AddDutyActivity.class);
+                    Intent intent = new Intent(DepartmentInfoActivity.this, DutyInfoActivity.class);
                     intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
+                    intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
                     intent.putExtra("duty_index",i);
                     startActivity(intent);
                     finish();
@@ -192,7 +194,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
             tnum = (TextView)childAt.findViewById(R.id.duty_num);
 
             tname.setText(dutyInfo.get(i).getName());
-            tnum.setText(dutyInfo.get(i).getLimit());
+            tnum.setText(String.valueOf(dutyInfo.get(i).getLimit()));
         }
         Log.e(TAG, "职务名称：" + tname.getText().toString() + "-----人数限制："
                 + tnum.getText().toString());
@@ -201,7 +203,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
      *  新建职务数组空值存储到SharedPreferences文件中
      *
      */
-    public void setAddDepartmentinfo(int v){
+    public void setAddDutyinfo(int v){
         SharedPreferences.Editor editor = getSharedPreferences("duty",MODE_PRIVATE).edit();
         editor.putString("dcid["+v+"]","");
         editor.putString("ppid["+v+"]","");

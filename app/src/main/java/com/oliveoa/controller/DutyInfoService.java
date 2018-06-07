@@ -32,7 +32,7 @@ public class DutyInfoService {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
                     .addHeader("Cookie",s)
-                    .url(Const.GET_DEPARTMENT)
+                    .url(Const.DUTY_SEARCH)
                     .post(body)
                     .build();
 

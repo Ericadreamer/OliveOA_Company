@@ -35,6 +35,7 @@ import static com.oliveoa.util.Validator.isMobile;
 public class AddDutyActivity extends AppCompatActivity {
 
     private ArrayList<DutyInfo> dutyInfo;
+    private ArrayList<DepartmentInfo> departmentInfo;
     private ImageView back,save;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
@@ -47,6 +48,12 @@ public class AddDutyActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_duty);
 
+        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
+        Log.e("department",dutyInfo.toString());
+        dutyindex = getIntent().getIntExtra("index",dutyindex);
+        dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
+        Log.e("dutyinfo",dutyInfo.toString());
+
         initView();
     }
 
@@ -55,12 +62,12 @@ public class AddDutyActivity extends AppCompatActivity {
         save = (ImageView)findViewById(R.id.info_save);
 
         etname = (EditText)findViewById(R.id.edit_duty_name);
-        etnum =(EditText)findViewById(R.id.edit_num);
+        etnum =(EditText)findViewById(R.id.edit_limit);
 
-        SharedPreferences pref = getSharedPreferences("duty", MODE_PRIVATE);
-        //tid.setText(pref.getString(""));
-        etname.setText(pref.getString("id["+dutyindex+"]",""));
-        etnum.setText(pref.getString("name["+dutyindex+"]",""));
+//        SharedPreferences pref = getSharedPreferences("duty", MODE_PRIVATE);
+//        //tid.setText(pref.getString(""));
+//        etname.setText(dutyInfo.get(dutyInfo.size()).getName());
+//        etnum.setText(pref.getString("name["+dutyindex+"]",""));
 
 
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
@@ -74,6 +81,8 @@ public class AddDutyActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(AddDutyActivity.this, DepartmentInfoActivity.class);
+                        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
+                        intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
                         startActivity(intent);
                         finish();
                     }
@@ -102,8 +111,12 @@ public class AddDutyActivity extends AppCompatActivity {
         dt = new DutyInfo();
         dt.setName(etname.getText().toString().trim());
 
-        dt.setLimit(Integer.parseInt(etnum.getText().toString().trim()));
+        if(etnum.getText().toString().trim().equals("")){
+           dt.setLimit(0);
+        }else{
+            dt.setLimit(Integer.parseInt(etnum.getText().toString().trim()));
 
+        }
 
         if (TextUtils.isEmpty(dt.getName())) {
             Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
@@ -144,6 +157,7 @@ public class AddDutyActivity extends AppCompatActivity {
    public boolean checkdutyname(String name) {
        for (int i=0;i<dutyInfo.size();i++) {
             if(name.equals(dutyInfo.get(i).getName())) {
+                Log.e(TAG, "inputname"+name+"duty[]name"+dutyInfo.get(i).getName());
                 return true;
             }
        }

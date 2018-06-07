@@ -2,6 +2,7 @@ package com.oliveoa.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +15,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.controller.DepartmentInfoService;
+import com.oliveoa.controller.DutyInfoService;
+import com.oliveoa.jsonbean.DutyInfoJsonBean;
+import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.pojo.DutyInfo;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -98,22 +104,44 @@ public class DepartmentActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     tvid = (TextView)childAt.findViewById(R.id.did);
-                    int i ;
+                    final int i ;
+                    int j;
                     String id = tvid.getText().toString().trim();
                     id = id.substring(3);
 
                     Log.i("id=",id);
-                    for (i=0;i<departmentInfos.size();i++) {
-                        if(id.equals(departmentInfos.get(i).getId())){
+                    for (j=0;j<departmentInfos.size();j++) {
+                        if(id.equals(departmentInfos.get(j).getId())){
                             break;
                         }
-
                     }
-                    Intent intent = new Intent(DepartmentActivity.this, DepartmentInfoActivity.class);
-                    intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
-                    intent.putExtra("index",i);
-                    startActivity(intent);
-                    finish();
+                    i=j;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
+                            String s = pref.getString("sessionid", "");
+
+                            DutyInfoService dutyInfoService = new DutyInfoService();
+                            DutyInfoJsonBean dutyInfoJsonBean = dutyInfoService.dutyInfo(s,departmentInfos.get(i).getDcid());
+                            ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
+                            Log.d("getinfo", dutyInfos + "");
+
+                            if (dutyInfoJsonBean.getStatus() == 0) {
+                                Intent intent = new Intent(DepartmentActivity.this, DepartmentInfoActivity.class);
+                                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
+                                intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfos);
+                                intent.putExtra("index",i);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Looper.prepare();
+                                Toast.makeText(getApplicationContext(), "网络错误，请重试", Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                            }
+
+                        }
+                    }).start();
                 }
             });
         }
