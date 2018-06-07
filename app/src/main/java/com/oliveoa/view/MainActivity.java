@@ -57,6 +57,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private NavigationView navigationView;
     private RadioButton departionbtn,staffbtn,propertybtn,documentbtn;
     ImageView menu;
+    private ArrayList<EmployeeInfo> employeeInfos;
+    //private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -327,25 +329,46 @@ public class MainActivity extends Activity implements View.OnClickListener {
             public void run() {
                 SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
                 String s = pref.getString("sessionid","");
-                String dcid ="001";
+
+                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
+                ArrayList<DepartmentInfo> departmentInfos =  departmentInfoJsonBean.getData();
+                //Log.d("departmentInfo",departmentInfos.toString());
 
                 EmployeeInfoService employeeInfoService = new EmployeeInfoService();
-                EmployeeInfoJsonBean employeeInfoJsonBean = employeeInfoService.employeeinfo(s,dcid);
-                Log.d("employeeInfoJsonBean",employeeInfoJsonBean.toString());
+                for (int i=0;i<departmentInfos.size();i++) {
+                    EmployeeInfoJsonBean employeeInfoJsonBean = employeeInfoService.employeeinfo(s, departmentInfos.get(i).getDcid());
+                    employeeInfos = employeeInfoJsonBean.getData();
+                    Log.d("employeeInfo", employeeInfos.toString());
 
-                List<EmployeeInfo> employee = employeeInfoJsonBean.getData();
+                    if (employeeInfoJsonBean.getStatus() == 0) {
+                        SharedPreferences.Editor editor= getSharedPreferences(departmentInfos.get(i).getDcid()+"", MODE_PRIVATE).edit();
+                        editor.putInt("esum",employeeInfos.size());
+                        for (int j = 0; j < employeeInfos.size(); j++) {
+                            editor.putString("eid[" + j + "]", employeeInfos.get(j).getEid());
+                            editor.putString("dcid[" + j + "]", employeeInfos.get(j).getDcid());
+                            editor.putString("pcid[" + j + "]", employeeInfos.get(j).getPcid());
+                            editor.putString("id[" + j + "]", employeeInfos.get(j).getId());
+                            editor.putString("name[" + j + "]", employeeInfos.get(j).getName());
+                            editor.putString("sex[" + j + "]", employeeInfos.get(j).getSex());
+                            editor.putString("birth[" + j + "]", employeeInfos.get(j).getBirth());
+                            editor.putString("tel[" + j + "]", employeeInfos.get(j).getTel());
+                            editor.putString("email[" + j + "]", employeeInfos.get(j).getEmail());
+                            editor.putString("address[" + j + "]", employeeInfos.get(j).getAddress());
+                        }
+                        editor.apply();
 
-                if (employeeInfoJsonBean.getStatus()==0){
-                    Intent intent = new Intent(MainActivity.this,EmployeelistActivity.class);
-                    intent.putExtra("ParcelableEmployeeInfo",employee.toString());
-                    startActivity(intent);
-                    finish();
-                }else{
-                    Looper.prepare();//解决子线程弹toast问题
-                    Toast.makeText(getApplicationContext(), "网络错误，请重试", Toast.LENGTH_SHORT).show();
-                    Looper.loop();// 进入loop中的循环，查看消息队列
+                    } else {
+                        Looper.prepare();//解决子线程弹toast问题
+                        Toast.makeText(getApplicationContext(), "网络错误，请重试", Toast.LENGTH_SHORT).show();
+                        Looper.loop();// 进入loop中的循环，查看消息队列
 
+                    }
                 }
+                Intent intent = new Intent(MainActivity.this,EmployeelistActivity.class);
+                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
+                startActivity(intent);
+                finish();
             }
         }).start();
     }

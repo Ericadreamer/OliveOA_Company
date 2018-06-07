@@ -2,6 +2,8 @@ package com.oliveoa.view;
 
 import android.content.Context;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,6 +23,7 @@ import java.util.TimerTask;
 
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.Group;
 import com.oliveoa.pojo.Item;
@@ -29,19 +32,22 @@ import com.oliveoa.util.MyBaseExpandableListAdapter;
 
 public class EmployeelistActivity extends AppCompatActivity {
 
-    private ArrayList<Group> gData = null;
-    private ArrayList<ArrayList<Item>> iData = null;
-    private ArrayList<Item> lData = null;
+    private transient ArrayList<Group> gData = null;
+    private transient ArrayList<ArrayList<Item>> iData = null;
+    private transient ArrayList<Item> lData = null;
     private Context mContext;
     private ExpandableListView exlist_staff;
     private MyBaseExpandableListAdapter myAdapter = null;
     private ImageView back;
-    private EmployeeInfo employeeInfo;
+    private ArrayList<EmployeeInfo> employeeInfo;
+    private ArrayList<DepartmentInfo> departmentInfo;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employeelist);
 
+        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
+        Log.d("ParcelableDepartment", departmentInfo.toString());
         //employeeInfo = getIntent().getParcelableExtra("ParcelableEmployeeInfo");
        //Log.d("ParcelableEmployeeInfo", employeeInfo.toString());
        initView();
@@ -57,32 +63,39 @@ public class EmployeelistActivity extends AppCompatActivity {
         //数据准备
         gData = new ArrayList<Group>();
         iData = new ArrayList<ArrayList<Item>>();
-        gData.add(new Group("董事长办公室"));
-        gData.add(new Group("财务部"));
-        gData.add(new Group("人事部"));
+        for (int i=0;i<departmentInfo.size();i++){
+            gData.add(new Group(departmentInfo.get(i).getName()));
+            SharedPreferences pref = getSharedPreferences(departmentInfo.get(i).getDcid()+"", MODE_PRIVATE);
+            lData = new ArrayList<Item>();
+            for (int j=0;j<pref.getInt("esum",j);i++){
+                lData.add(new Item(R.drawable.yonghu,pref.getString("name["+j+"]","")));
+            }
+            iData.add(lData);
+        }
 
-        lData = new ArrayList<Item>();
 
-        //董事长办公室组
-        lData.add(new Item(R.drawable.yonghu,"长腿傻猫"));
-        lData.add(new Item(R.drawable.yonghu,"机智蕉蕉"));
-        iData.add(lData);
-        //财务部组
-        lData = new ArrayList<Item>();
-        lData.add(new Item(R.drawable.yonghu,"长腿傻猫"));
-        lData.add(new Item(R.drawable.yonghu,"机智蕉蕉"));
-        iData.add(lData);
-        //人事部组
-        lData = new ArrayList<Item>();
-        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-        iData.add(lData);
+
+//
+//        //董事长办公室组
+//
+//        lData.add(new Item(R.drawable.yonghu,"机智蕉蕉"));
+//
+//        //财务部组
+//        lData = new ArrayList<Item>();
+//        lData.add(new Item(R.drawable.yonghu,"长腿傻猫"));
+//        lData.add(new Item(R.drawable.yonghu,"机智蕉蕉"));
+//        iData.add(lData);
+//        //人事部组
+//        lData = new ArrayList<Item>();
+//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
+//        iData.add(lData);
 
         myAdapter = new MyBaseExpandableListAdapter(gData,iData,mContext);
         exlist_staff.setAdapter(myAdapter);
@@ -98,7 +111,10 @@ public class EmployeelistActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(EmployeelistActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
             }
         });
 

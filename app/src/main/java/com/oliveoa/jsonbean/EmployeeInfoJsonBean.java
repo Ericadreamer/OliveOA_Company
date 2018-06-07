@@ -8,7 +8,7 @@ import java.util.List;
 public class EmployeeInfoJsonBean {
     private int status;
     private String msg;
-    private List<EmployeeInfo> data;
+    private ArrayList<EmployeeInfo> data;
 
     public EmployeeInfoJsonBean(int status, String msg, ArrayList<EmployeeInfo> data) {
         this.status = status;
@@ -32,11 +32,11 @@ public class EmployeeInfoJsonBean {
         this.msg = msg;
     }
 
-    public List<EmployeeInfo> getData() {
+    public ArrayList<EmployeeInfo> getData() {
         return data;
     }
 
-    public void setData(List<EmployeeInfo> data) {
+    public void setData(ArrayList<EmployeeInfo> data) {
         this.data = data;
     }
 
@@ -47,5 +47,9 @@ public class EmployeeInfoJsonBean {
                 ", msg='" + msg + '\'' +
                 ", data=" + data +
                 '}';
+    }
+
+    public EmployeeInfoJsonBean() {
+        super();
     }
 }

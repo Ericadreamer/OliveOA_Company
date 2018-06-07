@@ -31,7 +31,7 @@ public class EmployeeInfoService {
                     .build();
 
             Response response = client.newCall(request).execute();
-            System.out.println(response.body().string());
+            //System.out.println(response.body().string());
 
 
             String json = response.body().string();
