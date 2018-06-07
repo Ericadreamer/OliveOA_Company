@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,21 +40,18 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
+        ImageView goodsShow;
         TextView goodsName,goodsDescription;
-        //LinearLayout goodsShow;
-        Button goodsEdit,goodsDelete;
+        ImageButton goodsEdit,goodsDelete;
 
         public ViewHolder(View view) {
             super(view);
             cardView = (CardView) view.findViewById(R.id.card_view);
             goodsName = (TextView) view.findViewById(R.id.goods_name);
             goodsDescription = (TextView) view.findViewById(R.id.goods_description);
-            //goodsShow = (LinearLayout) view.findViewById(R.id.goods_item);
-            goodsEdit = (Button) view.findViewById(R.id.goods_edit);
-            goodsDelete = (Button) view.findViewById(R.id.goods_delete);
-            //设置TextView背景为半透明
-            goodsName.setBackgroundColor(Color.argb(20, 0, 0, 0));
-            goodsDescription.setBackgroundColor(Color.argb(20, 0, 0, 0));
+            //goodsShow = (ImageView) view.findViewById(R.id.to_info);
+            goodsEdit = (ImageButton) view.findViewById(R.id.goods_edit);
+            goodsDelete = (ImageButton) view.findViewById(R.id.goods_delete);
         }
     }
 
@@ -108,9 +107,6 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
         holder.goodsDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(mContext,GoodsInfoActivity.class);
-                intent.putExtra("Goods", String.valueOf(mGoodsList.get(j)));
-                mContext.startActivity(intent);
             }
         });
 
