@@ -122,6 +122,39 @@
                 android:textColorHint="#898989"
                 android:textSize="@dimen/activity_companyinfo_text" />
         </LinearLayout>
+        //上级职务
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/colorWhite"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/superior_duty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:textColor="#101010"
+                android:textSize="@dimen/activity_companyinfo_text"
+                android:text="上级职务" />
+
+            <TextView
+                android:id="@+id/text_superior"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@null"
+                android:gravity="center_vertical|end"
+                android:layout_marginRight="20dp"
+                android:text="董事长"
+                android:textColor="@color/textcolor"
+                android:singleLine="true"
+                android:textColorHint="#898989"
+                android:textSize="@dimen/activity_companyinfo_text"/>
+        </LinearLayout>
 
     </LinearLayout>
 </RelativeLayout>

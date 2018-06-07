@@ -281,6 +281,7 @@
                 android:background="@null"
                 android:gravity="center_vertical|end"
                 android:layout_marginRight="20dp"
+                android:clickable="true"
                 android:text="＋添加"
                 android:singleLine="true"
                 android:textColor="@color/orange_main"

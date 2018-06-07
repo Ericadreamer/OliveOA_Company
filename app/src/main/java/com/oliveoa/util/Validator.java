@@ -77,6 +77,20 @@ public class Validator {
         public static final String REGEX_ZIPCODE="^[1-9]\\d{5}$";
 
         /**
+         * 正则表达式：验证字符串是否为数字
+         */
+        public static final String REGEX_NUMBERSTR="^[0-9]+.?[0-9]*$";
+
+        /**
+         * 校验数字字符串
+         *
+         * @param numstr
+         * @return 校验通过返回true，否则返回false
+         */
+        public static boolean isNumstr(String numstr) {
+                return Pattern.matches(REGEX_NUMBERSTR, numstr);
+        }
+        /**
          * 校验用户名
          *
          * @param username

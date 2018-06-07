@@ -4,7 +4,7 @@
     android:layout_height="match_parent"  android:clickable="true">
 
     <LinearLayout
-        android:id="@+id/duty_item"
+        android:id="@+id/select_item"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_45"
         android:background="#fff"

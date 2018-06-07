@@ -3,8 +3,10 @@ package com.oliveoa.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -15,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.controller.DutyInfoService;
+import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 
@@ -39,22 +43,23 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_department_info);
 
         departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
+        dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
+        index = getIntent().getIntExtra("index",index);//部门索引
+        Log.e("dutyInfos",dutyInfo.toString());
         Log.e("departmentInfos",departmentInfo.toString());
-        index = getIntent().getIntExtra("index",index);
+
         Log.e("dpindex", String.valueOf(index));
 
-        dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
-        Log.e("dutyInfos",dutyInfo.toString());
-
         initView();
-
+        saveDutyinfo();
       }
 
     //初始化
     public void initView() {
         ImageView back = (ImageView)findViewById(R.id.null_back);
         TextView edit = (TextView)findViewById(R.id.depart_edit);
-        TextView add = (TextView)findViewById(R.id.duty_add);
+       // TextView add = (TextView)findViewById(R.id.duty_add);
+        TextView dutyadd = (TextView)findViewById(R.id.duty_add);
         addDutylistView = (LinearLayout)findViewById(R.id.duty_list);
 
         //默认添加一个Item
@@ -66,7 +71,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(DepartmentInfoActivity.this, DepartmentActivity.class);
                 intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-                intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
+                //intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
                 startActivity(intent);
                 finish();
             }
@@ -79,14 +84,19 @@ public class DepartmentInfoActivity extends AppCompatActivity {
             }
         });
 
-        add.setOnClickListener(new View.OnClickListener() {
+//        add.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                add();
+//            }
+//        });
+
+        dutyadd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                add();
+                dutyadd();
             }
         });
-
-
 
         SharedPreferences pref = getSharedPreferences("department",MODE_PRIVATE);
         TextView tid = (TextView) findViewById(R.id.text_num);
@@ -99,10 +109,9 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         tfax.setText(pref.getString("fax["+index+"]",""));
         TextView tdpid = (TextView) findViewById(R.id.text_superior);
         tdpid.setText(pref.getString("dpname[" + index + "]", ""));
-
     }
 
-    //编辑操作
+    //编辑部门操作
     public void edit() {
         Intent intent = new Intent(DepartmentInfoActivity.this, RedactDepartmentActivity.class);
         intent.putExtra("ParcelableDepartment",departmentInfo);
@@ -112,7 +121,20 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
     }
 
-    public void add() {
+//    //添加部门操作
+//    public void add() {
+//        setAddDutyinfo(dutyInfo.size());
+//        Intent intent = new Intent(DepartmentInfoActivity.this, CreateDepartmentActivity.class);
+//        //intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
+//        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
+//        intent.putExtra("index",index);
+//        startActivity(intent);
+//        finish();
+//
+//    }
+
+    //添加职务操作
+    public void dutyadd() {
         setAddDutyinfo(dutyInfo.size());
         Intent intent = new Intent(DepartmentInfoActivity.this, AddDutyActivity.class);
         intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
@@ -137,6 +159,38 @@ public class DepartmentInfoActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //从LinearLayout容器中删除当前点击到的ViewItem
+                    tname = (TextView)childAt.findViewById(R.id.duty_name);
+                    int i ; final int f;
+                    String dutyname = tname.getText().toString().trim();
+                    Log.i("dutyname=",dutyname);
+                    for (i=0;i<dutyInfo.size();i++) {
+                        if(dutyname.equals(dutyInfo.get(i).getName())){
+                            break;
+                        }
+                    }
+                    f=i;
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
+                            String s = pref.getString("sessionid", "");
+
+                            DutyInfoService dutyInfoService = new DutyInfoService();
+                            StatusAndMsgJsonBean statusAndMsgJsonBean = dutyInfoService.deleteduty(s,dutyInfo.get(f).getPcid());
+                            Log.d("delete", statusAndMsgJsonBean.getMsg() + "");
+                            if (statusAndMsgJsonBean.getStatus() == 0) {
+                                dutyInfo.remove(dutyInfo.get(f));
+                                Looper.prepare();
+                                Toast.makeText(getApplicationContext(), "删除成功！点击返回键返回部门列表", Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                            } else {
+                                Looper.prepare();
+                                Toast.makeText(getApplicationContext(), statusAndMsgJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                            }
+                        }
+                    }).start();
+
                     addDutylistView.removeView(childAt);
                 }
 
@@ -162,6 +216,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
                     intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
                     intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
                     intent.putExtra("duty_index",i);
+                    intent.putExtra("department_index",index);
                     startActivity(intent);
                     finish();
                 }
@@ -205,8 +260,10 @@ public class DepartmentInfoActivity extends AppCompatActivity {
      */
     public void setAddDutyinfo(int v){
         SharedPreferences.Editor editor = getSharedPreferences("duty",MODE_PRIVATE).edit();
-        editor.putString("dcid["+v+"]","");
+        editor.putString("dcid["+v+"]",departmentInfo.get(index).getDcid());
+        editor.putString("dname["+v+"]",departmentInfo.get(index).getName());
         editor.putString("ppid["+v+"]","");
+        editor.putString("pname["+v+"]","");
         editor.putString("name["+v+"]","");
         editor.putString("limit["+v+"]","");
         editor.apply();
@@ -218,7 +275,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
      *  职务所有数据存储到SharedPreferences文件中
      *
      */
-    public void saveDepartmentinfo(){
+    public void saveDutyinfo(){
         SharedPreferences.Editor editor = getSharedPreferences("duty",MODE_PRIVATE).edit();
 
         for (int i = 0;i<dutyInfo.size();i++){
@@ -232,14 +289,14 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         Log.e(TAG, "" + dutyInfo.toString());
         //存储所属部门以及管辖上级职务名称
         for (int i = 0;i<dutyInfo.size();i++){
-            System.out.println("Ppid["+i+"]"+dutyInfo.get(i).getPpid());
+           // System.out.println("Ppid["+i+"]"+dutyInfo.get(i).getPpid());
             for (int j = 0 ;j<dutyInfo.size();j++){
-                System.out.println("Dcid["+j+"]"+dutyInfo.get(j).getDcid());
+              //  System.out.println("Dcid["+j+"]"+dutyInfo.get(j).getDcid());
                 if (!(dutyInfo.get(i).getPpid()==null)){
                     if (dutyInfo.get(i).getPpid().equals(dutyInfo.get(j).getPcid())) {
                         editor.putString("pname[" + i + "]", dutyInfo.get(j).getName());
                         editor.apply();
-                        System.out.println("pname[" + i + "]" + dutyInfo.get(j).getName());
+                      //  System.out.println("pname[" + i + "]" + dutyInfo.get(j).getName());
                     }
                 } else {
                     editor.putString("pname["+i+"]","无");

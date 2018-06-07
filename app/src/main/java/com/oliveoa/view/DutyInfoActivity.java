@@ -23,9 +23,10 @@ import java.util.TimerTask;
 public class DutyInfoActivity extends AppCompatActivity {
 
     private ArrayList<DutyInfo> dutyInfo;
-    private int index;
+    private ArrayList<DepartmentInfo> departmentInfo;
+    private int dpindex,dtindex;
     private String TAG = this.getClass().getSimpleName();
-    private TextView tname,tnum;
+    private TextView tname,tnum,tppid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +35,12 @@ public class DutyInfoActivity extends AppCompatActivity {
 
         dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
         Log.e("dutyInfos",dutyInfo.toString());
-        index = getIntent().getIntExtra("dutynum",index);
-        Log.e("dtindex", String.valueOf(index));
+        dtindex = getIntent().getIntExtra("duty_index",dtindex);
+        Log.e("dtindex", String.valueOf(dtindex));
+
+        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
+        dpindex = getIntent().getIntExtra("department_index",dpindex);
+
 
         initView();
 
@@ -47,15 +52,15 @@ public class DutyInfoActivity extends AppCompatActivity {
     //初始化
     public void initView() {
         ImageView back = (ImageView)findViewById(R.id.null_back);
-        TextView edit = (TextView)findViewById(R.id.depart_edit);
-        TextView add = (TextView)findViewById(R.id.duty_add);
+        ImageView edit = (ImageView) findViewById(R.id.info_edit);
+        //TextView add = (TextView)findViewById(R.id.duty_add);
 
         //监听事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DutyInfoActivity.this, DepartmentActivity.class);
-                intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
+                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
                 startActivity(intent);
                 finish();
             }
@@ -70,18 +75,22 @@ public class DutyInfoActivity extends AppCompatActivity {
 
 
         SharedPreferences pref = getSharedPreferences("duty",MODE_PRIVATE);
-        tname = (TextView) findViewById(R.id.tv_name);
-        tname.setText(pref.getString("name["+index+"]",""));
+        tname = (TextView) findViewById(R.id.tv_duty_name);
+        tname.setText(pref.getString("name["+dtindex+"]",""));
         tnum = (TextView) findViewById(R.id.tv_num);
-        tnum.setText(pref.getString("limit["+index+"]",""));
+        tnum.setText(pref.getString("limit["+dtindex+"]",""));
+        tppid = (TextView) findViewById(R.id.text_superior);
+        tppid.setText(pref.getString("pname["+dtindex+"]",""));
 
     }
 
     //编辑操作
     public void edit() {
         Intent intent = new Intent(DutyInfoActivity.this, EditDutyInfoActivity.class);
-        intent.putExtra("ParcelableDuty",dutyInfo);
-        intent.putExtra("index",index);
+        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
+        intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
+        intent.putExtra("dpindex",dpindex);
+        intent.putExtra("dtindex",dtindex);
         startActivity(intent);
         finish();
 

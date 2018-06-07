@@ -112,13 +112,21 @@ public class CreateDepartmentActivity extends AppCompatActivity {
         tdpid.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    departmentSelect();
+                    if (departmentInfo.size() > 0)
+                        departmentSelect();
+                    else{
+                        Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         dpselect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    departmentSelect();
+                    if (departmentInfo.size() > 0)
+                        departmentSelect();
+                    else{
+                        Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
   }

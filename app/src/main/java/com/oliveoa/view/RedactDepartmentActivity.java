@@ -100,19 +100,27 @@ public class RedactDepartmentActivity extends AppCompatActivity {
         tdpid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                departmentSelect();
+                if (departmentInfo.size() > 0)
+                    departmentSelect();
+                else{
+                    Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         dpselect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                departmentSelect();
+                if (departmentInfo.size() > 0)
+                    departmentSelect();
+                else{
+                    Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
     }
 
-    //
+    //上级部门选择
     public void departmentSelect(){
         saveDepartmentinfo();
         Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentSelectActivity.class);

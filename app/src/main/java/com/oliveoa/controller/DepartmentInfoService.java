@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.oliveoa.common.Const;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
+import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
 import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 
@@ -184,7 +185,43 @@ public class DepartmentInfoService {
         return null;
 
     }
+    //删除部门
+    public StatusAndMsgJsonBean deleteduty (String s, String dcid) {
+        try {
+            Log.i("info_Login","知道了session："+s);
+            FormBody body = new FormBody.Builder()
+                    .add("dcid",dcid)
+                    .build();
+            Log.d("deleteinfobody",body.toString());
 
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Cookie",s)
+                    .url(Const.DEPARTMENT_DELETE)
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+
+            String json = response.body().string();
+            Gson gson = new Gson();
+            System.out.println(json);
+
+            java.lang.reflect.Type type = new TypeToken<StatusAndMsgJsonBean>() {
+            }.getType();
+            StatusAndMsgJsonBean statusAndMsgJsonBean = gson.fromJson(json, type);
+            System.out.println("StatusAndMsgJsonBean = " + statusAndMsgJsonBean);
+
+            return statusAndMsgJsonBean;
+
+        } catch (IOException e) {
+            //todo handler IOException
+            //throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 
     //获取部门信息
     public DepartmentInfoJsonBean getdepartmentinfo (String s) {
