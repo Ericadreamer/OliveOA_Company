@@ -31,10 +31,12 @@
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_gravity="center_vertical" />
-        <View
+        <ImageView
+            android:id="@+id/add"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@color/colorPrimary"
+            android:src="@drawable/ic_add"
             android:layout_gravity="center_vertical"
             android:layout_margin="15dp"/>
     </LinearLayout>

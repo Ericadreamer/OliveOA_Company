@@ -23,6 +23,7 @@ import java.util.TimerTask;
 
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.daoimpl.EmployeeDAOImpl;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.Group;
@@ -38,7 +39,7 @@ public class EmployeelistActivity extends AppCompatActivity {
     private Context mContext;
     private ExpandableListView exlist_staff;
     private MyBaseExpandableListAdapter myAdapter = null;
-    private ImageView back;
+    private ImageView back,add;
     private ArrayList<EmployeeInfo> employeeInfo;
     private ArrayList<DepartmentInfo> departmentInfo;
 
@@ -59,59 +60,43 @@ public class EmployeelistActivity extends AppCompatActivity {
 
         exlist_staff = (ExpandableListView) findViewById(R.id.exlist_staff);
         back =(ImageView)findViewById(R.id.info_back);
+        add =(ImageView)findViewById(R.id.add);
+
+        EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(EmployeelistActivity.this);
 
         //数据准备
         gData = new ArrayList<Group>();
         iData = new ArrayList<ArrayList<Item>>();
         for (int i=0;i<departmentInfo.size();i++){
             gData.add(new Group(departmentInfo.get(i).getName()));
-            SharedPreferences pref = getSharedPreferences(departmentInfo.get(i).getDcid()+"", MODE_PRIVATE);
+
             lData = new ArrayList<Item>();
-            for (int j=0;j<pref.getInt("esum",j);i++){
-                lData.add(new Item(R.drawable.yonghu,pref.getString("name["+j+"]","")));
+            employeeInfo = employeeDAO.getEmployees(departmentInfo.get(i).getDcid());
+
+            Log.i("employeeSize=", String.valueOf(employeeInfo.size()));
+
+            for (int j=0;j<employeeInfo.size();j++){
+                lData.add(new Item(R.drawable.yonghu,employeeInfo.get(j).getName()+""));
             }
             iData.add(lData);
         }
 
-
-
-//
-//        //董事长办公室组
-//
-//        lData.add(new Item(R.drawable.yonghu,"机智蕉蕉"));
-//
-//        //财务部组
-//        lData = new ArrayList<Item>();
-//        lData.add(new Item(R.drawable.yonghu,"长腿傻猫"));
-//        lData.add(new Item(R.drawable.yonghu,"机智蕉蕉"));
-//        iData.add(lData);
-//        //人事部组
-//        lData = new ArrayList<Item>();
-//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-//        lData.add(new Item(R.drawable.yonghu,"泉麻麻"));
-//        iData.add(lData);
-
         myAdapter = new MyBaseExpandableListAdapter(gData,iData,mContext);
         exlist_staff.setAdapter(myAdapter);
 
-        //为列表设置点击事件
-        exlist_staff.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                Toast.makeText(mContext, "你点击了：" + iData.get(groupPosition).get(childPosition).getiName(), Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EmployeelistActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+                //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
+            }
+        });
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EmployeelistActivity.this, AddEmployeeinfoActivity.class);
                 startActivity(intent);
                 finish();
                 //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
@@ -127,9 +112,13 @@ public class EmployeelistActivity extends AppCompatActivity {
      *
      * @param view
      */
-    //编辑单击触发函数
+    //详情单击触发函数
     public void StaffEdit(View view){
-        Toast.makeText(mContext, "你点击了编辑", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, "你点击了详情", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(EmployeelistActivity.this, EmployeeinfoActivity.class);
+        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
+        startActivity(intent);
+        finish();
     }
     //删除单机触发函数
     public void StaffDelete(View view){

@@ -2,15 +2,16 @@ package com.oliveoa.jsonbean;
 
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.Goods;
+import com.oliveoa.pojo.Properties;
 
 import java.util.ArrayList;
 
 public class GoodInfoJsonBean {
     private int status;
     private String msg;
-    private Goods data;
+    private Properties data;
 
-    public GoodInfoJsonBean(int status, String msg, Goods data) {
+    public GoodInfoJsonBean(int status, String msg, Properties data) {
         this.status = status;
         this.msg = msg;
         this.data = data;
@@ -32,11 +33,11 @@ public class GoodInfoJsonBean {
         this.msg = msg;
     }
 
-    public Goods getData() {
+    public Properties getData() {
         return data;
     }
 
-    public void setData(Goods data) {
+    public void setData(Properties  data) {
         this.data = data;
     }
 

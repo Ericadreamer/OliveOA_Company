@@ -34,6 +34,7 @@ import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
 import com.oliveoa.controller.EmployeeInfoService;
 import com.oliveoa.controller.LoginService;
+import com.oliveoa.daoimpl.EmployeeDAOImpl;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
@@ -336,27 +337,17 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 //Log.d("departmentInfo",departmentInfos.toString());
 
                 EmployeeInfoService employeeInfoService = new EmployeeInfoService();
+                EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(MainActivity.this);
                 for (int i=0;i<departmentInfos.size();i++) {
                     EmployeeInfoJsonBean employeeInfoJsonBean = employeeInfoService.employeeinfo(s, departmentInfos.get(i).getDcid());
                     employeeInfos = employeeInfoJsonBean.getData();
                     Log.d("employeeInfo", employeeInfos.toString());
 
                     if (employeeInfoJsonBean.getStatus() == 0) {
-                        SharedPreferences.Editor editor= getSharedPreferences(departmentInfos.get(i).getDcid()+"", MODE_PRIVATE).edit();
-                        editor.putInt("esum",employeeInfos.size());
                         for (int j = 0; j < employeeInfos.size(); j++) {
-                            editor.putString("eid[" + j + "]", employeeInfos.get(j).getEid());
-                            editor.putString("dcid[" + j + "]", employeeInfos.get(j).getDcid());
-                            editor.putString("pcid[" + j + "]", employeeInfos.get(j).getPcid());
-                            editor.putString("id[" + j + "]", employeeInfos.get(j).getId());
-                            editor.putString("name[" + j + "]", employeeInfos.get(j).getName());
-                            editor.putString("sex[" + j + "]", employeeInfos.get(j).getSex());
-                            editor.putString("birth[" + j + "]", employeeInfos.get(j).getBirth());
-                            editor.putString("tel[" + j + "]", employeeInfos.get(j).getTel());
-                            editor.putString("email[" + j + "]", employeeInfos.get(j).getEmail());
-                            editor.putString("address[" + j + "]", employeeInfos.get(j).getAddress());
+                            //Log.d("employeeInfo["+j+"]", employeeInfos.get(j).toString());
+                            employeeDAO.insertEmployee(employeeInfos.get(j));
                         }
-                        editor.apply();
 
                     } else {
                         Looper.prepare();//解决子线程弹toast问题
@@ -365,6 +356,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
                     }
                 }
+
                 Intent intent = new Intent(MainActivity.this,EmployeelistActivity.class);
                 intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
                 startActivity(intent);

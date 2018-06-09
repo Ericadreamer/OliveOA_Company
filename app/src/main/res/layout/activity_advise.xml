@@ -48,7 +48,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="意见反馈"
+            android:text="正在建设中"
             android:textSize="22sp"
             android:textColor="#c5c5c5"
             android:gravity="center"/>

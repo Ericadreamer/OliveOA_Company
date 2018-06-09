@@ -34,6 +34,10 @@ public class EmployeeInfo implements Parcelable {
         this.updatetime = updatetime;
     }
 
+    public EmployeeInfo() {
+
+    }
+
     public String getEid() {
         return eid;
     }

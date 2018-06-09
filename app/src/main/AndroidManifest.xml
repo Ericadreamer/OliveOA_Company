@@ -21,7 +21,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@android:style/Theme.NoTitleBar">
+        android:theme="@android:style/Theme.NoTitleBar"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true">
         <activity
             android:name="com.oliveoa.view.MainActivity"
             android:exported="true"
@@ -76,7 +78,8 @@
         <activity
             android:name="com.oliveoa.view.EmployeelistActivity"
             android:exported="true"
-            android:theme="@style/EmployeeTheme" />
+            android:theme="@style/EmployeeTheme"
+             />
         <activity
             android:name="com.oliveoa.view.DutyInfoActivity"
             android:exported="true"

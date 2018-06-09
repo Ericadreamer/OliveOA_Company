@@ -1,8 +1,11 @@
 package com.oliveoa.view;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
@@ -16,6 +19,21 @@ public class AdviseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_advise);
+        initview();
+    }
+    public void initview(){
+
+        ImageView back =(ImageView)findViewById(R.id.info_back);
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AdviseActivity.this,MainActivity.class);
+                startActivity(intent);
+                finish();
+                //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
