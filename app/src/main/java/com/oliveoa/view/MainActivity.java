@@ -65,58 +65,57 @@ public class MainActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_main);
-        initWindow();
-        drawerLayout = (DrawerLayout) findViewById(R.id.activity_na);
-        navigationView = (NavigationView) findViewById(R.id.nav);
-        menu= (ImageView) findViewById(R.id.main_menu);
-        View headerView = navigationView.getHeaderView(0);//获取头布局
-        menu.setOnClickListener(this);
-        //设置菜单图标为默认原图颜色
-        navigationView.setItemIconTintList(null);
-
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                //item.setChecked(true);
-                //Toast.makeText(MainActivity.this,item.getTitle().toString(), Toast.LENGTH_SHORT).show();
-                //
-                // startActivity(intent);
-                // finish();
-                int id = item.getItemId();
-                String string = null;
-                switch (id){
-                    case R.id.nav_name:
-                        companyinfo();
-                        break;
-                    case R.id.nav_password:
-                        updatepassword();
-                        break;
-                    case R.id.nav_advise:
-                        Intent intent = new Intent(MainActivity.this,AdviseActivity.class);
-                        startActivity(intent);
-                        finish();
-                        break;
-                    case R.id.nav_aboutus:
-                        intent = new Intent(MainActivity.this,AboutusActivity.class);
-                        startActivity(intent);
-                        finish();
-                        break;
-                    case R.id.nav_update:
-                        Toast.makeText(getApplicationContext(), "您的版本已是最新版本！", Toast.LENGTH_SHORT).show();
-                        break;
-                    case R.id.nav_exit:
-                         logout();
-                        break;
-
-
-                }
-                drawerLayout.closeDrawer(navigationView);
-                return true;
-            }
-        });
+        initview();
 
 }
+    public void initview(){
+            setContentView(R.layout.activity_main);
+            initWindow();
+            drawerLayout = (DrawerLayout) findViewById(R.id.activity_na);
+            navigationView = (NavigationView) findViewById(R.id.nav);
+            menu= (ImageView) findViewById(R.id.main_menu);
+            View headerView = navigationView.getHeaderView(0);//获取头布局
+            menu.setOnClickListener(this);
+            //设置菜单图标为默认原图颜色
+            navigationView.setItemIconTintList(null);
+
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                    int id = item.getItemId();
+                    String string = null;
+                    switch (id){
+                        case R.id.nav_name:
+                            companyinfo();
+                            break;
+                        case R.id.nav_password:
+                            updatepassword();
+                            break;
+                        case R.id.nav_advise:
+                            Intent intent = new Intent(MainActivity.this,AdviseActivity.class);
+                            startActivity(intent);
+                            finish();
+                            break;
+                        case R.id.nav_aboutus:
+                            intent = new Intent(MainActivity.this,AboutusActivity.class);
+                            startActivity(intent);
+                            finish();
+                            break;
+                        case R.id.nav_update:
+                            Toast.makeText(getApplicationContext(), "您的版本已是最新版本！", Toast.LENGTH_SHORT).show();
+                            break;
+                        case R.id.nav_exit:
+                            logout();
+                            break;
+
+
+                    }
+                    drawerLayout.closeDrawer(navigationView);
+                    return true;
+                }
+            });
+
+    }
     public void companyinfo(){
             new Thread(new Runnable() {
                 @Override
@@ -170,6 +169,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }).start();
 
     }
+
     private void logout() {
         new Thread(new Runnable() {
             @Override

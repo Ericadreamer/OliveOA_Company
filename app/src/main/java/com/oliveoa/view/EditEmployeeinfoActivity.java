@@ -36,7 +36,7 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
         picker.setOnDatePickListener(new DatePicker.OnYearMonthPickListener() {
             @Override
             public void onDatePicked(String year, String month) {
-                showToast(year + "-" + month);
+                //showToast(year + "-" + month);
             }
         });
         picker.show();

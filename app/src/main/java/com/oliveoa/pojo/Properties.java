@@ -5,18 +5,18 @@ public class Properties {
     private String name;
     private String describe;
     private String total;
-    private String remaing;
+    private String remaining;
     private String pcid;
 
     public Properties() {
     }
 
-    public Properties(String gid, String name, String describe, String total, String remaing, String pcid) {
+    public Properties(String gid, String name, String describe, String total, String remaining, String pcid) {
         this.gid = gid;
         this.name = name;
         this.describe = describe;
         this.total = total;
-        this.remaing = remaing;
+        this.remaining = remaining;
         this.pcid = pcid;
     }
 
@@ -52,12 +52,12 @@ public class Properties {
         this.total = total;
     }
 
-    public String getRemaing() {
-        return remaing;
+    public String getRemaining() {
+        return remaining;
     }
 
-    public void setRemaing(String remaing) {
-        this.remaing = remaing;
+    public void setRemaining(String remaining) {
+        this.remaining = remaining;
     }
 
     public String getPcid() {
@@ -75,7 +75,7 @@ public class Properties {
                 ", name='" + name + '\'' +
                 ", describe='" + describe + '\'' +
                 ", total='" + total + '\'' +
-                ", remaing='" + remaing + '\'' +
+                ", remaining='" + remaining + '\'' +
                 ", pcid='" + pcid + '\'' +
                 '}';
     }
