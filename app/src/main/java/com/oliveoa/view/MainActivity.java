@@ -34,7 +34,11 @@ import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
 import com.oliveoa.controller.EmployeeInfoService;
 import com.oliveoa.controller.LoginService;
+import com.oliveoa.dao.DepartmentDAO;
+import com.oliveoa.daoimpl.DepartmentDAOImpl;
+import com.oliveoa.daoimpl.DutyDAOImpl;
 import com.oliveoa.daoimpl.EmployeeDAOImpl;
+import com.oliveoa.daoimpl.PropertyDAOImpl;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
@@ -42,7 +46,9 @@ import com.oliveoa.jsonbean.EmployeeInfoJsonBean;
 import com.oliveoa.jsonbean.LogoutJsonBean;
 import com.oliveoa.pojo.CompanyInfo;
 import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.pojo.EmployeeInfo;
+import com.oliveoa.pojo.Properties;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 import java.io.Serializable;
@@ -58,8 +64,16 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private NavigationView navigationView;
     private RadioButton departionbtn,staffbtn,propertybtn,documentbtn;
     ImageView menu;
+
     private ArrayList<EmployeeInfo> employeeInfos;
-    //private SharedPreferences.Editor editor;
+    private ArrayList<DepartmentInfo> departmentInfos;
+    private ArrayList<Properties>properties;
+    private ArrayList<DutyInfo> dutyInfos;
+
+    private DutyDAOImpl dutyDAO;
+    private DepartmentDAOImpl departmentDAO;
+    private PropertyDAOImpl propertyDAO;
+    private EmployeeDAOImpl employeeDAO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,7 +128,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     return true;
                 }
             });
-
     }
     public void companyinfo(){
             new Thread(new Runnable() {
@@ -328,37 +341,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
-                String s = pref.getString("sessionid","");
-
-                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
-                DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
-                ArrayList<DepartmentInfo> departmentInfos =  departmentInfoJsonBean.getData();
-                //Log.d("departmentInfo",departmentInfos.toString());
-
-                EmployeeInfoService employeeInfoService = new EmployeeInfoService();
-                EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(MainActivity.this);
-                for (int i=0;i<departmentInfos.size();i++) {
-                    EmployeeInfoJsonBean employeeInfoJsonBean = employeeInfoService.employeeinfo(s, departmentInfos.get(i).getDcid());
-                    employeeInfos = employeeInfoJsonBean.getData();
-                    Log.d("employeeInfo", employeeInfos.toString());
-
-                    if (employeeInfoJsonBean.getStatus() == 0) {
-                        for (int j = 0; j < employeeInfos.size(); j++) {
-                            //Log.d("employeeInfo["+j+"]", employeeInfos.get(j).toString());
-                            employeeDAO.insertEmployee(employeeInfos.get(j));
-                        }
-
-                    } else {
-                        Looper.prepare();//解决子线程弹toast问题
-                        Toast.makeText(getApplicationContext(), "网络错误，请重试", Toast.LENGTH_SHORT).show();
-                        Looper.loop();// 进入loop中的循环，查看消息队列
-
-                    }
-                }
-
                 Intent intent = new Intent(MainActivity.this,EmployeelistActivity.class);
-                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
                 startActivity(intent);
                 finish();
             }
@@ -369,7 +352,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private void propertyinfo() {
         //Toast.makeText(getApplicationContext(), "资产管理", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this,GoodsActivity.class);
-        //intent.putExtra("ParcelableEmployeeInfo",employee.toString());
         startActivity(intent);
         finish();
     }
@@ -403,7 +385,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }, 2000); // 如果2秒钟内没有按下返回键，则启动定时器取消掉刚才执行的任务
 
         } else {
+            SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+            pref.edit().remove("sessionid").commit();//移除指定数值
             System.exit(0);
+
         }
     }
 

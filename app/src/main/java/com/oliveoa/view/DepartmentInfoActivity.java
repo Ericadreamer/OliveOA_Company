@@ -121,18 +121,6 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
     }
 
-//    //添加部门操作
-//    public void add() {
-//        setAddDutyinfo(dutyInfo.size());
-//        Intent intent = new Intent(DepartmentInfoActivity.this, CreateDepartmentActivity.class);
-//        //intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
-//        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-//        intent.putExtra("index",index);
-//        startActivity(intent);
-//        finish();
-//
-//    }
-
     //添加职务操作
     public void dutyadd() {
         setAddDutyinfo(dutyInfo.size());

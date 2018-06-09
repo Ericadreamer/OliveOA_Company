@@ -2,24 +2,29 @@ package com.oliveoa.util;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.daoimpl.EmployeeDAOImpl;
 import com.oliveoa.pojo.Item;
 import com.oliveoa.pojo.Group;
+import com.oliveoa.view.EmployeeinfoActivity;
+import com.oliveoa.view.EmployeelistActivity;
 
 import java.util.ArrayList;
 
 public class MyBaseExpandableListAdapter extends BaseExpandableListAdapter {
 
-        private ArrayList<Group> gData;
-        private ArrayList<ArrayList<Item>> iData;
-        private Context mContext;
+        private ArrayList<Group> gData; //父列表项
+        private ArrayList<ArrayList<Item>> iData;  //子列表项
+        private Context mContext; //mContext为ExpandableListView所在的Activity，通过构造方法的参数传递进来，可以获得该Activity对应的Inflater
 
         public MyBaseExpandableListAdapter(ArrayList<Group> gData, ArrayList<ArrayList<Item>> iData, Context mContext) {
             this.gData = gData;
@@ -32,7 +37,7 @@ public class MyBaseExpandableListAdapter extends BaseExpandableListAdapter {
             return gData.size();
         }
 
-        @Override
+        @Override //获得子列表项的数目
         public int getChildrenCount(int groupPosition) {
             return iData.get(groupPosition).size();
         }
@@ -43,7 +48,7 @@ public class MyBaseExpandableListAdapter extends BaseExpandableListAdapter {
         }
 
         @Override
-        public Object getChild(int groupPosition, int childPosition) {
+        public Object getChild(int groupPosition, int childPosition) { //获取子列表项对应的Item
             return iData.get(groupPosition).get(childPosition);
         }
 
@@ -52,7 +57,7 @@ public class MyBaseExpandableListAdapter extends BaseExpandableListAdapter {
             return groupPosition;
         }
 
-        @Override
+        @Override   //获取子列表项id
         public long getChildId(int groupPosition, int childPosition) {
             return childPosition;
         }
@@ -83,19 +88,22 @@ public class MyBaseExpandableListAdapter extends BaseExpandableListAdapter {
         //取得显示给定分组给定子位置的数据用的视图
         @Override
         public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            ViewHolderItem itemHolder;
-            if(convertView == null){
+            final ViewHolderItem itemHolder;
+            if(convertView == null){ //如果第一次调用则convertView为null，需要获得对应的layout布局文件：子列表项的布局R.layout.item_exlist_item
                 convertView = LayoutInflater.from(mContext).inflate(
                         R.layout.item_exlist_item, parent, false);
                 itemHolder = new ViewHolderItem();
                 itemHolder.img_icon = (ImageView) convertView.findViewById(R.id.img_icon);
                 itemHolder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
+                itemHolder.edit = (Button) convertView.findViewById(R.id.btnEdit);
+                itemHolder.delete = (Button) convertView.findViewById(R.id.btnDelete);
                 convertView.setTag(itemHolder);
             }else{
                 itemHolder = (ViewHolderItem) convertView.getTag();
             }
             itemHolder.img_icon.setImageResource(iData.get(groupPosition).get(childPosition).getiId());
             itemHolder.tv_name.setText(iData.get(groupPosition).get(childPosition).getiName());
+
             return convertView;
         }
 
@@ -113,6 +121,10 @@ public class MyBaseExpandableListAdapter extends BaseExpandableListAdapter {
         private static class ViewHolderItem{
             private ImageView img_icon;
             private TextView tv_name;
+            private Button edit;
+            private Button delete;
         }
+
+
 
 }

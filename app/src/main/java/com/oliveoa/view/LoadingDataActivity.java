@@ -1,5 +1,6 @@
 package com.oliveoa.view;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import com.example.erica.oliveoa_company.R;
 import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
 import com.oliveoa.controller.EmployeeInfoService;
+import com.oliveoa.controller.GoodInfoService;
 import com.oliveoa.dao.DepartmentDAO;
 import com.oliveoa.dao.DutyDAO;
 import com.oliveoa.daoimpl.DepartmentDAOImpl;
@@ -21,12 +23,15 @@ import com.oliveoa.daoimpl.PropertyDAOImpl;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
 import com.oliveoa.jsonbean.EmployeeInfoJsonBean;
+import com.oliveoa.jsonbean.GoodInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.Properties;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class LoadingDataActivity extends AppCompatActivity {
 
@@ -38,7 +43,7 @@ public class LoadingDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.load_view);
+        setContentView(R.layout.loadingview);
         initdata();
     }
     public void initdata(){
@@ -110,11 +115,38 @@ public class LoadingDataActivity extends AppCompatActivity {
 
                 }
 
-                //
-
+                //获取资产信息
+                GoodInfoService goodInfoService = new GoodInfoService();
+                GoodInfoJsonBean goodInfoJsonBean =  goodInfoService.properties(s);
+                if (goodInfoJsonBean.getStatus() == 0) {
+                    properties = goodInfoJsonBean.getData();
+                    Log.d("properties", properties.toString());
+                    for (int j = 0; j < properties.size(); j++) {
+                        //Log.d("properties["+j+"]", properties.get(j).toString());
+                        propertyDAO.insertProperty(properties.get(j));
+                    }
+                }
+                else{
+                    Looper.prepare();//解决子线程弹toast问题
+                    Toast.makeText(getApplicationContext(), "网络错误，获取资产信息失败", Toast.LENGTH_SHORT).show();
+                    Looper.loop();// 进入loop中的循环，查看消息队列
+                }
 
             }
         }).start();
+
+        final  Intent intent = new Intent(LoadingDataActivity.this,MainActivity.class);
+        Timer timer=new Timer();
+        TimerTask task=new TimerTask()
+        {
+            @Override
+            public void run(){
+                startActivity(intent);
+                finish();
+            }
+        };
+        timer.schedule(task,3000);//此处的Delay可以是3*1000，代表三秒
+
 
     }
 }

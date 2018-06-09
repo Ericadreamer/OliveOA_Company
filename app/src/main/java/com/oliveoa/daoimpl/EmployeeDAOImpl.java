@@ -22,7 +22,11 @@ public class EmployeeDAOImpl implements EmployeeDAO{
             mHelpter = new DBHelper(context);
         }
 
-        @Override
+    public EmployeeDAOImpl() {
+
+    }
+
+    @Override
         public void insertEmployee(EmployeeInfo employeeInfo) {
             SQLiteDatabase db = mHelpter.getWritableDatabase();
             db.execSQL("insert into employee_info(eid,dcid,pcid,id,name,sex,birth,tel,email,address) values(?,?,?,?,?,?,?,?,?,?)",

@@ -23,6 +23,8 @@ import java.util.TimerTask;
 
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.dao.DepartmentDAO;
+import com.oliveoa.daoimpl.DepartmentDAOImpl;
 import com.oliveoa.daoimpl.EmployeeDAOImpl;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.EmployeeInfo;
@@ -36,23 +38,19 @@ public class EmployeelistActivity extends AppCompatActivity {
     private transient ArrayList<Group> gData = null;
     private transient ArrayList<ArrayList<Item>> iData = null;
     private transient ArrayList<Item> lData = null;
+
     private Context mContext;
     private ExpandableListView exlist_staff;
     private MyBaseExpandableListAdapter myAdapter = null;
     private ImageView back,add;
+
     private ArrayList<EmployeeInfo> employeeInfo;
     private ArrayList<DepartmentInfo> departmentInfo;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employeelist);
-
-        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        Log.d("ParcelableDepartment", departmentInfo.toString());
-        //employeeInfo = getIntent().getParcelableExtra("ParcelableEmployeeInfo");
-       //Log.d("ParcelableEmployeeInfo", employeeInfo.toString());
-       initView();
-
+        initView();
     }
 
     public void initView(){
@@ -63,6 +61,8 @@ public class EmployeelistActivity extends AppCompatActivity {
         add =(ImageView)findViewById(R.id.add);
 
         EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(EmployeelistActivity.this);
+        DepartmentDAO departmentDAO = new DepartmentDAOImpl(EmployeelistActivity.this);
+        departmentInfo = departmentDAO.getDepartments();
 
         //数据准备
         gData = new ArrayList<Group>();
@@ -83,6 +83,21 @@ public class EmployeelistActivity extends AppCompatActivity {
 
         myAdapter = new MyBaseExpandableListAdapter(gData,iData,mContext);
         exlist_staff.setAdapter(myAdapter);
+        exlist_staff.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+        public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+            Log.i("" + EmployeelistActivity.this, "group " + groupPosition + " child " + childPosition);
+            return false;
+        }
+        });
+
+        exlist_staff.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+        public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+            Log.i("" + EmployeelistActivity.this, "group " + groupPosition);
+            return false;
+        }
+        });
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,20 +125,19 @@ public class EmployeelistActivity extends AppCompatActivity {
      *  ，然而显示空指针，使用inflater虽然能获取到button，但是捆绑监听事件。最后解决方案很简单，直接在item_exlist_iten.xml里的button添加onclick事件就好了……
      *  然后在本Activity里写好相应的onclick方法
      *
-     * @param view
      */
     //详情单击触发函数
-    public void StaffEdit(View view){
-        //Toast.makeText(mContext, "你点击了详情", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(EmployeelistActivity.this, EmployeeinfoActivity.class);
-        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-        startActivity(intent);
-        finish();
-    }
+//    public void StaffEdit(View view){
+//        //Toast.makeText(mContext, "你点击了详情", Toast.LENGTH_SHORT).show();
+//
+//        Intent intent = new Intent(EmployeelistActivity.this, EmployeeinfoActivity.class);
+//        startActivity(intent);
+//        finish();
+//    }
     //删除单机触发函数
-    public void StaffDelete(View view){
-        Toast.makeText(mContext, "你点击了删除", Toast.LENGTH_SHORT).show();
-    }
+//    public void StaffDelete(View view){
+//        Toast.makeText(mContext, "你点击了删除", Toast.LENGTH_SHORT).show();
+//    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

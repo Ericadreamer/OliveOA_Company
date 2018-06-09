@@ -9,12 +9,16 @@ import java.util.ArrayList;
 public class GoodInfoJsonBean {
     private int status;
     private String msg;
-    private Properties data;
+    private ArrayList<Properties> data;
 
-    public GoodInfoJsonBean(int status, String msg, Properties data) {
+    public GoodInfoJsonBean(int status, String msg, ArrayList<Properties> data) {
         this.status = status;
         this.msg = msg;
         this.data = data;
+    }
+
+    public GoodInfoJsonBean() {
+
     }
 
     public int getStatus() {
@@ -33,11 +37,11 @@ public class GoodInfoJsonBean {
         this.msg = msg;
     }
 
-    public Properties getData() {
+    public ArrayList<Properties> getData() {
         return data;
     }
 
-    public void setData(Properties  data) {
+    public void setData(ArrayList<Properties>  data) {
         this.data = data;
     }
 

@@ -114,7 +114,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     if (httpResponseObject.getStatus()==0){
                         saveCompanyinfo(httpResponseObject);
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, LoadingDataActivity.class);
                         startActivity(intent);
                         finish();
                     }else{

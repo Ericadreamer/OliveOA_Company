@@ -7,11 +7,13 @@
         android:orientation="horizontal"
         android:paddingLeft="5dp"
         android:paddingBottom="@dimen/dp_0.5"
-        android:background="#f0f5f0">
+        android:background="#f0f5f0"
+        android:descendantFocusability="blocksDescendants">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:focusable="false">
     <ImageView
         android:id="@+id/img_icon"
         android:layout_width="35dp"
@@ -40,7 +42,8 @@
             android:background="#d9dee4"
             android:text="详情"
             android:textColor="@android:color/white"
-            android:onClick="StaffEdit" />
+            android:focusable="false"
+            />
 
         <Button
             android:id="@+id/btnDelete"
@@ -49,7 +52,8 @@
             android:background="@color/orange_deep"
             android:text="删除"
             android:textColor="@android:color/white"
-            android:onClick="StaffDelete"/>
+            android:focusable="false"
+            />
 
     </com.mcxtzhang.swipemenulib.SwipeMenuLayout>
     <!--<ImageView-->
