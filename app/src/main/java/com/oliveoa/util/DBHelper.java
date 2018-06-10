@@ -54,4 +54,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(SQL_CREATEPROPERTIES);
     }
 
+    public void deleteDatabse(String tb) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(tb+"", "1", new String[] {});
+        Log.d("Database stuff", "Database table succesfully deleted");
+        db.close();
+    }
+
 }

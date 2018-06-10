@@ -31,6 +31,8 @@ public class Const {
     public static  final  String EMPLOYEE_INFO_GETBYPOSITON = HOSTPATH + "/oliveoa/manage/employees/get_employees_by_position.do";
     public static  final  String EMPLOYEE_INFO_GETBYDEPARTMENT = HOSTPATH + "/oliveoa/manage/employees/get_employees_by_department.do";
     public static  final  String EMPLOYEE_INFO_DELETE = HOSTPATH +"/oliveoa/manage/employees/delete_employee.do";
+    public static  final  String EMPLOYEE_INFO_UPDATE = HOSTPATH +"/oliveoa/manage/employees/update_employee.do";
+
 
     public static  final  String GOODS_ADD = HOSTPATH + "/oliveoa/manage/goods/add_goods.do";
     public static  final  String GOODS_SEARCH = HOSTPATH +"/oliveoa/manage/goods/get_goods.do";

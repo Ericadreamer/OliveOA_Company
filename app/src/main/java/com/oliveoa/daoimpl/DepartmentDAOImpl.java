@@ -15,6 +15,7 @@ public class DepartmentDAOImpl implements DepartmentDAO{
 
     private DBHelper mHelpter = null;
 
+
     public DepartmentDAOImpl(Context context) {
         mHelpter = new DBHelper(context);
     }

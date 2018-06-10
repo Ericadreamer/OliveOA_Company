@@ -1,46 +1,359 @@
 package com.oliveoa.view;
 
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.OnOptionsSelectChangeListener;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.controller.EmployeeInfoService;
+import com.oliveoa.dao.DepartmentDAO;
+import com.oliveoa.daoimpl.DepartmentDAOImpl;
+import com.oliveoa.daoimpl.DutyDAOImpl;
+import com.oliveoa.daoimpl.EmployeeDAOImpl;
+import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
+import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.pojo.DutyInfo;
+import com.oliveoa.pojo.EmployeeInfo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.qqtheme.framework.picker.DatePicker;
+import cn.qqtheme.framework.picker.DoublePicker;
+import cn.qqtheme.framework.picker.LinkagePicker;
+import cn.qqtheme.framework.picker.OptionPicker;
+import cn.qqtheme.framework.util.DateUtils;
+import cn.qqtheme.framework.widget.WheelView;
+
+import static com.oliveoa.util.Validator.isEmail;
+import static com.oliveoa.util.Validator.isFixPhone;
+import static com.oliveoa.util.Validator.isMobile;
+import static com.oliveoa.util.Validator.isUrl;
+import static com.oliveoa.util.Validator.isZipCode;
 
 public class EditEmployeeinfoActivity extends AppCompatActivity {
 
+    private ArrayList<EmployeeInfo> employeeInfos;
+    private ArrayList<DepartmentInfo> departmentInfos;
+    private ArrayList<DutyInfo> dutyInfos;
+
+    private ArrayList<String> options1Items = new ArrayList<>();
+    private ArrayList<ArrayList<String>> options2Items = new ArrayList<>();
+
+    private EmployeeInfo employeeInfo;
+    private String tmpdname;
+    private String tmppname;
+
+//    DepartmentDAOImpl departmentDAO;
+//    DutyDAOImpl dutyDAO;
+//    EmployeeDAOImpl employeeDAO;
+
+    private TextView dpcid,sex,birth;
+    private EditText ename,eid,etel,eemail,eaddress;
+    private ImageView back,save;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employeeinfo_edit);
+
+        employeeInfo = getIntent().getParcelableExtra("employee");
+        Log.d("ParcelableEmployee", employeeInfo.toString());
+
+        getOptionData();
         initview();
     }
     public void initview(){
+        back = (ImageView)findViewById(R.id.info_back);
+        save = (ImageView)findViewById(R.id.info_save);
+
+        dpcid = (TextView)findViewById(R.id.content_dpcid);
+        //pcid = (TextView)findViewById(R.id.content_pcid);
+        sex =(TextView)findViewById(R.id.content_sex);
+        birth =(TextView)findViewById(R.id.content_birth);
+
+        ename = (EditText)findViewById(R.id.content_name);
+        eid = (EditText)findViewById(R.id.content_id);
+        etel =(EditText)findViewById(R.id.content_tel);
+        eemail =(EditText)findViewById(R.id.content_email);
+        eaddress =(EditText)findViewById(R.id.content_address);
+
+        initData();
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder dialog = new AlertDialog.Builder(EditEmployeeinfoActivity.this);
+                dialog.setTitle("提示");
+                dialog.setMessage("是否确定退出编辑,直接返回部门信息页面？");
+                dialog.setCancelable(false);
+                dialog.setNegativeButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        Intent intent = new Intent(EditEmployeeinfoActivity.this,EmployeeinfoActivity.class);
+                        intent.putExtra("employee",employeeInfo);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                dialog.setPositiveButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
+            }
+        });
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                save();
+            }
+        });
+
+
+
+    }
+    public void initData(){
+
+         ename.setText(employeeInfo.getName());
+         eid.setText(employeeInfo.getId());
+         etel.setText(employeeInfo.getTel());
+         eemail.setText(employeeInfo.getEmail());
+         eaddress.setText(employeeInfo.getAddress());
+
+         //DepartmentDAOImpl departmentDAO = new DepartmentDAOImpl(EditEmployeeinfoActivity.this);
+         //DutyDAOImpl dutyDAO = new DutyDAOImpl(EditEmployeeinfoActivity.this);
+         //EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(EditEmployeeinfoActivity.this);
+
+         //departmentInfos = departmentDAO.getDepartments();
+         Log.i("EditEmployeeinfo.DPInfo",departmentInfos.toString());
+         String dpname = "无";
+
+         for (int i=0;i<departmentInfos.size();i++) {
+             if (employeeInfo.getDcid().equals(departmentInfos.get(i).getDcid())){
+                 dpname = departmentInfos.get(i).getName();
+                 tmpdname =dpname;
+             }
+         }
+
+        for (int i=0;i<departmentInfos.size();i++){
+            //dutyInfos =dutyDAO.getDutys(departmentInfos.get(i).getDcid());
+            //Log.i("EditEmployeeinfo.DTInfo",dutyInfos.toString());
+            for (int j=0;j<dutyInfos.size();j++){
+                if(employeeInfo.getPcid().equals(dutyInfos.get(j).getPcid())){
+                    Log.i("EditEmployeeinfo.dtname",dutyInfos.get(j).getName());
+                    tmppname =dutyInfos.get(j).getName();
+                    break;
+                }
+            }
+        }
+        Log.i("EditEmployeeinfo.tmp",tmpdname+"-----"+tmppname);
+         if(tmppname==null){tmppname="无";}
+        dpcid.setText(dpname+":"+tmppname);
+
+        sex.setText(employeeInfo.getSex());
+        birth.setText(employeeInfo.getBirth());
+
 
     }
 
+    public void save(){
+        //Toast.makeText(mContext, "成功保存", Toast.LENGTH_SHORT).show();
+        employeeInfo.setName(ename.getText().toString().trim());
+        employeeInfo.setId(eid.getText().toString().trim());
+        employeeInfo.setSex(sex.getText().toString().trim());
+        employeeInfo.setTel(etel.getText().toString().trim());
+        employeeInfo.setBirth(birth.getText().toString().trim());
+        employeeInfo.setEmail(eemail.getText().toString().trim());
+        employeeInfo.setAddress(eaddress.getText().toString().trim());
+
+        for (int i=0;i<departmentInfos.size();i++){
+            if(tmpdname.equals(departmentInfos.get(i).getName())){
+                employeeInfo.setDcid(departmentInfos.get(i).getDcid());
+            }
+        }
+
+        DutyDAOImpl dutyDAO = new DutyDAOImpl(EditEmployeeinfoActivity.this);
+
+        for(int i=0;i<departmentInfos.size();i++){
+            dutyInfos = dutyDAO.getDutys(departmentInfos.get(i).getDcid());
+            for(int j=0;j<dutyInfos.size();j++){
+                if(tmppname.equals(dutyInfos.get(j).getName())){
+                    employeeInfo.setPcid(dutyInfos.get(j).getName());
+                }
+            }
+        }
+
+        if (TextUtils.isEmpty(employeeInfo.getName())||TextUtils.isEmpty(employeeInfo.getEmail())||
+                TextUtils.isEmpty(employeeInfo.getBirth())||TextUtils.isEmpty(employeeInfo.getAddress())||
+                TextUtils.isEmpty(employeeInfo.getId())||TextUtils.isEmpty(employeeInfo.getTel())||
+                TextUtils.isEmpty(employeeInfo.getSex())||TextUtils.isEmpty(employeeInfo.getPcid())||
+                TextUtils.isEmpty(employeeInfo.getDcid())) {
+            Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
+        }else if(!isMobile(employeeInfo.getTel())){
+            Toast.makeText(getApplicationContext(), "联系方式格式输入错误！请以手机格式重新输入", Toast.LENGTH_SHORT).show();
+        } else if(!isEmail(employeeInfo.getEmail())) {
+            Toast.makeText(getApplicationContext(), "邮箱格式输入错误！请重新输入", Toast.LENGTH_SHORT).show();
+        } else {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    //读取SharePreferences的cookies
+                    SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
+                    String s = pref.getString("sessionid", "");
+
+                    EmployeeInfoService employeeInfoService = new EmployeeInfoService();
+                    StatusAndMsgJsonBean statusAndMsgJsonBean = employeeInfoService.updateemployeeinfo(s, employeeInfo);
+                    if (statusAndMsgJsonBean.getStatus() == 0) {
+                        Looper.prepare();
+                        Toast.makeText(getApplicationContext(), "保存成功！点击返回键返回主页", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                    } else {
+                        Looper.prepare();
+                        Toast.makeText(getApplicationContext(), statusAndMsgJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                    }
+                }
+            }).start();
+        }
+    }
+
+    //年月选择器
     public void onYearMonthPicker(View view) {
         DatePicker picker = new DatePicker(this, DatePicker.YEAR_MONTH);
-        picker.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-        picker.setWidth((int) (picker.getScreenWidthPixels() * 0.6));
-        picker.setRangeStart(2016, 10, 14);
+        //picker.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+        picker.setTitleTextSize(20);
+        picker.setWidth((int) (picker.getScreenWidthPixels() * 1));
+        picker.setRangeStart(1900, 01, 01);
         picker.setRangeEnd(2020, 11, 11);
-        picker.setSelectedItem(2017, 9);
+        picker.setSelectedItem(1996, 12);
         picker.setOnDatePickListener(new DatePicker.OnYearMonthPickListener() {
             @Override
             public void onDatePicked(String year, String month) {
+                birth.setText(year+"-"+month);
                 //showToast(year + "-" + month);
             }
         });
         picker.show();
     }
+
+    //单项选择器
+    public void onOptionPicker(View view) {
+        OptionPicker picker = new OptionPicker(this, new String[]{
+                "男", "女"
+        });
+        picker.setCanceledOnTouchOutside(false);
+        picker.setDividerRatio(WheelView.DividerConfig.FILL);
+        picker.setShadowColor(Color.WHITE, 40);
+        picker.setSelectedIndex(0);
+        picker.setCycleDisable(true);
+        picker.setTextSize(18);
+        picker.setTitleTextSize(20);
+        picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
+            @Override
+            public void onOptionPicked(int index, String item) {
+                sex.setText(item);
+                //showToast("index=" + index + ", item=" + item);
+            }
+        });
+        picker.show();
+    }
+
+    //重写showToast
+    private void showToast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+
+    public void onLinkagePicker(View view) {
+        OptionsPickerView pvOptions = new OptionsPickerBuilder(EditEmployeeinfoActivity.this, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3 ,View v) {
+                //返回的分别是三个级别的选中位置
+                String tx = options1Items.get(options1)
+                        + ":" +options2Items.get(options1).get(option2);
+                /* + options3Items.get(options1).get(options2).get(options3).getPickerViewText()*/;
+                dpcid.setText(tx);
+            }
+        })
+                .setTitleText("部门职务选择")
+//                .setContentTextSize(18)//设置滚轮文字大小
+//                .setDividerColor(Color.rgb(121,188,230))//设置分割线的颜色
+//                .setSelectOptions(0, 1)//默认选中项
+//                .setBgColor(Color.WHITE)
+//                .setTitleBgColor(Color.WHITE)
+//                .setTitleColor(Color.BLACK)
+//                .setTitleSize(18)
+//                .setCancelColor(Color.rgb(121,188,230))
+//                .setSubmitColor(Color.rgb(121,188,230))
+//                .setSubCalSize(16)
+//                .setTextColorCenter(Color.DKGRAY)
+                .isRestoreItem(true)//切换时是否还原，设置默认选中第一项。
+                .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
+                .setLabels("", "","")
+//                .setBackgroundId(0x00000000) //设置外部遮罩颜色
+                .setOptionsSelectChangeListener(new OnOptionsSelectChangeListener() {
+                    @Override
+                    public void onOptionsSelectChanged(int options1, int options2, int options3) {
+                        String str = "options1: " + options1 + "\noptions2: " + options2 + "\noptions3: " + options3;
+                        Toast.makeText(EditEmployeeinfoActivity.this, str, Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .build();
+
+        pvOptions.setPicker(options1Items, options2Items);//二级选择器
+        pvOptions.show();
+    }
+    private void getOptionData() {
+        DepartmentDAOImpl departmentDAO = new DepartmentDAOImpl(EditEmployeeinfoActivity.this);
+        DutyDAOImpl dutyDAO = new DutyDAOImpl(EditEmployeeinfoActivity.this);
+
+        departmentInfos = departmentDAO.getDepartments();
+        //选项1
+        for (int i =0;i<departmentInfos.size();i++){
+            options1Items.add(departmentInfos.get(i).getName());
+        }
+
+        //选项2
+        for(int i=0;i<departmentInfos.size();i++){
+            dutyInfos =dutyDAO.getDutys(departmentInfos.get(i).getDcid());
+            //Log.i("EditEmployeeinfo.DTInfo",dutyInfos.toString());
+            ArrayList<String> options2Item = new ArrayList<>();
+            for(int j =1;j<dutyInfos.size();j++){
+                options2Item.add(dutyInfos.get(j).getName());
+            }
+            options2Items.add(options2Item);
+        }
+
+        /*--------数据源添加完毕---------*/
+    }
+
+
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

@@ -55,4 +55,5 @@ dependencies {
     implementation ('com.github.gzu-liyujiang.AndroidPicker:ColorPicker:1.5.6') {
         exclude group: 'com.android.support'
     }
+    implementation 'com.contrarywind:Android-PickerView:4.1.3'
 }

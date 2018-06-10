@@ -28,6 +28,7 @@ import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.Properties;
+import com.oliveoa.util.DBHelper;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -53,6 +54,20 @@ public class LoadingDataActivity extends AppCompatActivity {
                 //读取SharePreferences的cookies
                 SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
                 String s = pref.getString("sessionid","");
+
+                DBHelper dbHelper = new DBHelper(LoadingDataActivity.this);
+                try {
+                    dbHelper.deleteDatabse("department_info");
+                    dbHelper.deleteDatabse("duty_info");
+                    dbHelper.deleteDatabse("properties_info");
+                    dbHelper.deleteDatabse("employee_info");
+
+
+                }catch (Exception e){
+                    Log.e("删除表异常",e.getMessage());
+                    e.printStackTrace();
+
+                }
 
                 //实例化DAOImpl
                 DepartmentDAO departmentDAO = new DepartmentDAOImpl(LoadingDataActivity.this);

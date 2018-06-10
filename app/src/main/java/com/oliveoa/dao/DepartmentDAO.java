@@ -30,6 +30,7 @@ public interface DepartmentDAO {
     public ArrayList<DepartmentInfo> getDepartments();
 
 
+
     /**\
      * 部门信息是否存在
      * @return

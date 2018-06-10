@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.mcxtzhang.swipemenulib.SwipeMenuLayout
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_48"
-        android:clickable="true"
         android:orientation="horizontal"
         android:paddingLeft="5dp"
         android:paddingBottom="@dimen/dp_0.5"
@@ -34,28 +33,28 @@
         android:textSize="18sp" />
 
       </LinearLayout>
-        <!-- 以下都是侧滑菜单的内容依序排列 -->
-        <Button
-            android:id="@+id/btnEdit"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:background="#d9dee4"
-            android:text="详情"
-            android:textColor="@android:color/white"
-            android:focusable="false"
-            />
+        <!--&lt;!&ndash; 以下都是侧滑菜单的内容依序排列 &ndash;&gt;-->
+        <!--<Button-->
+            <!--android:id="@+id/btnEdit"-->
+            <!--android:layout_width="60dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="#d9dee4"-->
+            <!--android:text="详情"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:focusable="false"-->
+            <!--/>-->
 
-        <Button
-            android:id="@+id/btnDelete"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
-            android:background="@color/orange_deep"
-            android:text="删除"
-            android:textColor="@android:color/white"
-            android:focusable="false"
-            />
+        <!--<Button-->
+            <!--android:id="@+id/btnDelete"-->
+            <!--android:layout_width="60dp"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/orange_deep"-->
+            <!--android:text="删除"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:focusable="false"-->
+            <!--/>-->
 
-    </com.mcxtzhang.swipemenulib.SwipeMenuLayout>
+    </LinearLayout>
     <!--<ImageView-->
         <!--android:id="@+id/img_icon"-->
         <!--android:layout_width="@dimen/dp_30"-->

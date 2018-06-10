@@ -1,6 +1,7 @@
 package com.oliveoa.view;
 
 import android.content.Intent;
+import android.os.TestLooperManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,11 +9,16 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.dao.DepartmentDAO;
+import com.oliveoa.daoimpl.DepartmentDAOImpl;
+import com.oliveoa.daoimpl.DutyDAOImpl;
 import com.oliveoa.daoimpl.EmployeeDAOImpl;
 import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.Group;
 import com.oliveoa.pojo.Item;
@@ -25,16 +31,22 @@ import java.util.TimerTask;
 public class EmployeeinfoActivity extends AppCompatActivity {
 
     private ImageView back,edit;
-    private ArrayList<EmployeeInfo> employeeInfo;
-    private ArrayList<DepartmentInfo> departmentInfo;
+    private TextView tname,dname,pname,id,sex,birth,tel,email,address;
+
+
+    private ArrayList<EmployeeInfo> employeeInfos;
+    private ArrayList<DepartmentInfo> departmentInfos;
+    private ArrayList<DutyInfo> dutynfos;
+    private EmployeeInfo employeeInfo;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employeeinfo);
 
-        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        Log.d("ParcelableDepartment", departmentInfo.toString());
+        employeeInfo = getIntent().getParcelableExtra("employee");
+        Log.d("ParcelableEmployee", employeeInfo.toString());
         initView();
     }
 
@@ -44,15 +56,23 @@ public class EmployeeinfoActivity extends AppCompatActivity {
         back =(ImageView)findViewById(R.id.info_back);
         edit =(ImageView)findViewById(R.id.info_edit);
 
-        EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(EmployeeinfoActivity.this);
+        tname =(TextView) findViewById(R.id.content_name);
+        dname =(TextView) findViewById(R.id.content_id);
+        pname =(TextView) findViewById(R.id.content_pcid);
+        id =(TextView)findViewById(R.id.content_id);
+        sex = (TextView)findViewById(R.id.content_sex);
+        birth =(TextView)findViewById(R.id.content_birth);
+        tel =(TextView)findViewById(R.id.content_tel);
+        email = (TextView)findViewById(R.id.content_email);
+        address =(TextView)findViewById(R.id.content_address);
 
 
+        initData();
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EmployeeinfoActivity.this, EmployeelistActivity.class);
-                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
                 startActivity(intent);
                 finish();
                 //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
@@ -63,13 +83,45 @@ public class EmployeeinfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(EmployeeinfoActivity.this, EditEmployeeinfoActivity.class);
-                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
+                intent.putExtra("employee",employeeInfo);
                 startActivity(intent);
                 finish();
             }
         });
 
     }
+    public void initData(){
+        final EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(EmployeeinfoActivity.this);
+        final DepartmentDAO departmentDAO = new DepartmentDAOImpl(EmployeeinfoActivity.this);
+        final DutyDAOImpl dutyDAO = new DutyDAOImpl(EmployeeinfoActivity.this);
+
+        tname.setText(employeeInfo.getName());
+
+        departmentInfos = departmentDAO.getDepartments();
+        for(int i =0;i<departmentInfos.size();i++){
+            if(employeeInfo.getDcid().equals(departmentInfos.get(i).getDcid())){
+                dname.setText(departmentInfos.get(i).getName());
+            }
+        }
+
+        for(int i =0;i<departmentInfos.size();i++) {
+            dutynfos = dutyDAO.getDutys(departmentInfos.get(i).getDcid());
+            for (int j = 0; j < dutynfos.size(); j++) {
+                if(employeeInfo.getPcid().equals(dutynfos.get(i).getPcid())){
+                    dname.setText(dutynfos.get(i).getName());
+                }
+            }
+        }
+
+        id.setText(employeeInfo.getId());
+        sex.setText(employeeInfo.getSex());
+        birth.setText(employeeInfo.getBirth());
+        tel.setText(employeeInfo.getTel());
+        email.setText(employeeInfo.getEmail());
+        address.setText(employeeInfo.getAddress());
+
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

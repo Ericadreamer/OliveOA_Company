@@ -142,7 +142,7 @@ public class GoodInfoService {
 
     }
     //删除物品
-    public StatusAndMsgJsonBean deleteduty (String s, String gid) {
+    public StatusAndMsgJsonBean deleteproperty (String s, String gid) {
         try {
             Log.i("info_Login","知道了session："+s);
             FormBody body = new FormBody.Builder()

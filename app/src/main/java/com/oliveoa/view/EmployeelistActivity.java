@@ -2,9 +2,12 @@ package com.oliveoa.view;
 
 import android.content.Context;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Looper;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -12,9 +15,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,9 +28,11 @@ import java.util.TimerTask;
 
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.controller.EmployeeInfoService;
 import com.oliveoa.dao.DepartmentDAO;
 import com.oliveoa.daoimpl.DepartmentDAOImpl;
 import com.oliveoa.daoimpl.EmployeeDAOImpl;
+import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.Group;
@@ -47,6 +54,8 @@ public class EmployeelistActivity extends AppCompatActivity {
     private ArrayList<EmployeeInfo> employeeInfo;
     private ArrayList<DepartmentInfo> departmentInfo;
 
+
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employeelist);
@@ -60,8 +69,8 @@ public class EmployeelistActivity extends AppCompatActivity {
         back =(ImageView)findViewById(R.id.info_back);
         add =(ImageView)findViewById(R.id.add);
 
-        EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(EmployeelistActivity.this);
-        DepartmentDAO departmentDAO = new DepartmentDAOImpl(EmployeelistActivity.this);
+        final EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(EmployeelistActivity.this);
+        final DepartmentDAOImpl departmentDAO = new DepartmentDAOImpl(EmployeelistActivity.this);
         departmentInfo = departmentDAO.getDepartments();
 
         //数据准备
@@ -87,9 +96,32 @@ public class EmployeelistActivity extends AppCompatActivity {
             @Override
         public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
             Log.i("" + EmployeelistActivity.this, "group " + groupPosition + " child " + childPosition);
+            employeeInfo = employeeDAO.getEmployees(departmentInfo.get(groupPosition).getDcid());
+            Intent intent = new Intent(EmployeelistActivity.this, EmployeeinfoActivity.class);
+            intent.putExtra("employee",employeeInfo.get(childPosition));
+            startActivity(intent);
+            finish();
             return false;
         }
         });
+       exlist_staff.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int arg2, long arg3) {
+                final TextView name = (TextView)arg1.findViewById(R.id.tv_name);
+                final String name_str= name.getText().toString().trim();
+                AlertDialog.Builder builder= new AlertDialog.Builder(EmployeelistActivity.this);
+                builder.setTitle("警告");
+                builder.setMessage("您生在试图删除"+name_str+"这名职员，确定删除吗？");
+                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                         deleteEmployee(name_str);
+            }});
+                builder.setNegativeButton("取消",null);
+                builder.show();
+                return true;
+                }
+       });
 
         exlist_staff.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
@@ -119,6 +151,50 @@ public class EmployeelistActivity extends AppCompatActivity {
         });
 
     }
+    public void  deleteEmployee(String name_str){
+        final String name = name_str;
+        final EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(EmployeelistActivity.this);
+
+       // Log.e("departmentSize", String.valueOf(departmentInfo.size()));
+        Log.e("employeeSize", String.valueOf(employeeInfo.size()));
+        Log.e("employeeInfo", employeeInfo.toString());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+            for(int i=0;i<departmentInfo.size();i++) {
+                employeeInfo = employeeDAO.getEmployees(departmentInfo.get(i).getDcid());
+                for (int j = 0; j < employeeInfo.size(); j++) {
+                    Log.e("employeeName", employeeInfo.get(j).getName());
+                    if (employeeInfo.get(j).getName().equals(name)) {
+                        //读取SharePreferences的cookies
+                        SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
+                        String s = pref.getString("sessionid", "");
+
+                        EmployeeInfoService employeeInfoService = new EmployeeInfoService();
+                        StatusAndMsgJsonBean statusAndMsgJsonBean = employeeInfoService.deleteemployee(s, employeeInfo.get(i).getEid());
+
+
+                        if (statusAndMsgJsonBean.getStatus() == 0) {
+                            employeeDAO.deleteEmployee(employeeInfo.get(j).getEid());
+                            employeeInfo.remove(employeeInfo.get(j));
+
+                            Looper.prepare();//解决子线程弹toast问题
+                            Toast.makeText(getApplicationContext(), "删除成功！", Toast.LENGTH_SHORT).show();
+                            Looper.loop();// 进入loop中的循环，查看消息队列
+
+                        } else {
+                            Looper.prepare();//解决子线程弹toast问题
+                            Toast.makeText(getApplicationContext(), "网络错误，获取部门信息失败", Toast.LENGTH_SHORT).show();
+                            Looper.loop();// 进入loop中的循环，查看消息队列
+                        }
+                    }
+                }
+            }
+            }
+        }).start();
+    }
+
+
 
     /**
      *  对于这种include下还包含着expendlistview，expendlistview下又有两个xml文件，尝试直接在本Activity用findviewbyid获取item_exlist_iten.xml里的button
