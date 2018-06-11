@@ -26,32 +26,29 @@ import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.controller.EmployeeInfoService;
-import com.oliveoa.dao.DepartmentDAO;
+
 import com.oliveoa.daoimpl.DepartmentDAOImpl;
 import com.oliveoa.daoimpl.DutyDAOImpl;
-import com.oliveoa.daoimpl.EmployeeDAOImpl;
+
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.qqtheme.framework.picker.DatePicker;
-import cn.qqtheme.framework.picker.DoublePicker;
-import cn.qqtheme.framework.picker.LinkagePicker;
+import cn.qqtheme.framework.picker.DateTimePicker;
+
 import cn.qqtheme.framework.picker.OptionPicker;
-import cn.qqtheme.framework.util.DateUtils;
+import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 
 import static com.oliveoa.util.Validator.isEmail;
-import static com.oliveoa.util.Validator.isFixPhone;
 import static com.oliveoa.util.Validator.isMobile;
-import static com.oliveoa.util.Validator.isUrl;
-import static com.oliveoa.util.Validator.isZipCode;
+
 
 public class EditEmployeeinfoActivity extends AppCompatActivity {
 
@@ -245,11 +242,16 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
     public void onYearMonthPicker(View view) {
         DatePicker picker = new DatePicker(this, DatePicker.YEAR_MONTH);
         //picker.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-        picker.setTitleTextSize(20);
+        picker.setTitleTextSize(16);
+        picker.setTitleTextColor(Color.BLACK);
+        picker.setTitleText("年月选择");
         picker.setWidth((int) (picker.getScreenWidthPixels() * 1));
         picker.setRangeStart(1900, 01, 01);
         picker.setRangeEnd(2020, 11, 11);
         picker.setSelectedItem(1996, 12);
+        picker.setTopLineColor(Color.WHITE);
+        picker.setSubmitTextSize(16);
+        picker.setCancelTextSize(16);
         picker.setOnDatePickListener(new DatePicker.OnYearMonthPickListener() {
             @Override
             public void onDatePicked(String year, String month) {
@@ -260,18 +262,83 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
         picker.show();
     }
 
+    public void onYearMonthDayPicker(View view) {
+        final DatePicker picker = new DatePicker(this);
+        picker.setCanceledOnTouchOutside(true);
+        picker.setUseWeight(true);
+        picker.setTopPadding(ConvertUtils.toPx(this, 10));
+        picker.setRangeEnd(2111, 1, 11);
+        picker.setRangeStart(2016, 8, 29);
+        picker.setSelectedItem(2050, 10, 14);
+        picker.setResetWhileWheel(false);
+        picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {
+            @Override
+            public void onDatePicked(String year, String month, String day) {
+                birth.setText(year+"-"+month+"-"+day);
+               // showToast(year + "-" + month + "-" + day);
+            }
+        });
+        picker.setOnWheelListener(new DatePicker.OnWheelListener() {
+            @Override
+            public void onYearWheeled(int index, String year) {
+                picker.setTitleText(year + "-" + picker.getSelectedMonth() + "-" + picker.getSelectedDay());
+            }
+
+            @Override
+            public void onMonthWheeled(int index, String month) {
+                picker.setTitleText(picker.getSelectedYear() + "-" + month + "-" + picker.getSelectedDay());
+            }
+
+            @Override
+            public void onDayWheeled(int index, String day) {
+                picker.setTitleText(picker.getSelectedYear() + "-" + picker.getSelectedMonth() + "-" + day);
+            }
+        });
+        picker.show();
+    }
+
+    //年月日时分选择器
+    public void onYearMonthDayTimePicker(View view) {
+        DateTimePicker picker = new DateTimePicker(this, DateTimePicker.HOUR_24);
+        picker.setDateRangeStart(1900, 1, 1);
+        picker.setDateRangeEnd(2025, 11, 11);
+        picker.setTimeRangeStart(9, 0);
+        picker.setTimeRangeEnd(20, 30);
+       // picker.setTopLineColor(0x99FF0000);
+        picker.setLabelTextColor(0xFFFF0000);
+        picker.setDividerColor(0xFFFF0000);
+        picker.setTopLineColor(Color.WHITE);
+        picker.setSubmitTextSize(16);
+        picker.setCancelTextSize(16);
+        picker.setTitleTextColor(Color.BLACK);
+        picker.setTitleText("年月日选择");
+        picker.setOnDateTimePickListener(new DateTimePicker.OnYearMonthDayTimePickListener() {
+            @Override
+            public void onDateTimePicked(String year, String month, String day, String hour, String minute) {
+                //birth.setText(year+"-"+month+"-"+day + " " + hour + ":" + minute);
+                //showToast(year + "-" + month + "-" + day + " " + hour + ":" + minute);
+            }
+        });
+        picker.show();
+    }
+
     //单项选择器
     public void onOptionPicker(View view) {
         OptionPicker picker = new OptionPicker(this, new String[]{
                 "男", "女"
         });
+        picker.setTitleTextColor(Color.BLACK);
+        picker.setTitleText("性别选择");
         picker.setCanceledOnTouchOutside(false);
         picker.setDividerRatio(WheelView.DividerConfig.FILL);
         picker.setShadowColor(Color.WHITE, 40);
         picker.setSelectedIndex(0);
         picker.setCycleDisable(true);
         picker.setTextSize(18);
-        picker.setTitleTextSize(20);
+        picker.setTitleTextSize(16);
+        picker.setTopLineColor(Color.WHITE);
+        picker.setSubmitTextSize(16);
+        picker.setCancelTextSize(16);
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
             public void onOptionPicked(int index, String item) {
@@ -287,7 +354,7 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 
-
+    //多级联动
     public void onLinkagePicker(View view) {
         OptionsPickerView pvOptions = new OptionsPickerBuilder(EditEmployeeinfoActivity.this, new OnOptionsSelectListener() {
             @Override
@@ -299,27 +366,29 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
                 dpcid.setText(tx);
             }
         })
+                .setTitleColor(Color.BLACK)
                 .setTitleText("部门职务选择")
-//                .setContentTextSize(18)//设置滚轮文字大小
-//                .setDividerColor(Color.rgb(121,188,230))//设置分割线的颜色
-//                .setSelectOptions(0, 1)//默认选中项
-//                .setBgColor(Color.WHITE)
-//                .setTitleBgColor(Color.WHITE)
-//                .setTitleColor(Color.BLACK)
-//                .setTitleSize(18)
-//                .setCancelColor(Color.rgb(121,188,230))
-//                .setSubmitColor(Color.rgb(121,188,230))
-//                .setSubCalSize(16)
-//                .setTextColorCenter(Color.DKGRAY)
+                .setContentTextSize(18)//设置滚轮文字大小
+                .setDividerColor(Color.rgb(0,178,238))//设置分割线的颜色
+                .setDividerType(com.contrarywind.view.WheelView.DividerType.WRAP)
+                .setSelectOptions(0, 1)//默认选中项
+                .setBgColor(Color.WHITE)
+                .setTitleBgColor(Color.WHITE)
+                .setTitleSize(16)
+                .setCancelColor(Color.rgb(0,178,238))
+                .setSubmitColor(Color.rgb(0,178,238))
+                .setSubCalSize(16)
+                .setTextColorCenter(Color.rgb(0,178,238))
                 .isRestoreItem(true)//切换时是否还原，设置默认选中第一项。
                 .isCenterLabel(false) //是否只显示中间选中项的label文字，false则每项item全部都带有label。
                 .setLabels("", "","")
-//                .setBackgroundId(0x00000000) //设置外部遮罩颜色
+                .setBackgroundId(0x00000000) //设置外部遮罩颜色
                 .setOptionsSelectChangeListener(new OnOptionsSelectChangeListener() {
                     @Override
                     public void onOptionsSelectChanged(int options1, int options2, int options3) {
-                        String str = "options1: " + options1 + "\noptions2: " + options2 + "\noptions3: " + options3;
-                        Toast.makeText(EditEmployeeinfoActivity.this, str, Toast.LENGTH_SHORT).show();
+                       //String str = "options1: " + options1 + "\noptions2: " + options2 + "\noptions3: " + options3;
+                       // Toast.makeText(EditEmployeeinfoActivity.this, str, Toast.LENGTH_SHORT).show();
+                        dpcid.setText(options1Items.get(options1)+":"+options2Items.get(options2));
                     }
                 })
                 .build();
@@ -327,6 +396,8 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
         pvOptions.setPicker(options1Items, options2Items);//二级选择器
         pvOptions.show();
     }
+
+    //联动数据获取
     private void getOptionData() {
         DepartmentDAOImpl departmentDAO = new DepartmentDAOImpl(EditEmployeeinfoActivity.this);
         DutyDAOImpl dutyDAO = new DutyDAOImpl(EditEmployeeinfoActivity.this);
@@ -350,7 +421,6 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
 
         /*--------数据源添加完毕---------*/
     }
-
 
 
 

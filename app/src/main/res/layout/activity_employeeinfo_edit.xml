@@ -19,6 +19,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/back"
+            android:clickable="true"
             android:background="@color/colorPrimary"
             android:layout_gravity="center_vertical"
             android:layout_margin="15dp"/>
@@ -37,6 +38,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/save"
+            android:clickable="true"
             android:background="@color/colorPrimary"
             android:layout_gravity="center_vertical"
             android:layout_margin="15dp"/>/>
@@ -279,7 +281,7 @@
                     android:layout_marginRight="@dimen/dp_20"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_next"
-                    android:onClick="onYearMonthPicker"/>
+                    android:onClick="onYearMonthDayPicker"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"

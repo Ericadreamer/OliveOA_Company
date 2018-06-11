@@ -246,7 +246,7 @@
                     android:layout_marginRight="@dimen/dp_20"
                     android:layout_gravity="center_vertical"
                     android:src="@drawable/ic_next"
-                    android:onClick="onYearMonthPicker"/>
+                    android:onClick="onYearMonthDayPicker"/>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
