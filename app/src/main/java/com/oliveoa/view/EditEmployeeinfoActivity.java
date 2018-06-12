@@ -101,6 +101,7 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                System.out.println("dsdsdsda");
                 AlertDialog.Builder dialog = new AlertDialog.Builder(EditEmployeeinfoActivity.this);
                 dialog.setTitle("提示");
                 dialog.setMessage("是否确定退出编辑,直接返回部门信息页面？");
@@ -262,14 +263,15 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
         picker.show();
     }
 
+    //年月日选择器
     public void onYearMonthDayPicker(View view) {
         final DatePicker picker = new DatePicker(this);
         picker.setCanceledOnTouchOutside(true);
         picker.setUseWeight(true);
         picker.setTopPadding(ConvertUtils.toPx(this, 10));
-        picker.setRangeEnd(2111, 1, 11);
-        picker.setRangeStart(2016, 8, 29);
-        picker.setSelectedItem(2050, 10, 14);
+        picker.setRangeEnd(2111, 1, 1);
+        picker.setRangeStart(1900, 1, 1);
+        picker.setSelectedItem(1996, 07, 03);
         picker.setResetWhileWheel(false);
         picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {
             @Override
