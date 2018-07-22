@@ -38,11 +38,11 @@
         </LinearLayout>
         <ImageView
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_170"
+            android:layout_height="184dp"
             android:src="@drawable/homepic"/>
         <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="265dp"
+            android:layout_height="220dp"
             android:layout_gravity="center"
             android:layout_marginTop="-40dp">
             <View
@@ -74,7 +74,7 @@
             android:layout_width="290dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="-220dp">
+            android:layout_marginTop="-180dp">
             <RadioButton
                 android:id="@+id/departionicon"
                 android:layout_width="wrap_content"
@@ -109,7 +109,7 @@
             android:layout_width="290dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/dp_20"
             >
 
                 <RadioButton
