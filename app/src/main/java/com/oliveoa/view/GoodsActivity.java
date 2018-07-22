@@ -1,10 +1,8 @@
 package com.oliveoa.view;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -18,14 +16,13 @@ import com.oliveoa.util.GoodsAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 
 public class GoodsActivity extends AppCompatActivity {
 
-    private ImageView back;
+    private ImageView back,add;
     private List<Goods> goodsList;
     private GoodsAdapter adapter;
     private RecyclerView recyclerView;
@@ -54,7 +51,7 @@ public class GoodsActivity extends AppCompatActivity {
 
     private void initGoods() {
         goodsList = new ArrayList<Goods>();
-        goodsList.add(new Goods("打印机","打印资料文件"));
+        goodsList.add(new Goods("佳能单反相机","广告外拍","那只喵借用未还"));
         /*goodsList.clear();
         for (int i = 0; i < 50; i++) {
             Random random = new Random();
@@ -65,6 +62,7 @@ public class GoodsActivity extends AppCompatActivity {
 
     public void initView() {
         back = (ImageView)findViewById(R.id.back);
+        add = (ImageView)findViewById(R.id.add);
 
         //点击事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
@@ -73,6 +71,16 @@ public class GoodsActivity extends AppCompatActivity {
                 Intent intent = new Intent(GoodsActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GoodsActivity.this, AddGoodsActivity.class);
+                startActivity(intent);
+                finish();
+                //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
             }
         });
     }

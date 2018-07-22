@@ -16,7 +16,7 @@ import java.util.TimerTask;
 
 public class GoodsInfoActivity extends AppCompatActivity {
 
-    private ImageView back;
+    private ImageView back,edit;
     private TextView tname,tquantity,tdescription,tduty;
 
     @Override
@@ -29,6 +29,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
 
     public void initView() {
         back = (ImageView)findViewById(R.id.back);
+        edit = (ImageView)findViewById(R.id.info_edit);
         tname = (TextView)findViewById(R.id.goods_name);
         tquantity = (TextView)findViewById(R.id.goods_quantity);
         tdescription = (TextView)findViewById(R.id.goods_description);
@@ -39,6 +40,15 @@ public class GoodsInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(GoodsInfoActivity.this, GoodsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        edit.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(GoodsInfoActivity.this, EditGoodsActivity.class);
                 startActivity(intent);
                 finish();
             }

@@ -9,13 +9,13 @@
 <android.support.v7.widget.CardView
     android:id="@+id/card_view"
     android:layout_width="match_parent"
-    android:layout_height="151dp"
+    android:layout_height="130dp"
     tools:targetApi="lollipop"
     android:clickable="true"
     android:stateListAnimator="@drawable/selector_elevation"
-    android:layout_marginLeft="@dimen/dp_8"
-    android:layout_marginRight="@dimen/dp_8"
-    android:layout_marginBottom="@dimen/dp_8"
+    android:layout_marginLeft="@dimen/dp_4"
+    android:layout_marginRight="@dimen/dp_4"
+    android:layout_marginBottom="@dimen/dp_2"
     android:foreground="?android:attr/selectableItemBackground"
     app:cardCornerRadius="@dimen/dp_8"
     app:cardUseCompatPadding="true"
@@ -31,7 +31,8 @@
         //物品名称
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp">
+        android:layout_height="70dp"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/to_info"
@@ -43,7 +44,7 @@
             android:layout_marginRight="16dp"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="@dimen/dp_220"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
@@ -66,9 +67,18 @@
 
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/goods_delete"
+            android:layout_width="@dimen/dp_30"
+            android:layout_height="@dimen/dp_30"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_delete"
+            android:background="#0000"
+            android:scaleType="centerInside" />
+
     </LinearLayout>
 
-        //竖线
+        //横线
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
@@ -78,101 +88,27 @@
             android:layout_marginRight="@dimen/dp_10"
             android:layout_marginLeft="@dimen/dp_10" />
 
-        //借用记录、编辑
+        //借用记录
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_80"
-            android:orientation="horizontal">
+            android:layout_height="@dimen/dp_60"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dp_10">
             //借用记录
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_35"
-                    android:gravity="center"
-                    android:textColor="#101010"
-                    android:textSize="16sp"
-                    android:text="借用记录"/>
-                <TextView
-                    android:id="@+id/goods_record"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:textColor="@color/LoginPrimaryDark"
-                    android:text="那只喵借用未还"/>
-
-
-            </LinearLayout>
-
-            //竖线
-            <View
-                android:layout_width="@dimen/dp_1"
-                android:layout_height="60dp"
-                android:gravity="center_vertical"
-                android:layout_gravity="center_vertical"
-                android:background="@color/bodyline" />
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/dp_35"
-                    android:gravity="center"
-                    android:textColor="#101010"
-                    android:textSize="16sp"
-                    android:text="编辑"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <ImageButton
-                            android:id="@+id/goods_edit"
-                            android:src="@drawable/ic_edit"
-                            android:layout_width="@dimen/dp_40"
-                            android:layout_height="@dimen/dp_40"
-                            android:layout_gravity="center"
-                            android:background="#0000"
-                            android:scaleType="centerInside"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                    <ImageButton
-                        android:id="@+id/goods_delete"
-                        android:layout_width="@dimen/dp_30"
-                        android:layout_height="@dimen/dp_30"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/dp_3"
-                        android:src="@drawable/ic_delete"
-                        android:background="#0000"
-                        android:scaleType="centerInside"/>
-                    </LinearLayout>
-
-
-                </LinearLayout>
-
-            </LinearLayout>
-
+            <TextView
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_35"
+                android:textColor="#101010"
+                android:gravity="center"
+                android:textSize="16sp"
+                android:text="借用记录："/>
+            <TextView
+                android:id="@+id/goods_record"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_35"
+                android:textColor="#101010"
+                android:textSize="16sp"
+                android:text="那只喵借用未还"/>
         </LinearLayout>
     </LinearLayout>
 

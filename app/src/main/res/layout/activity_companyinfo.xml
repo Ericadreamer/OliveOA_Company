@@ -39,7 +39,7 @@
                 android:src="@drawable/edit"
                 android:background="@color/colorPrimary"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="15dp"/>/>
+                android:layout_margin="15dp"/>
 
         </LinearLayout>
 

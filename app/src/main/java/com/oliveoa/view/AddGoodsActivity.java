@@ -5,10 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.util.LinesEditView;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,7 +19,8 @@ import java.util.TimerTask;
 public class AddGoodsActivity extends AppCompatActivity {
 
     private ImageView back,save,next;
-
+    private EditText tname;
+    private EditText tquantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,11 @@ public class AddGoodsActivity extends AppCompatActivity {
         back = (ImageView)findViewById(R.id.back);
         save = (ImageView)findViewById(R.id.save);
         next = (ImageView)findViewById(R.id.next);
+        tname = (EditText) findViewById(R.id.edit_goods_name);
+        tquantity = (EditText) findViewById(R.id.quantity);
+
+        LinesEditView linesEditView = new LinesEditView(AddGoodsActivity.this);
+        String test = linesEditView.getContentText();
 
         //点击事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页

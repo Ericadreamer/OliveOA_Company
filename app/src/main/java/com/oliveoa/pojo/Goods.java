@@ -3,12 +3,21 @@ package com.oliveoa.pojo;
 public class Goods {
     private String gName;
     private String gDescription;
-    //private String gDecord;
+    private String gRecord;
 
-    public Goods(String gName, String gDescription) {
+
+    public String getgRecord() {
+        return gRecord;
+    }
+
+    public void setgRecord(String gRecord) {
+        this.gRecord = gRecord;
+    }
+
+    public Goods(String gName, String gDescription,String gRecord) {
         this.gName = gName;
         this.gDescription = gDescription;
-        //this.gDecord = gDecord;
+        this.gRecord = gRecord;
     }
 
     public String getgName() {
@@ -27,11 +36,4 @@ public class Goods {
         this.gDescription = gDescription;
     }
 
-    /*public String getgDecord() {
-        return gDecord;
-    }
-
-    public void setgDecord(String gDecord) {
-        this.gDecord = gDecord;
-    }*/
 }

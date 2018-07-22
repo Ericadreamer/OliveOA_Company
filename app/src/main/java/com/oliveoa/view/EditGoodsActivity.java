@@ -21,7 +21,7 @@ public class EditGoodsActivity extends AppCompatActivity {
 
     private ImageView back,save,next;
     private EditText tname;
-    private TextView tquantity;
+    private EditText tquantity;
     private EditText tcontent;
 
     @Override
@@ -38,7 +38,7 @@ public class EditGoodsActivity extends AppCompatActivity {
         next = (ImageView) findViewById(R.id.next);
 
         tname = (EditText) findViewById(R.id.edit_goods_name);
-        tquantity = (TextView) findViewById(R.id.quantity);
+        tquantity = (EditText) findViewById(R.id.quantity);
 
         LinesEditView linesEditView = new LinesEditView(EditGoodsActivity.this);
         String test = linesEditView.getContentText();

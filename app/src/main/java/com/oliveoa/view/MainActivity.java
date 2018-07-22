@@ -222,6 +222,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
         }
     }
+
     private void initWindow() {//初始化窗口属性，让状态栏和导航栏透明
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
            // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);

@@ -118,7 +118,7 @@
                             android:textSize="@dimen/activity_companyinfo_text"
                             android:text="物品总量" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/quantity"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
