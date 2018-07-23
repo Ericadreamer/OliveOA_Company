@@ -32,8 +32,8 @@ public class RedactDepartmentActivity extends AppCompatActivity {
 
     private ArrayList<DepartmentInfo> departmentInfo;
     private String TAG = this.getClass().getSimpleName();
-    private EditText tid,tname,ttelephone,tfax;
-    private TextView tdpid;
+    private EditText tname,ttelephone,tfax;
+    private TextView tdpid,tid;
     private int index;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +48,7 @@ public class RedactDepartmentActivity extends AppCompatActivity {
     //初始化
     public void initView() {
         SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
-        tid = (EditText) findViewById(R.id.edit_num);
+        tid = (TextView) findViewById(R.id.edit_num);
         tid.setText(pref.getString("id[" + index + "]", ""));
         tname = (EditText) findViewById(R.id.edit_name);
         tname.setText(pref.getString("name[" + index + "]", ""));
@@ -133,7 +133,7 @@ public class RedactDepartmentActivity extends AppCompatActivity {
     //保存编辑
     public void save(){
         SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
-        departmentInfo.get(index).setId(tid.getText().toString().trim());
+       // departmentInfo.get(index).setId(tid.getText().toString().trim());
         departmentInfo.get(index).setName(tname.getText().toString().trim());
         departmentInfo.get(index).setTelephone(ttelephone.getText().toString().trim());
         departmentInfo.get(index).setFax(tfax.getText().toString().trim());
@@ -143,10 +143,6 @@ public class RedactDepartmentActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(departmentInfo.get(index).getId())||TextUtils.isEmpty(departmentInfo.get(index).getName())||TextUtils.isEmpty(departmentInfo.get(index).getTelephone())||TextUtils.isEmpty(departmentInfo.get(index).getFax())) {
             Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
-        } else if(!isMobile(departmentInfo.get(index).getTelephone())){
-            Toast.makeText(getApplicationContext(), "公司电话格式输入错误！请以手机格式重新输入", Toast.LENGTH_SHORT).show();
-        } else if(!isFixPhone(departmentInfo.get(index).getFax())){
-            Toast.makeText(getApplicationContext(), "传真机格式输入错误！请以固话格式重新输入", Toast.LENGTH_SHORT).show();
         } else {
             new Thread(new Runnable() {
                 @Override

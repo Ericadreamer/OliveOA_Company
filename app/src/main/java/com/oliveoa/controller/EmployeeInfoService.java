@@ -63,8 +63,8 @@ public class EmployeeInfoService {
             FormBody body = new FormBody.Builder()
                     .add("eid",employee.getEid())
                     .add("dcid",employee.getDcid())
-                    .add("pcid",employee.getPcid())
                     .add("id",employee.getId())
+                    .add("pcid",employee.getPcid())
                     .add("name",employee.getName())
                     .add("sex",employee.getSex())
                     .add("birth",employee.getBirth())
@@ -72,7 +72,6 @@ public class EmployeeInfoService {
                     .add("email",employee.getEmail())
                     .add("address",employee.getAddress())
                     .build();
-            Log.d("updateinfobody",body.toString());
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -84,6 +83,7 @@ public class EmployeeInfoService {
             Response response = client.newCall(request).execute();
 
             String json = response.body().string();
+            Log.d("updateinfojson",json);
             Gson gson = new Gson();
             System.out.println(json);
 

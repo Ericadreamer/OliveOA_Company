@@ -3,6 +3,11 @@ package com.oliveoa.pojo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Keep;
+
+@Entity
+@Keep
 public class EmployeeInfo implements Parcelable {
     private String eid;
     private String dcid;

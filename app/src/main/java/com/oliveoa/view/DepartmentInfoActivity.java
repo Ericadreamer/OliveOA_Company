@@ -45,10 +45,10 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
         dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
         index = getIntent().getIntExtra("index",index);//部门索引
-        Log.e("dutyInfos",dutyInfo.toString());
-        Log.e("departmentInfos",departmentInfo.toString());
-
-        Log.e("dpindex", String.valueOf(index));
+//        Log.e("dutyInfos",dutyInfo.toString());
+//        Log.e("departmentInfos",departmentInfo.toString());
+//
+//        Log.e("dpindex", String.valueOf(index));
 
         initView();
         saveDutyinfo();
@@ -62,6 +62,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         TextView dutyadd = (TextView)findViewById(R.id.duty_add);
         addDutylistView = (LinearLayout)findViewById(R.id.duty_list);
 
+      
         //默认添加一个Item
         addViewItem(null);
 
@@ -157,6 +158,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
                         }
                     }
                     f=i;
+                    final int[] h = {0};
                     new Thread(new Runnable() {
                         @Override
                         public void run() {
@@ -171,6 +173,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
                                 Looper.prepare();
                                 Toast.makeText(getApplicationContext(), "删除成功！点击返回键返回部门列表", Toast.LENGTH_SHORT).show();
                                 Looper.loop();
+                                addDutylistView.removeView(childAt);
                             } else {
                                 Looper.prepare();
                                 Toast.makeText(getApplicationContext(), statusAndMsgJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
@@ -178,8 +181,6 @@ public class DepartmentInfoActivity extends AppCompatActivity {
                             }
                         }
                     }).start();
-
-                    addDutylistView.removeView(childAt);
                 }
 
             });

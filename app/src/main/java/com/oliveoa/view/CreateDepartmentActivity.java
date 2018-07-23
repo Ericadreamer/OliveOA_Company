@@ -152,12 +152,6 @@ public class CreateDepartmentActivity extends AppCompatActivity {
 
         if (TextUtils.isEmpty(dp.getId())||TextUtils.isEmpty(dp.getName())||TextUtils.isEmpty(dp.getTelephone())||TextUtils.isEmpty(dp.getFax())) {
             Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
-        } else if(!isMobile(dp.getTelephone())){
-            Log.e("departmentTelephone",dp.getTelephone());
-            Toast.makeText(getApplicationContext(), "公司电话格式输入错误！请以手机格式重新输入", Toast.LENGTH_SHORT).show();
-        } else if(!isFixPhone(dp.getFax())){
-            Log.e("departmentFax",dp.getFax());
-            Toast.makeText(getApplicationContext(), "传真机格式输入错误！请以固话格式重新输入", Toast.LENGTH_SHORT).show();
         } else {
             new Thread(new Runnable() {
                 @Override

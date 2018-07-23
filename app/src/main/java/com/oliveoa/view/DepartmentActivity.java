@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
+import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
 import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
@@ -87,16 +88,16 @@ public class DepartmentActivity extends AppCompatActivity {
         for (int i = 0; i < addDPlistView.getChildCount(); i++) {
             final View childAt = addDPlistView.getChildAt(i);
             //删除操作
-            final Button btn_remove = (Button) childAt.findViewById(R.id.btnDelete);
-            btn_remove.setTag("remove");//设置删除标记
-            btn_remove.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //从LinearLayout容器中删除当前点击到的ViewItem
-                    addDPlistView.removeView(childAt);
-                }
-
-            });
+//            final Button btn_remove = (Button) childAt.findViewById(R.id.btnDelete);
+//            btn_remove.setTag("remove");//设置删除标记
+//            btn_remove.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    //从LinearLayout容器中删除当前点击到的ViewItem
+//                    addDPlistView.removeView(childAt);
+//                }
+//
+//            });
             //转到详情页面
             Button btn_info = (Button) childAt.findViewById(R.id.btnInfo);
             btn_info.setTag("edit");
@@ -116,6 +117,14 @@ public class DepartmentActivity extends AppCompatActivity {
                         }
                     }
                     i=j;
+                    if(departmentInfos.get(i).getDcid()==null){
+                        SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
+                        String s = pref.getString("sessionid", "");
+
+                        DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                        DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
+                        departmentInfos = departmentInfoJsonBean.getData();
+                    }
                     new Thread(new Runnable() {
                         @Override
                         public void run() {

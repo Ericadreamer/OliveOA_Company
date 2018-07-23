@@ -4,6 +4,11 @@ package com.oliveoa.pojo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Keep;
+
+@Entity
+@Keep
 /* JSON 数据抽象为实体类 */
 public class CompanyInfo implements Parcelable {
     private String username;

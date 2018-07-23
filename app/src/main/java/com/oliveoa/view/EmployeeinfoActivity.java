@@ -57,7 +57,7 @@ public class EmployeeinfoActivity extends AppCompatActivity {
         edit =(ImageView)findViewById(R.id.info_edit);
 
         tname =(TextView) findViewById(R.id.content_name);
-        dname =(TextView) findViewById(R.id.content_id);
+        //dname =(TextView) findViewById(R.id.content_id);
         pname =(TextView) findViewById(R.id.content_pcid);
         id =(TextView)findViewById(R.id.content_id);
         sex = (TextView)findViewById(R.id.content_sex);
@@ -97,18 +97,19 @@ public class EmployeeinfoActivity extends AppCompatActivity {
 
         tname.setText(employeeInfo.getName());
 
+        String dname=null;
         departmentInfos = departmentDAO.getDepartments();
         for(int i =0;i<departmentInfos.size();i++){
             if(employeeInfo.getDcid().equals(departmentInfos.get(i).getDcid())){
-                dname.setText(departmentInfos.get(i).getName());
+                dname=departmentInfos.get(i).getName();
             }
         }
 
         for(int i =0;i<departmentInfos.size();i++) {
             dutynfos = dutyDAO.getDutys(departmentInfos.get(i).getDcid());
             for (int j = 0; j < dutynfos.size(); j++) {
-                if(employeeInfo.getPcid().equals(dutynfos.get(i).getPcid())){
-                    dname.setText(dutynfos.get(i).getName());
+                if(employeeInfo.getPcid().equals(dutynfos.get(j).getPcid())){
+                    pname.setText(dname+":"+dutynfos.get(j).getName());
                 }
             }
         }

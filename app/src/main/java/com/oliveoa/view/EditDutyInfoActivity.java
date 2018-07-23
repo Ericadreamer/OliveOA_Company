@@ -84,8 +84,8 @@ public class EditDutyInfoActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(EditDutyInfoActivity.this,DepartmentInfoActivity.class);
                         intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-                        intent.putExtra("index",dpindex);
                         intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
+                        intent.putExtra("index",dpindex);
                         Log.e(TAG,"部门信息"+departmentInfo+"职务信息"+dutyInfo+"部门索引"+dpindex);
                         //intent.putExtra("index",index);
                         startActivity(intent);

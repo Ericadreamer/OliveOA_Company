@@ -104,24 +104,9 @@ public class AddEmployeeinfoActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder dialog = new AlertDialog.Builder(AddEmployeeinfoActivity.this);
-                dialog.setTitle("提示");
-                dialog.setMessage("是否确定退出创建,直接返回部门列表页面？");
-                dialog.setCancelable(false);
-                dialog.setNegativeButton("是", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(AddEmployeeinfoActivity.this, EmployeelistActivity.class);
+                  Intent intent = new Intent(AddEmployeeinfoActivity.this, EmployeelistActivity.class);
                         startActivity(intent);
                         finish();
-                    }
-                });
-                dialog.setPositiveButton("否", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                });
                 //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
             }
         });
@@ -139,88 +124,94 @@ public class AddEmployeeinfoActivity extends AppCompatActivity {
     }
 
     public void save() {
+            if(TextUtils.isEmpty(ename.getText().toString().trim())&&TextUtils.isEmpty(sex.getText().toString().trim())
+                    ||TextUtils.isEmpty(etel.getText().toString().trim())||TextUtils.isEmpty(birth.getText().toString().trim())
+                    ||TextUtils.isEmpty(eemail.getText().toString().trim())||TextUtils.isEmpty(eaddress.getText().toString().trim())){
+                Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
+            }else {
+                employeeInfo.setName(ename.getText().toString().trim());
+                employeeInfo.setId(eid.getText().toString().trim());
+                employeeInfo.setSex(sex.getText().toString().trim());
+                employeeInfo.setTel(etel.getText().toString().trim());
+                employeeInfo.setBirth(birth.getText().toString().trim());
+                employeeInfo.setEmail(eemail.getText().toString().trim());
+                employeeInfo.setAddress(eaddress.getText().toString().trim());
 
-        employeeInfo.setName(ename.getText().toString().trim());
-        employeeInfo.setId(eid.getText().toString().trim());
-        employeeInfo.setSex(sex.getText().toString().trim());
-        employeeInfo.setTel(etel.getText().toString().trim());
-        employeeInfo.setBirth(birth.getText().toString().trim());
-        employeeInfo.setEmail(eemail.getText().toString().trim());
-        employeeInfo.setAddress(eaddress.getText().toString().trim());
-
-        for (int i = 0; i < departmentInfos.size(); i++) {
-            if (tmpdname.equals(departmentInfos.get(i).getName())) {
-                employeeInfo.setDcid(departmentInfos.get(i).getDcid());
-            }
-        }
-
-        DutyDAOImpl dutyDAO = new DutyDAOImpl(AddEmployeeinfoActivity.this);
-
-        for (int i = 0; i < departmentInfos.size(); i++) {
-            dutyInfos = dutyDAO.getDutys(departmentInfos.get(i).getDcid());
-            for (int j = 0; j < dutyInfos.size(); j++) {
-                if (tmppname.equals(dutyInfos.get(j).getName())) {
-                    employeeInfo.setPcid(dutyInfos.get(j).getName());
-                }
-            }
-        }
-
-        if (TextUtils.isEmpty(employeeInfo.getName()) || TextUtils.isEmpty(employeeInfo.getEmail()) ||
-                TextUtils.isEmpty(employeeInfo.getBirth()) || TextUtils.isEmpty(employeeInfo.getAddress()) ||
-                TextUtils.isEmpty(employeeInfo.getId()) || TextUtils.isEmpty(employeeInfo.getTel()) ||
-                TextUtils.isEmpty(employeeInfo.getSex()) || TextUtils.isEmpty(employeeInfo.getPcid()) ||
-                TextUtils.isEmpty(employeeInfo.getDcid())) {
-            Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
-        } else if (!isMobile(employeeInfo.getTel())) {
-            Toast.makeText(getApplicationContext(), "联系方式格式输入错误！请以手机格式重新输入", Toast.LENGTH_SHORT).show();
-        } else if (!isEmail(employeeInfo.getEmail())) {
-            Toast.makeText(getApplicationContext(), "邮箱格式输入错误！请重新输入", Toast.LENGTH_SHORT).show();
-        } else {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    //读取SharePreferences的cookies
-                    SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
-                    String s = pref.getString("sessionid", "");
-
-                    EmployeeInfoService employeeInfoService = new EmployeeInfoService();
-                    StatusAndMsgJsonBean statusAndMsgJsonBean = employeeInfoService.addemployee(s, employeeInfo);
-                    if (statusAndMsgJsonBean.getStatus() == 0) {
-                        Looper.prepare();
-                        Toast.makeText(getApplicationContext(), "添加成功！点击返回键返回主页", Toast.LENGTH_SHORT).show();
-                        Looper.loop();
-                    } else {
-                        Looper.prepare();
-                        Toast.makeText(getApplicationContext(), statusAndMsgJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
-                        Looper.loop();
+                for (int i = 0; i < departmentInfos.size(); i++) {
+                    if (tmpdname.equals(departmentInfos.get(i).getName())) {
+                        employeeInfo.setDcid(departmentInfos.get(i).getDcid());
                     }
                 }
-            }).start();
-        }
+
+                DutyDAOImpl dutyDAO = new DutyDAOImpl(AddEmployeeinfoActivity.this);
+
+                for (int i = 0; i < departmentInfos.size(); i++) {
+                    dutyInfos = dutyDAO.getDutys(departmentInfos.get(i).getDcid());
+                    for (int j = 0; j < dutyInfos.size(); j++) {
+                        if (tmppname.equals(dutyInfos.get(j).getName())) {
+                            employeeInfo.setPcid(dutyInfos.get(j).getName());
+                        }
+                    }
+                }
+
+                if (TextUtils.isEmpty(employeeInfo.getName()) || TextUtils.isEmpty(employeeInfo.getEmail()) ||
+                        TextUtils.isEmpty(employeeInfo.getBirth()) || TextUtils.isEmpty(employeeInfo.getAddress()) ||
+                        TextUtils.isEmpty(employeeInfo.getId()) || TextUtils.isEmpty(employeeInfo.getTel()) ||
+                        TextUtils.isEmpty(employeeInfo.getSex()) || TextUtils.isEmpty(employeeInfo.getPcid()) ||
+                        TextUtils.isEmpty(employeeInfo.getDcid())) {
+                    Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
+                } else if (!isMobile(employeeInfo.getTel())) {
+                    Toast.makeText(getApplicationContext(), "联系方式格式输入错误！请以手机格式重新输入", Toast.LENGTH_SHORT).show();
+                } else if (!isEmail(employeeInfo.getEmail())) {
+                    Toast.makeText(getApplicationContext(), "邮箱格式输入错误！请重新输入", Toast.LENGTH_SHORT).show();
+                } else {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //读取SharePreferences的cookies
+                            SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
+                            String s = pref.getString("sessionid", "");
+
+                            EmployeeInfoService employeeInfoService = new EmployeeInfoService();
+                            StatusAndMsgJsonBean statusAndMsgJsonBean = employeeInfoService.addemployee(s, employeeInfo);
+                            if (statusAndMsgJsonBean.getStatus() == 0) {
+                                Looper.prepare();
+                                Toast.makeText(getApplicationContext(), "添加成功！点击返回键返回主页", Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                            } else {
+                                Looper.prepare();
+                                Toast.makeText(getApplicationContext(), statusAndMsgJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                                Looper.loop();
+                            }
+                        }
+                    }).start();
+                }
+            }
     }
 
     //年月选择器
-    public void onYearMonthPicker(View view) {
-        DatePicker picker = new DatePicker(this, DatePicker.YEAR_MONTH);
-        //picker.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
-        picker.setTitleTextSize(16);
-        picker.setTitleTextColor(Color.BLACK);
-        picker.setTitleText("年月选择");
-        picker.setWidth((int) (picker.getScreenWidthPixels() * 1));
-        picker.setRangeStart(1900, 01, 01);
-        picker.setRangeEnd(2020, 11, 11);
-        picker.setSelectedItem(1996, 12);
-        picker.setTopLineColor(Color.WHITE);
-        picker.setSubmitTextSize(16);
-        picker.setCancelTextSize(16);
-        picker.setOnDatePickListener(new DatePicker.OnYearMonthPickListener() {
-            @Override
-            public void onDatePicked(String year, String month) {
-                birth.setText(year + "-" + month);
-                //showToast(year + "-" + month);
-            }
-        });
-        picker.show();
+    public void onYearMonthPicker(View view){
+            DatePicker picker = new DatePicker(this, DatePicker.YEAR_MONTH);
+            //picker.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
+            picker.setTitleTextSize(16);
+            picker.setTitleTextColor(Color.BLACK);
+            picker.setTitleText("年月选择");
+            picker.setWidth((int) (picker.getScreenWidthPixels() * 1));
+            picker.setRangeStart(1900, 01, 01);
+            picker.setRangeEnd(2020, 11, 11);
+            picker.setSelectedItem(1996, 12);
+            picker.setTopLineColor(Color.WHITE);
+            picker.setSubmitTextSize(16);
+            picker.setCancelTextSize(16);
+            picker.setOnDatePickListener(new DatePicker.OnYearMonthPickListener() {
+                @Override
+                public void onDatePicked(String year, String month) {
+                    birth.setText(year + "-" + month);
+                    //showToast(year + "-" + month);
+                }
+            });
+            picker.show();
+
     }
 
     public void onYearMonthDayPicker(View view) {
@@ -369,7 +360,9 @@ public class AddEmployeeinfoActivity extends AppCompatActivity {
         departmentInfos = departmentDAO.getDepartments();
         //选项1
         for (int i = 0; i < departmentInfos.size(); i++) {
-            options1Items.add(departmentInfos.get(i).getName());
+            if(dutyInfos!=null) {
+                options1Items.add(departmentInfos.get(i).getName());
+            }
         }
 
         //选项2

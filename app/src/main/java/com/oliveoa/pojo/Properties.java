@@ -1,5 +1,9 @@
 package com.oliveoa.pojo;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Keep;
+
+
 public class Properties {
     private String gid;
     private String name;
@@ -79,6 +83,4 @@ public class Properties {
                 ", pcid='" + pcid + '\'' +
                 '}';
     }
-
-
 }

@@ -1,5 +1,9 @@
 package com.oliveoa.pojo;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Keep;
+
+
 public class Goods {
     private String gName;
     private String gDescription;
