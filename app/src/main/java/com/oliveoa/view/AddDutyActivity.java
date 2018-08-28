@@ -13,51 +13,57 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
-import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
+import com.oliveoa.greendao.DutyInfoDao;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
-import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
-import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
+import com.oliveoa.util.EntityManager;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.oliveoa.util.Validator.isFixPhone;
-import static com.oliveoa.util.Validator.isMobile;
-
 public class AddDutyActivity extends AppCompatActivity {
 
-    private ArrayList<DutyInfo> dutyInfo;
-    private ArrayList<DepartmentInfo> departmentInfo;
+    private List<DutyInfo> dutyInfo;
+
     private ImageView back,save,dtselect;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
     private EditText etname,etnum;
     private TextView tppid;
-    private int dpindex,dtindex;
+    private String dpname;
+    private int index;
     private DutyInfo dt;
-    private  ArrayList<DutyInfo> duty;
+    private DutyInfoDao dutyInfoDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_duty);
+        index = getIntent().getIntExtra("index",index);//详情0，职务选择返回1
+        initData();
+    }
+    private void initData(){
+        dutyInfoDao = EntityManager.getInstance().dutyInfoDao;
+        dutyInfo = dutyInfoDao.queryBuilder().orderAsc(DutyInfoDao.Properties.Orderby).list();
+        //如果是从职务选择页面返回
+        if(index==1){
+            Log.e("AddDutySize", String.valueOf(dutyInfo.size()));
+            dt = dutyInfo.get(dutyInfo.size()-1);
+            DutyInfo temp = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Pcid.eq(dt.getPpid())).unique();
+            if(temp==null){
+                dpname = "无";
+            }else{
+                dpname = temp.getName();
+            }
 
-        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        Log.e("department",departmentInfo.toString());
-        dpindex = getIntent().getIntExtra("index",dpindex);//部门索引
-        dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
-        Log.e("dutyinfo",dutyInfo.toString());
-        dtindex = dutyInfo.size();
-
+        }
         initView();
     }
 
@@ -70,10 +76,11 @@ public class AddDutyActivity extends AppCompatActivity {
         etnum =(EditText)findViewById(R.id.edit_limit);
         tppid = (TextView) findViewById(R.id.edit_superior);
 
-        SharedPreferences pref = getSharedPreferences("duty", MODE_PRIVATE);
-        etname.setText((pref.getString("name["+dtindex+"]","")));
-        etnum.setText(pref.getString("limit["+dtindex+"]",""));
-        tppid.setText(pref.getString("pname["+dtindex+"]",""));
+        if(index==1) {
+            etname.setText(dt.getName());
+            etnum.setText(dt.getLimit());
+            tppid.setText(dpname);
+        }
 
 
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
@@ -87,9 +94,6 @@ public class AddDutyActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(AddDutyActivity.this, DepartmentInfoActivity.class);
-                        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-                        intent.putExtra("index",dpindex);
-                        intent.putParcelableArrayListExtra("ParcelableDuty",duty);
                         startActivity(intent);
                         finish();
                     }
@@ -133,12 +137,9 @@ public class AddDutyActivity extends AppCompatActivity {
 
     }
     public void dutySelect(){
-        saveDutyinfo();
         Intent intent = new Intent(AddDutyActivity.this, DutySelectActivity.class);
-        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-        intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
-        intent.putExtra("dtindex", dtindex);
-        intent.putExtra("dpindex", dpindex);
+        intent.putExtra("dutyname", dt.getName());
+        intent.putExtra("index",1 );
         startActivity(intent);
         finish();
     }
@@ -147,16 +148,14 @@ public class AddDutyActivity extends AppCompatActivity {
     public void save() {
         SharedPreferences pref = getSharedPreferences("duty", MODE_PRIVATE);
 
-        dt = new DutyInfo();
         dt.setName(etname.getText().toString().trim());
-        dt.setDcid(pref.getString("dcid["+dtindex+"]",""));
+
         if(etnum.getText().toString().trim().equals("")){
            dt.setLimit(0);
         }else{
             dt.setLimit(Integer.parseInt(etnum.getText().toString().trim()));
-
         }
-        dt.setPpid(pref.getString("ppid["+dtindex+"]",""));
+
 
         if (TextUtils.isEmpty(dt.getName())) {
             Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
@@ -172,23 +171,27 @@ public class AddDutyActivity extends AppCompatActivity {
                     String s = pref.getString("sessionid", "");
 
                     DutyInfoService dutyInfoService = new DutyInfoService();
-
                         StatusAndMsgJsonBean statusAndMsgJsonBean = dutyInfoService.addduty(s, dt);
                         Log.d("add", statusAndMsgJsonBean.getMsg() + "");
                         if (statusAndMsgJsonBean.getStatus() == 0) {
-                            DutyInfoJsonBean dutyInfoJsonBean = dutyInfoService.dutyInfo(s, departmentInfo.get(dpindex).getDcid());
+                            DutyInfoJsonBean dutyInfoJsonBean = dutyInfoService.dutyInfo(s, dt.getDcid());
+                            DutyInfoDao dutyInfoDao = EntityManager.getInstance().dutyInfoDao;
+                            List<DutyInfo> duty;
                             if(dutyInfoJsonBean.getStatus()==0) {
                                 duty = dutyInfoJsonBean.getData();
                                 Log.e("duty_add", duty.toString());
 
+                                dutyInfoDao.deleteAll();
+                                for (int i =0;i<duty.size();i++){
+                                    dutyInfoDao.insert(duty.get(i));
+                                }
+
                                 Looper.prepare();
                                 Toast.makeText(getApplicationContext(), "创建成功！点击返回键返回部门列表", Toast.LENGTH_SHORT).show();
-                                dtindex++;
                                 Looper.loop();
                             } else{
                                 Looper.prepare();
                                 Toast.makeText(getApplicationContext(), "获取职务信息失败！", Toast.LENGTH_SHORT).show();
-                                dtindex++;
                                 Looper.prepare();
                                 }
                         }
@@ -198,28 +201,16 @@ public class AddDutyActivity extends AppCompatActivity {
     }
     //判断重名
    public boolean checkdutyname(String name) {
-        System.out.println(dutyInfo.size());
-       for (int i=0;i<dutyInfo.size();i++) {
-            if(name.equals(dutyInfo.get(i).getName())) {
-                Log.e(TAG, "inputname"+name+"duty[]name"+dutyInfo.get(i).getName());
+            DutyInfo dutyInfo =dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Name.eq(name)).unique();
+            if(dutyInfo!=null) {
+                Log.e(TAG, "inputname"+name+"duty[]name"+dutyInfo.getName());
                 return true;
             }
-       }
+
        return false;
    }
 
-    /**
-     *  数据存储到SharedPreferences文件中
-     *
-     */
-    public void saveDutyinfo(){
-        SharedPreferences.Editor editor = getSharedPreferences("duty",MODE_PRIVATE).edit();
-        editor.putString("name["+dtindex+"]",etname.getText().toString().trim());
-        editor.putString("limit["+dtindex+"]",etnum.getText().toString().trim());
-        editor.putString("pname["+dtindex+"]",tppid.getText().toString().trim());
-        editor.apply();
-        //Log.e(TAG, "" + departmentInfo.toString());
-    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 

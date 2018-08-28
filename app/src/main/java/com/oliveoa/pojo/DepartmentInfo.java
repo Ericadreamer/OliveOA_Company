@@ -4,12 +4,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Keep;
 
 @Entity
 @Keep
 /* JSON 数据抽象为实体类 */
 public class DepartmentInfo implements Parcelable {
+    @Id(autoincrement = true)
+    private  Long _id ;
     private String dcid;
     private String dpid;
     private String id;
@@ -20,7 +23,8 @@ public class DepartmentInfo implements Parcelable {
     private String createtime;
     private String updatetime;
 
-    public DepartmentInfo(String dcid, String dpid, String id, String name, String telephone, String fax, int orderby, String createtime, String updatetime) {
+    public DepartmentInfo(Long _id,String dcid, String dpid, String id, String name, String telephone, String fax, int orderby, String createtime, String updatetime) {
+        this._id = _id;
         this.dcid = dcid;
         this.dpid = dpid;
         this.id = id;
@@ -35,6 +39,7 @@ public class DepartmentInfo implements Parcelable {
     //创建带参Parcel构造器
     protected DepartmentInfo(Parcel in) {
         //这里read字段的顺序要与write的顺序一致
+        _id = in.readLong();
         dcid = in.readString();
         dpid = in.readString();
         id = in.readString();
@@ -70,6 +75,7 @@ public class DepartmentInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeLong(_id);
         parcel.writeString(dcid);
         parcel.writeString(dpid);
         parcel.writeString(id);
@@ -79,6 +85,14 @@ public class DepartmentInfo implements Parcelable {
         parcel.writeInt(orderby);
         parcel.writeString(createtime);
         parcel.writeString(updatetime);
+    }
+
+    public Long get_id() {
+        return _id;
+    }
+
+    public void set_id(Long _id) {
+        this._id = _id;
     }
 
     public String getDcid() {
@@ -160,7 +174,8 @@ public class DepartmentInfo implements Parcelable {
     @Override
     public String toString() {
         return "DepartmentInfo{" +
-                "dcid='" + dcid + '\'' +
+                "_id=" + _id +
+                ", dcid='" + dcid + '\'' +
                 ", dpid='" + dpid + '\'' +
                 ", id='" + id + '\'' +
                 ", name='" + name + '\'' +

@@ -2,7 +2,6 @@ package com.oliveoa.util;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.erica.oliveoa_company.R;
-import com.oliveoa.daoimpl.EmployeeDAOImpl;
 import com.oliveoa.pojo.Item;
 import com.oliveoa.pojo.Group;
-import com.oliveoa.view.EmployeeinfoActivity;
-import com.oliveoa.view.EmployeelistActivity;
 
 import java.util.ArrayList;
 

@@ -7,7 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.oliveoa.common.Const;
 import com.oliveoa.jsonbean.GoodInfoJsonBean;
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
-import com.oliveoa.pojo.Properties;
+import com.oliveoa.pojo.PropertiesInfo;
 
 import java.io.IOException;
 
@@ -55,7 +55,7 @@ public class GoodInfoService {
     }
 
     //更新物品信息
-    public StatusAndMsgJsonBean updatepropertyinfo (String s, Properties property) {
+    public StatusAndMsgJsonBean updatepropertyinfo (String s, PropertiesInfo property) {
         try {
             Log.i("info_Login","知道了session："+s);
             Log.d("updateinfo",property.toString());
@@ -99,7 +99,7 @@ public class GoodInfoService {
     }
 
     //添加物品
-    public StatusAndMsgJsonBean addproperty (String s, Properties property) {
+    public StatusAndMsgJsonBean addproperty (String s, PropertiesInfo property) {
         try {
             Log.i("info_Login","知道了session："+s);
             Log.d("addinfo",property.toString());

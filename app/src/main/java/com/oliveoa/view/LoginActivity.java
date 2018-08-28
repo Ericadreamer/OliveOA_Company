@@ -102,6 +102,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mLayoutPwd.setError("请填写正确密码！");
                 return;
             }
+
             new Thread(new Runnable() {
                 @Override
                 public void run() {

@@ -19,11 +19,16 @@ import android.widget.Toast;
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.controller.CompanyInfoService;
 import com.oliveoa.controller.DepartmentInfoService;
+import com.oliveoa.greendao.DepartmentInfoDao;
+import com.oliveoa.greendao.DutyInfoDao;
 import com.oliveoa.jsonbean.UpdateCompanyInfoJsonBean;
 import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.pojo.DutyInfo;
+import com.oliveoa.util.EntityManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -34,25 +39,43 @@ import static com.oliveoa.util.Validator.isMobile;
 
 public class CreateDepartmentActivity extends AppCompatActivity {
 
-    private ArrayList<DepartmentInfo> departmentInfo;
+    private List<DepartmentInfo> departmentInfo;
     private String TAG = this.getClass().getSimpleName();
     private EditText tid,tname,ttelephone,tfax;
     private TextView tdpid;
     private ImageView save,back,dpselect;
     private int index;
     private DepartmentInfo dp;
-
+    private String dpname;//上级部门
+    private DepartmentInfoDao departmentInfoDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_department);
 
-        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        index =getIntent().getIntExtra("index",index);
-        Log.e("departmentInfos",departmentInfo.toString());
-        Log.e("index", String.valueOf(index));
+        index =getIntent().getIntExtra("index",index);//1为部门选择列表，0为详情页
+
+        initData();
+
+    }
+    private  void initData(){
+        departmentInfoDao= EntityManager.getInstance().departmentInfoDao;
+        departmentInfo = departmentInfoDao.queryBuilder().orderAsc(DepartmentInfoDao.Properties.Orderby).list();
+        //如果是从部门选择页面返回
+        if(index==1){
+            Log.e("AddDepartmentSize", String.valueOf(departmentInfo.size()));
+            dp =departmentInfo.get(departmentInfo.size()-1);
+            DepartmentInfo temp = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(dp.getDpid())).unique();
+            if(temp==null){
+                dpname = "无";
+            }else{
+                dpname = temp.getName();
+            }
+
+        }
 
         initView();
+
     }
 
     private void initView() {
@@ -67,15 +90,13 @@ public class CreateDepartmentActivity extends AppCompatActivity {
         tfax = (EditText)findViewById(R.id.edit_fax);
 
         tdpid = (TextView) findViewById(R.id.edit_superior);
-
-        SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
-        //tid.setText(pref.getString(""));
-        tid.setText(pref.getString("id["+index+"]",""));
-        tname.setText(pref.getString("name["+index+"]",""));
-        ttelephone.setText(pref.getString("telephone["+index+"]",""));
-        tfax.setText(pref.getString("fax["+index+"]",""));
-        tdpid.setText(pref.getString("dpname["+index+"]",""));
-
+        if(index==1) {
+            tid.setText(dp.getId());
+            tname.setText(dp.getName());
+            ttelephone.setText(dp.getTelephone());
+            tfax.setText(dp.getFax());
+            tdpid.setText(dpname);
+        }
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
             public void onClick(View view) {
@@ -87,7 +108,6 @@ public class CreateDepartmentActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(CreateDepartmentActivity.this, DepartmentActivity.class);
-                        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
                         startActivity(intent);
                         finish();
                     }
@@ -132,10 +152,16 @@ public class CreateDepartmentActivity extends AppCompatActivity {
   }
 
     public void departmentSelect(){
-        saveDepartmentinfo();
+        DepartmentInfo t = new DepartmentInfo() ;
+        t.setId(tid.getText().toString().trim());
+        t.setName(tname.getText().toString().trim());
+        t.setTelephone(ttelephone.getText().toString().trim());
+        t.setFax(tfax.getText().toString().trim());
+        Log.e(TAG,t.toString());
+        departmentInfoDao.insertOrReplace(t);
         Intent intent = new Intent(CreateDepartmentActivity.this, DepartmentSelectActivity.class);
-        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-        intent.putExtra("index",index);
+        intent.putExtra("dname", tname.getText().toString().trim());
+        intent.putExtra("index",1);//判断是编辑页面0还是添加页面1
         startActivity(intent);
         finish();
     }
@@ -189,20 +215,6 @@ public class CreateDepartmentActivity extends AppCompatActivity {
             }).start();
         }
 
-    }
-
-    /**
-     *  数据存储到SharedPreferences文件中
-     *
-     */
-    public void saveDepartmentinfo(){
-        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
-         editor.putString("id["+index+"]",tid.getText().toString().trim());
-         editor.putString("name["+index+"]",tname.getText().toString().trim());
-         editor.putString("telephone["+index+"]",ttelephone.getText().toString().trim());
-         editor.putString("fax["+index+"]",tfax.getText().toString().trim());
-         editor.apply();
-         Log.e(TAG, "" + departmentInfo.toString());
     }
 
     @Override

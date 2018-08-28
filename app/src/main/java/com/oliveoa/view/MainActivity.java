@@ -1,57 +1,50 @@
 package com.oliveoa.view;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
-import com.oliveoa.common.HttpResponseObject;
 import com.oliveoa.controller.CompanyInfoService;
 import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
-import com.oliveoa.controller.EmployeeInfoService;
 import com.oliveoa.controller.LoginService;
-import com.oliveoa.dao.DepartmentDAO;
-import com.oliveoa.daoimpl.DepartmentDAOImpl;
-import com.oliveoa.daoimpl.DutyDAOImpl;
-import com.oliveoa.daoimpl.EmployeeDAOImpl;
-import com.oliveoa.daoimpl.PropertyDAOImpl;
+import com.oliveoa.greendao.CompanyInfoDao;
+import com.oliveoa.greendao.DepartmentInfoDao;
+import com.oliveoa.greendao.DutyInfoDao;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
-import com.oliveoa.jsonbean.EmployeeInfoJsonBean;
 import com.oliveoa.jsonbean.LogoutJsonBean;
 import com.oliveoa.pojo.CompanyInfo;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.pojo.EmployeeInfo;
-import com.oliveoa.pojo.Properties;
+import com.oliveoa.pojo.PropertiesInfo;
+import com.oliveoa.util.DBOpreator;
+import com.oliveoa.util.EntityManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -65,15 +58,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private RadioButton departionbtn,staffbtn,propertybtn,documentbtn;
     ImageView menu;
 
-    private ArrayList<EmployeeInfo> employeeInfos;
-    private ArrayList<DepartmentInfo> departmentInfos;
-    private ArrayList<Properties>properties;
-    private ArrayList<DutyInfo> dutyInfos;
+    private List<EmployeeInfo> employeeInfos;
+    private List<DepartmentInfo> departmentInfos;
+    private List<PropertiesInfo>properties;
+    private List<DutyInfo> dutyInfos;
 
-    private DutyDAOImpl dutyDAO;
-    private DepartmentDAOImpl departmentDAO;
-    private PropertyDAOImpl propertyDAO;
-    private EmployeeDAOImpl employeeDAO;
+    private String TAG = this.getClass().getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,30 +120,31 @@ public class MainActivity extends Activity implements View.OnClickListener {
             });
     }
     public void companyinfo(){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
-                    String s = pref.getString("sessionid","");
 
-                    CompanyInfoService companyInfoService = new CompanyInfoService();
-                    CompanyLoginJsonBean companyloginJsonBean = companyInfoService.companyinfo(s);
-                    CompanyInfo company = companyloginJsonBean.getData();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+                CompanyInfoService companyInfoService = new CompanyInfoService();
+                CompanyLoginJsonBean companyloginJsonBean = companyInfoService.companyinfo(s);
+                CompanyInfo companyInfo = companyloginJsonBean.getData();
+                if (companyloginJsonBean.getStatus()==0){
+                    CompanyInfoDao companyInfoDao = EntityManager.getInstance().getCompanyInfo();
+                    companyInfoDao.deleteAll();
+                    companyInfoDao.insertOrReplace(companyInfo);
+                    Intent intent = new Intent(MainActivity.this, CompanyinfoActivity.class);
+                    startActivity(intent);
+                    finish();
 
-                    if (companyloginJsonBean.getStatus()==0){
-                        Intent intent = new Intent(MainActivity.this, CompanyinfoActivity.class);
-                        intent.putExtra("ParcelableCompany",company);
-                        startActivity(intent);
-                        finish();
-                    }else{
-                        Looper.prepare();
-                        Toast.makeText(getApplicationContext(), "数据加载失败，请重试", Toast.LENGTH_SHORT).show();
-                        Looper.loop();
-                    }
-
+                }else{
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(), "数据加载失败，请重试", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
                 }
-            }).start();
 
+            }
+        }).start();
     }
 
     public void updatepassword(){
@@ -308,45 +299,42 @@ public class MainActivity extends Activity implements View.OnClickListener {
     }
 
     //部门管理
-    private void departioninfo() {
-        new Thread(new Runnable() {
+    private void departioninfo(){
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+
+        Handler mHandler = new Handler(handlerThread.getLooper()){
             @Override
-            public void run() {
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
                 SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
                 String s = pref.getString("sessionid","");
-
                 DepartmentInfoService departmentInfoService = new DepartmentInfoService();
                 DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
-                Log.d("departmentInfoJsonBean",departmentInfoJsonBean.toString());
+                if (departmentInfoJsonBean.getStatus()==0) {
+                    departmentInfos = departmentInfoJsonBean.getData();
+                    DBOpreator dbOpreator = new DBOpreator();
+                    dbOpreator.DepartmentDaoUpdate(departmentInfos);
 
-                ArrayList<DepartmentInfo> department = departmentInfoJsonBean.getData();
-                System.out.println(department);
-
-                if (departmentInfoJsonBean.getStatus()==0){
+                    /* departmentInfoDao.insert(departmentInfos.get(i));*/
                     Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
-                    intent.putParcelableArrayListExtra("ParcelableDepartment",department);
                     startActivity(intent);
                     finish();
-                }else{
-                    Looper.prepare();//解决子线程弹toast问题
-                    Toast.makeText(getApplicationContext(), "网络错误，请重试", Toast.LENGTH_SHORT).show();
-                    Looper.loop();// 进入loop中的循环，查看消息队列
-
                 }
+
+                Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
             }
-        }).start();
+        };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
     }
 
     //员工管理
     private void employeeinfo() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Intent intent = new Intent(MainActivity.this,EmployeelistActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        }).start();
+       /* Intent intent = new Intent(MainActivity.this,EmployeelistActivity.class);
+        startActivity(intent);
+        finish();*/
     }
 
     //资产管理

@@ -16,32 +16,48 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.greendao.DepartmentInfoDao;
 import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.util.EntityManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DepartmentSelectActivity extends AppCompatActivity {
 
-    private ArrayList<DepartmentInfo> departmentInfo;
+    private List<DepartmentInfo> departmentInfo;
     private ImageView back;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
     private LinearLayout addDPlistView;
     private int index;
     private TextView tvname;
+    private String dname;
+    private DepartmentInfoDao departmentInfoDao;
+    private String id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_select);
 
-        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        index = getIntent().getIntExtra("index",index);
-        Log.e("departmentInfo",departmentInfo.toString());
-        Log.e("index", String.valueOf(index));
+        dname = getIntent().getStringExtra("dname");//被编辑的部门名
+        index = getIntent().getIntExtra("index",index);//判断是编辑页面0还是添加页面1
 
-        initview();
+        initData();
+    }
+
+    public void initData(){
+        departmentInfoDao = EntityManager.getInstance().departmentInfoDao;
+        if(dname=="") {
+            departmentInfo = departmentInfoDao.queryBuilder().orderAsc(DepartmentInfoDao.Properties.Orderby).list();
+        }else{
+            departmentInfo = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Name.notEq(dname)).list();
+
+        }
+       initview();
     }
 
     public void initview(){
@@ -62,23 +78,20 @@ public class DepartmentSelectActivity extends AppCompatActivity {
                 dialog.setPositiveButton("是", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
-                        editor.putString("dpname[" + index + "]", "无");
-                        editor.putString("dpid[" + index + "]", null);
-                        editor.apply();
-                        if(index!=departmentInfo.size()) {
+                        if(index==0) {
                             Intent intent = new Intent(DepartmentSelectActivity.this, RedactDepartmentActivity.class);
-                            intent.putParcelableArrayListExtra("ParcelableDepartment", departmentInfo);
-                            intent.putExtra("index", index);
-                            startActivity(intent);
-                            finish();
-                        }else{
-                            Intent intent = new Intent(DepartmentSelectActivity.this, CreateDepartmentActivity.class);
-                            intent.putParcelableArrayListExtra("ParcelableDepartment", departmentInfo);
-                            intent.putExtra("index", index);
+                            intent.putExtra("id",id );//dcid
+                            intent.putExtra("index", 0);
                             startActivity(intent);
                             finish();
                         }
+                        if(index==1){
+                            Intent intent = new Intent(DepartmentSelectActivity.this, CreateDepartmentActivity.class);
+                            intent.putExtra("index", 1);
+                            startActivity(intent);
+                            finish();
+                        }
+
                     }
                 });
                 dialog.setNegativeButton("否", new DialogInterface.OnClickListener() {
@@ -103,42 +116,39 @@ public class DepartmentSelectActivity extends AppCompatActivity {
             final LinearLayout item = (LinearLayout)childAt.findViewById(R.id.depart_item);
 
             final TextView tname = (TextView)childAt.findViewById(R.id.dname);
+
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                        if(index!=departmentInfo.size()) {  //编辑部门选择
-                            if(tname.getText().toString().equals(departmentInfo.get(index).getName())){
-                                Toast.makeText(getApplicationContext(),"请选择除正在编辑的部门以外的其他部门", Toast.LENGTH_SHORT).show();
-                            }else{
-                                SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
-                                editor.putString("dpname[" + index + "]", tname.getText().toString());
-                                for (int i=0;i<departmentInfo.size();i++){
-                                    if(tname.getText().toString().equals(departmentInfo.get(i).getName())){
-                                        editor.putString("dpid["+index+"]",departmentInfo.get(i).getDcid());
-                                        break;
-                                    }
-                                }
-                                editor.apply();
+                         Log.e(TAG,tname.getText().toString());
+                        if(index==0)  {  //编辑部门选择
+                            DepartmentInfo dp =departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Name.eq(dname)).unique();
+                            DepartmentInfo temp  = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(tname.getText().toString())).unique();
+                            Log.e(TAG,temp.toString());
+                            if(temp!=null) {
+                                dp.setDpid(temp.getDcid());
+                            }
+                            departmentInfoDao.update(dp);
 
                             Intent intent = new Intent(DepartmentSelectActivity.this, RedactDepartmentActivity.class);
-                            intent.putParcelableArrayListExtra("ParcelableDepartment", departmentInfo);
-                            intent.putExtra("index", index);
+                            intent.putExtra("id",id );//dcid
+                            intent.putExtra("index", 0);
                             startActivity(intent);
-                            finish(); }
-                        }else{ //创建部门选择
-                            SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
-                            editor.putString("dpname[" + index + "]", tname.getText().toString());
-                            for (int i=0;i<departmentInfo.size();i++){
-                                if(tname.getText().toString().equals(departmentInfo.get(i).getName())){
-                                    editor.putString("dpid["+index+"]",departmentInfo.get(i).getDcid());
-                                    break;
-                                }
+                            finish();
+                        }
+                        if(index==1){ //创建部门选择
+                            DepartmentInfo dp =departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Name.eq(dname)).unique();
+                            DepartmentInfo temp  = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(tname.getText().toString())).unique();
+
+                            if(temp!=null) {
+                                Log.e(TAG,temp.toString()+dp.toString());
+                                dp.setDpid(temp.getDcid());
+                                departmentInfoDao.update(dp);
                             }
-                            editor.apply();
+
 
                             Intent intent = new Intent(DepartmentSelectActivity.this, CreateDepartmentActivity.class);
-                            intent.putParcelableArrayListExtra("ParcelableDepartment", departmentInfo);
-                            intent.putExtra("index", index);
+                            intent.putExtra("index", 1);
                             startActivity(intent);
                             finish();
                         }
@@ -177,14 +187,6 @@ public class DepartmentSelectActivity extends AppCompatActivity {
             tvname.setText(departmentInfo.get(i).getName());
         }
         Log.e(TAG, "部门名称：" + tvname.getText().toString());
-    }
-
-    /**
-     *  数据存储到SharedPreferences文件中
-     *
-     */
-    public void saveDepartmentinfo(){
-        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
     }
 
     @Override

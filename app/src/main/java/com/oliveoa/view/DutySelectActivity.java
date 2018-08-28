@@ -2,7 +2,6 @@ package com.oliveoa.view;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,40 +14,50 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
-import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.greendao.DepartmentInfoDao;
+import com.oliveoa.greendao.DutyInfoDao;
 import com.oliveoa.pojo.DutyInfo;
+import com.oliveoa.util.EntityManager;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DutySelectActivity extends AppCompatActivity {
 
-    private ArrayList<DepartmentInfo> departmentInfo;
-    private ArrayList<DutyInfo> dutyInfo;
+
+    private List<DutyInfo> dutyInfo;
     private ImageView back;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
     private LinearLayout addDTlistView;
-    private int dpindex,dtindex;
+    private String dname;
     private TextView tvname;
+    private DutyInfoDao dutyInfoDao;
+    private int index;
+    private String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_duty_select);
 
-        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        dpindex = getIntent().getIntExtra("dpindex",dpindex);
-       // Log.e("departmentInfo",departmentInfo.toString());
-       // Log.e("dpindex", String.valueOf(dpindex));
+        dname = getIntent().getStringExtra("dname");//被编辑的职务名
+        index = getIntent().getIntExtra("index",index);//判断是编辑页面0还是添加页面1
 
-        dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
-        dtindex = getIntent().getIntExtra("dtindex",dtindex);
-      //  Log.e("dutyinfo",dutyInfo.toString());
-      //  Log.e("dtindex", String.valueOf(dtindex));
+        initData();
+    }
 
-        initview();
+    public void initData(){
+        dutyInfoDao = EntityManager.getInstance().dutyInfoDao;
+        dutyInfo = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Name.notEq(dname)).list();
+
+        DutyInfo temp = dutyInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Name.eq(dname)).unique();
+        if(temp==null){
+            id = null;
+        }else{
+            id= temp.getPcid();
+        }
     }
 
     public void initview(){
@@ -69,24 +78,17 @@ public class DutySelectActivity extends AppCompatActivity {
                 dialog.setNegativeButton("是", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        SharedPreferences.Editor editor = getSharedPreferences("duty",MODE_PRIVATE).edit();
-                        editor.putString("pname[" + dtindex + "]", "无");
-                        editor.putString("ppid[" + dtindex + "]", null);
-                        editor.apply();
-                        if(dtindex!=dutyInfo.size()) {
+
+                        if(index==0) {
                             Intent intent = new Intent(DutySelectActivity.this,EditDutyInfoActivity.class);
-                            intent.putParcelableArrayListExtra("ParcelableDepartment", departmentInfo);
-                            intent.putExtra("dpindex", dpindex);
-                            intent.putParcelableArrayListExtra("ParcelableDuty", dutyInfo);
-                            intent.putExtra("dtindex", dtindex);
+                            intent.putExtra("id",id );//pcid
+                            intent.putExtra("index", 0);
                             startActivity(intent);
                             finish();
-                        }else{
+                        }
+                        if(index==1){
                             Intent intent = new Intent(DutySelectActivity.this, AddDutyActivity.class);
-                            intent.putParcelableArrayListExtra("ParcelableDepartment", departmentInfo);
-                            intent.putExtra("dpindex", dpindex);
-                            intent.putParcelableArrayListExtra("ParcelableDuty", dutyInfo);
-                            intent.putExtra("dtindex", dtindex);
+                            intent.putExtra("index", 1);
                             startActivity(intent);
                             finish();
                         }
@@ -117,46 +119,24 @@ public class DutySelectActivity extends AppCompatActivity {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(dtindex!=dutyInfo.size()) {  //编辑职务选择
-                        if(tname.getText().toString().equals(dutyInfo.get(dtindex).getName())){
-                            Toast.makeText(getApplicationContext(),"请选择除正在编辑的职务以外的其他职务", Toast.LENGTH_SHORT).show();
-                        }else{
-                            SharedPreferences.Editor editor = getSharedPreferences("duty",MODE_PRIVATE).edit();
-                            editor.putString("pname[" + dtindex + "]", tname.getText().toString());
-                            for (int i=0;i<dutyInfo.size();i++){
-                                if(tname.getText().toString().equals(dutyInfo.get(i).getName())){
-                                    editor.putString("ppid["+dtindex+"]",dutyInfo.get(i).getPcid());
-                                    break;
-                                }
-                            }
-                            editor.apply();
-
-                            Intent intent = new Intent(DutySelectActivity.this, EditDutyInfoActivity.class);
-                            intent.putParcelableArrayListExtra("ParcelableDepartment", departmentInfo);
-                            intent.putExtra("dpindex", dpindex);
-                            intent.putParcelableArrayListExtra("ParcelableDuty", dutyInfo);
-                            intent.putExtra("dtindex", dtindex);
-                            startActivity(intent);
-                            finish();
-                    }}else{ //创建部门选择
-                            SharedPreferences.Editor editor = getSharedPreferences("duty", MODE_PRIVATE).edit();
-                            editor.putString("pname[" + dtindex + "]", tname.getText().toString());
-                            for (int i = 0; i < dutyInfo.size(); i++) {
-                                if (tname.getText().toString().equals(dutyInfo.get(i).getName())) {
-                                    editor.putString("ppid[" + dtindex + "]", dutyInfo.get(i).getDcid());
-                                    break;
-                                }
-                            }
-                            editor.apply();
-
-                            Intent intent = new Intent(DutySelectActivity.this, AddDutyActivity.class);
-                            intent.putParcelableArrayListExtra("ParcelableDepartment", departmentInfo);
-                            intent.putExtra("dpindex", dpindex);
-                            intent.putParcelableArrayListExtra("ParcelableDuty", dutyInfo);
-                            intent.putExtra("dtindex", dtindex);
-                            startActivity(intent);
-                            finish();
-                        }
+                    if(index==0) {  //编辑职务选择
+                          DutyInfo dt = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Name.eq(dname)).unique();
+                          dt.setPpid(dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Pcid.eq(tname.getText().toString())).unique().getPcid());
+                          dutyInfoDao.insertOrReplace(dt);
+                          Intent intent = new Intent(DutySelectActivity.this, EditDutyInfoActivity.class);
+                          intent.putExtra("id",id );//pcid
+                          intent.putExtra("index", 0);
+                          startActivity(intent);
+                          finish();
+                    }
+                    if(index==1){ //创建部门选择
+                        DutyInfo dt = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Name.eq(dname)).unique();
+                        dt.setPpid(dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Pcid.eq(tname.getText().toString())).unique().getPcid());
+                        dutyInfoDao.insertOrReplace(dt);
+                        Intent intent = new Intent(DutySelectActivity.this, EditDutyInfoActivity.class);
+                        intent.putExtra("index", 1);
+                        startActivity(intent);
+                        finish(); }
                 }
             });
         }

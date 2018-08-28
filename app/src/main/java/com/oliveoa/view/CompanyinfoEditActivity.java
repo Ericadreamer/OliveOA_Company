@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Looper;
-import android.os.PatternMatcher;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,9 +18,10 @@ import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.controller.CompanyInfoService;
-import com.oliveoa.jsonbean.CompanyLoginJsonBean;
+import com.oliveoa.greendao.CompanyInfoDao;
 import com.oliveoa.jsonbean.UpdateCompanyInfoJsonBean;
 import com.oliveoa.pojo.CompanyInfo;
+import com.oliveoa.util.EntityManager;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -35,6 +35,7 @@ import static com.oliveoa.util.Validator.isZipCode;
 public class CompanyinfoEditActivity extends AppCompatActivity {
 
     private CompanyInfo companyInfo;
+    private CompanyInfoDao companyInfoDao;
     private EditText tfullname,ttel,tfax,tzip,taddress,tweb,temail,tintro;
     private TextView tname;
     @Override
@@ -42,9 +43,7 @@ public class CompanyinfoEditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_companyinfo_edit);
 
-        companyInfo = getIntent().getParcelableExtra("ParcelableCompany");
-        // Log.d("name",companyInfo.getUsername());
-        initView();
+        initData();
         ImageView back = (ImageView)findViewById(R.id.info_back);
         ImageView save = (ImageView)findViewById(R.id.info_save);
 
@@ -80,9 +79,14 @@ public class CompanyinfoEditActivity extends AppCompatActivity {
             }
         });
     }
+    private void initData(){
+        companyInfoDao = EntityManager.getInstance().getCompanyInfo();
+        companyInfo = companyInfoDao.queryBuilder().unique();
+        initView();
+    }
 
     private void initView() {
-        if (companyInfo != null) {
+
             tname = (TextView) findViewById(R.id.content_username);
             tname.setText(companyInfo.getUsername());
             tfullname = (EditText)findViewById(R.id.content_allname);
@@ -101,7 +105,7 @@ public class CompanyinfoEditActivity extends AppCompatActivity {
             temail.setText(companyInfo.getEmail());
             tintro = (EditText)findViewById(R.id.content_intro);
             tintro.setText(companyInfo.getIntroduction());
-        }
+
     }
 
     public void save() {

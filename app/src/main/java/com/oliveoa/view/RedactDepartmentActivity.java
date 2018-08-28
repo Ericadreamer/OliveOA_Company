@@ -18,46 +18,58 @@ import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.controller.DepartmentInfoService;
+import com.oliveoa.greendao.DepartmentInfoDao;
 import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.util.EntityManager;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.oliveoa.util.Validator.isFixPhone;
-import static com.oliveoa.util.Validator.isMobile;
-
 public class RedactDepartmentActivity extends AppCompatActivity {
 
-    private ArrayList<DepartmentInfo> departmentInfo;
+    private DepartmentInfo departmentInfo;
     private String TAG = this.getClass().getSimpleName();
     private EditText tname,ttelephone,tfax;
     private TextView tdpid,tid;
+    private String id;
     private int index;
+    private String dpname;//上级部门
+    private DepartmentInfoDao departmentInfoDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_redact_department);
-
-        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        index = getIntent().getIntExtra("index",index);
-        initView();
+        id = getIntent().getStringExtra("id");//dcid
+        index = getIntent().getIntExtra("index",index);//1为部门选择列表，0为详情页
+        initData();
     }
 
     //初始化
+    public void initData(){
+           departmentInfoDao= EntityManager.getInstance().departmentInfoDao;
+           departmentInfo = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(id)).unique();
+           DepartmentInfo temp = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(departmentInfo.getDpid())).unique();
+           if(temp==null){
+               dpname = "无";
+           }else{
+               dpname = temp.getName();
+           }
+           initView();
+    }
+
     public void initView() {
-        SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
+
         tid = (TextView) findViewById(R.id.edit_num);
-        tid.setText(pref.getString("id[" + index + "]", ""));
+        tid.setText(departmentInfo.getId());
         tname = (EditText) findViewById(R.id.edit_name);
-        tname.setText(pref.getString("name[" + index + "]", ""));
+        tname.setText(departmentInfo.getName());
         ttelephone = (EditText) findViewById(R.id.edit_tel);
-        ttelephone.setText(pref.getString("telephone[" + index + "]", ""));
+        ttelephone.setText(departmentInfo.getTelephone());
         tfax = (EditText) findViewById(R.id.edit_fax);
-        tfax.setText(pref.getString("fax[" + index + "]", ""));
+        tfax.setText(departmentInfo.getFax());
         tdpid = (TextView) findViewById(R.id.edit_superior);
-        tdpid.setText(pref.getString("dpname[" + index + "]", ""));
+        tdpid.setText(dpname);
 
         ImageView back = (ImageView)findViewById(R.id.null_back);
         ImageView save = (ImageView)findViewById(R.id.info_save);
@@ -74,8 +86,6 @@ public class RedactDepartmentActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentActivity.class);
-                        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-                        //intent.putExtra("index",index);
                         startActivity(intent);
                         finish();
                     }
@@ -100,7 +110,7 @@ public class RedactDepartmentActivity extends AppCompatActivity {
         tdpid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (departmentInfo.size() > 0)
+                if (departmentInfoDao.queryBuilder().count() > 0)
                     departmentSelect();
                 else{
                     Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
@@ -110,7 +120,7 @@ public class RedactDepartmentActivity extends AppCompatActivity {
         dpselect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (departmentInfo.size() > 0)
+                if (departmentInfoDao.queryBuilder().count()  > 0)
                     departmentSelect();
                 else{
                     Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
@@ -122,10 +132,8 @@ public class RedactDepartmentActivity extends AppCompatActivity {
 
     //上级部门选择
     public void departmentSelect(){
-        saveDepartmentinfo();
         Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentSelectActivity.class);
-        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-        intent.putExtra("index",index);
+        intent.putExtra("index",0);
         startActivity(intent);
         finish();
     }
@@ -134,14 +142,14 @@ public class RedactDepartmentActivity extends AppCompatActivity {
     public void save(){
         SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
        // departmentInfo.get(index).setId(tid.getText().toString().trim());
-        departmentInfo.get(index).setName(tname.getText().toString().trim());
-        departmentInfo.get(index).setTelephone(ttelephone.getText().toString().trim());
-        departmentInfo.get(index).setFax(tfax.getText().toString().trim());
-        departmentInfo.get(index).setDpid(pref.getString("dpid["+index+"]",""));
+        departmentInfo.setName(tname.getText().toString().trim());
+        departmentInfo.setTelephone(ttelephone.getText().toString().trim());
+        departmentInfo.setFax(tfax.getText().toString().trim());
 
-        Log.e("departmentInfo111",departmentInfo.get(index).toString());
 
-        if (TextUtils.isEmpty(departmentInfo.get(index).getId())||TextUtils.isEmpty(departmentInfo.get(index).getName())||TextUtils.isEmpty(departmentInfo.get(index).getTelephone())||TextUtils.isEmpty(departmentInfo.get(index).getFax())) {
+        Log.e("departmentInfo111",departmentInfo.toString());
+
+        if (TextUtils.isEmpty(departmentInfo.getId())||TextUtils.isEmpty(departmentInfo.getName())||TextUtils.isEmpty(departmentInfo.getTelephone())||TextUtils.isEmpty(departmentInfo.getFax())) {
             Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
         } else {
             new Thread(new Runnable() {
@@ -151,7 +159,7 @@ public class RedactDepartmentActivity extends AppCompatActivity {
                     String s = pref.getString("sessionid", "");
 
                     DepartmentInfoService departmentInfoService = new DepartmentInfoService();
-                    UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = departmentInfoService.updatedepartmentinfo(s, departmentInfo.get(index));
+                    UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = departmentInfoService.updatedepartmentinfo(s, departmentInfo);
                     Log.d("update", updateDepartmentInfoJsonBean.getMsg() + "");
 
                     if (updateDepartmentInfoJsonBean.getStatus() == 0) {
@@ -170,21 +178,6 @@ public class RedactDepartmentActivity extends AppCompatActivity {
 
     }
 
-    /**
-     *  数据存储到SharedPreferences文件中
-     *
-     */
-    public void saveDepartmentinfo(){
-        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
-        for (int i = 0;i<departmentInfo.size();i++){
-            editor.putString("id["+index+"]",tid.getText().toString().trim());
-            editor.putString("name["+index+"]",tname.getText().toString().trim());
-            editor.putString("telephone["+index+"]",ttelephone.getText().toString().trim());
-            editor.putString("fax["+index+"]",tfax.getText().toString().trim());
-            editor.apply();
-        }
-        Log.e(TAG, "" + departmentInfo.toString());
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

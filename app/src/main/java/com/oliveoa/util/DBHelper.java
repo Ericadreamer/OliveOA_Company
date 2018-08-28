@@ -9,17 +9,17 @@ public class DBHelper extends SQLiteOpenHelper {
     private static final String DB_NAME = "oliveoa_company.db";
     private static final int version = 1;
    // 创建员工表、部门表、职务表、物品表，属性列为：id（主键并且自动增加）、名称+属性（）；
-    private static final String SQL_CREATESTAFF = "create table employee_info(_id integer primary key autoincrement," +
+    private static final String SQL_CREATESTAFF = "create table employee_info(_id bigint primary key autoincrement," +
                                              "eid text,dcid text,pcid text,dname text,pname text,id text,name text," +
                                              "sex text,birth text,tel text,email text,address text)";
 
-    private static final String SQL_CREATEDEPARTMENT = "create table department_info(_id integer primary key autoincrement," +
+    private static final String SQL_CREATEDEPARTMENT = "create table department_info(_id bigint primary key autoincrement," +
             "dcid text,dpid text,id text,name text,telephone text,fax text)";
 
-    private static final String SQL_CREATEDUTY = "create table duty_info(_id integer primary key autoincrement," +
+    private static final String SQL_CREATEDUTY = "create table duty_info(_id bigint primary key autoincrement," +
             "pcid text,ppid text,name text,dcid text,mlimit text)";
 
-    private static final String SQL_CREATEPROPERTIES = "create table properties_info(_id integer primary key autoincrement," +
+    private static final String SQL_CREATEPROPERTIES = "create table properties_info(_id bigint primary key autoincrement," +
             "gid text,name text,describe text,total text,remaining text,pcid text)";
 
 

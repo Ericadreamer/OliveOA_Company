@@ -3,8 +3,9 @@ package com.oliveoa.pojo;
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Keep;
 
-
-public class Properties {
+@Entity
+@Keep
+public class PropertiesInfo {
     private String gid;
     private String name;
     private String describe;
@@ -12,10 +13,11 @@ public class Properties {
     private String remaining;
     private String pcid;
 
-    public Properties() {
+
+    public PropertiesInfo() {
     }
 
-    public Properties(String gid, String name, String describe, String total, String remaining, String pcid) {
+    public PropertiesInfo(String gid, String name, String describe, String total, String remaining, String pcid) {
         this.gid = gid;
         this.name = name;
         this.describe = describe;
@@ -74,7 +76,7 @@ public class Properties {
 
     @Override
     public String toString() {
-        return "Properties{" +
+        return "PropertiesInfo{" +
                 "gid='" + gid + '\'' +
                 ", name='" + name + '\'' +
                 ", describe='" + describe + '\'' +

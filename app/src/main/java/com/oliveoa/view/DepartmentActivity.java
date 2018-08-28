@@ -2,7 +2,10 @@ package com.oliveoa.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,39 +18,69 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
-import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
-import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
+import com.oliveoa.greendao.DepartmentInfoDao;
+import com.oliveoa.greendao.DutyInfoDao;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
-import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
+import com.oliveoa.util.DBOpreator;
+import com.oliveoa.util.EntityManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DepartmentActivity extends AppCompatActivity {
 
-    private ArrayList<DepartmentInfo> departmentInfos;
+    private List<DepartmentInfo> departmentInfos;
     private ImageView back,add;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
     private LinearLayout addDPlistView;
     private TextView tvname,tvid;
+    private DepartmentInfoDao departmentInfoDao;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department);
 
-        departmentInfos = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        Log.e("departmentInfo",departmentInfos.toString());
+        initData();
+    }
+    public void initData(){
+        departmentInfoDao = EntityManager.getInstance().departmentInfoDao;
+        departmentInfos = departmentInfoDao.queryBuilder().orderAsc(DepartmentInfoDao.Properties.Orderby).list();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //读取SharePreferences的cookies
+                SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
+                String s = pref.getString("sessionid", "");
+                DutyInfoDao dutyInfoDao = EntityManager.getInstance().getDutyInfoInfo();
+                DutyInfoService dutyInfoService = new DutyInfoService();
+                DBOpreator dbOpreator = new DBOpreator();
+                dutyInfoDao.deleteAll();
+                Log.e(TAG,"  dutyInfoDao.deleteAll()");
+                for (int i = 0; i < departmentInfos.size(); i++) {
+                    DutyInfoJsonBean dutyInfoJsonBean = dutyInfoService.dutyInfo(s, departmentInfos.get(i).getDcid());
+                    if (dutyInfoJsonBean.getStatus() == 0) {
+                        ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
+                        dbOpreator.DutyDaoUpdate(dutyInfos);
+
+                    } else {
+                        Looper.prepare();//解决子线程弹toast问题
+                        Toast.makeText(getApplicationContext(), "网络错误，获取职务信息失败", Toast.LENGTH_SHORT).show();
+                        Looper.loop();// 进入loop中的循环，查看消息队列
+                    }
+                }
+            }
+        });
 
         initView();
-        saveDepartmentinfo();
     }
-
     public void initView(){
         back = (ImageView)findViewById(R.id.null_back);
         add = (ImageView)findViewById(R.id.null_add);
@@ -61,6 +94,7 @@ public class DepartmentActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(DepartmentActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
@@ -71,9 +105,6 @@ public class DepartmentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DepartmentActivity.this, CreateDepartmentActivity.class);
-                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
-                intent.putExtra("index",departmentInfos.size());
-                setAddDepartmentinfo(departmentInfos.size());
                 startActivity(intent);
                 finish();
             }
@@ -105,52 +136,11 @@ public class DepartmentActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     tvid = (TextView)childAt.findViewById(R.id.did);
-                    final int i ;
-                    int j;
-                    String id = tvid.getText().toString().trim();
-                    id = id.substring(3);
-
-                    Log.i("id=",id);
-                    for (j=0;j<departmentInfos.size();j++) {
-                        if(id.equals(departmentInfos.get(j).getId())){
-                            break;
-                        }
-                    }
-                    i=j;
-                    if(departmentInfos.get(i).getDcid()==null){
-                        SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
-                        String s = pref.getString("sessionid", "");
-
-                        DepartmentInfoService departmentInfoService = new DepartmentInfoService();
-                        DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
-                        departmentInfos = departmentInfoJsonBean.getData();
-                    }
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
-                            String s = pref.getString("sessionid", "");
-
-                            DutyInfoService dutyInfoService = new DutyInfoService();
-                            DutyInfoJsonBean dutyInfoJsonBean = dutyInfoService.dutyInfo(s,departmentInfos.get(i).getDcid());
-                            ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
-                            Log.d("getinfo", dutyInfos + "");
-
-                            if (dutyInfoJsonBean.getStatus() == 0) {
-                                Intent intent = new Intent(DepartmentActivity.this, DepartmentInfoActivity.class);
-                                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfos);
-                                intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfos);
-                                intent.putExtra("index",i);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                Looper.prepare();
-                                Toast.makeText(getApplicationContext(), "网络错误，请重试", Toast.LENGTH_SHORT).show();
-                                Looper.loop();
-                            }
-
-                        }
-                    }).start();
+                    String id = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Id.eq(tvid.getText().toString().trim().substring(3))).unique().getDcid();
+                    Intent intent = new Intent(DepartmentActivity.this, DepartmentInfoActivity.class);
+                    intent.putExtra("id", id);
+                    startActivity(intent);
+                    finish();
                 }
             });
         }
@@ -189,58 +179,6 @@ public class DepartmentActivity extends AppCompatActivity {
         }
         Log.e(TAG, "部门名称：" + tvname.getText().toString() + "-----部门编号："
                 + tvid.getText().toString());
-    }
-    /**
-     *  新建部门数组空值存储到SharedPreferences文件中
-     *
-     */
-    public void setAddDepartmentinfo(int v){
-        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
-            editor.putString("dcid["+v+"]","");
-            editor.putString("dpid["+v+"]","");
-            editor.putString("id["+v+"]","");
-            editor.putString("name["+v+"]","");
-            editor.putString("telephone["+v+"]","");
-            editor.putString("fax["+v+"]","");
-            editor.putString("dpname[" +v+ "]","无");
-            editor.apply();
-
-    }
-
-
-    /**
-     *  部门所有数据存储到SharedPreferences文件中
-     *
-     */
-    public void saveDepartmentinfo(){
-        SharedPreferences.Editor editor = getSharedPreferences("department",MODE_PRIVATE).edit();
-        for (int i = 0;i<departmentInfos.size();i++){
-        editor.putString("dcid["+i+"]",departmentInfos.get(i).getDcid());
-        editor.putString("dpid["+i+"]",departmentInfos.get(i).getDpid());
-        editor.putString("id["+i+"]",departmentInfos.get(i).getId());
-        editor.putString("name["+i+"]",departmentInfos.get(i).getName());
-        editor.putString("telephone["+i+"]",departmentInfos.get(i).getTelephone());
-        editor.putString("fax["+i+"]",departmentInfos.get(i).getFax());
-        editor.apply();
-        }
-        Log.e(TAG, "" + departmentInfos.toString());
-        //存储上级部门名称
-        for (int i = 0;i<departmentInfos.size();i++){
-            System.out.println("dpid["+i+"]"+departmentInfos.get(i).getDpid());
-            for (int j = 0 ;j<departmentInfos.size();j++){
-                System.out.println("dcid["+j+"]"+departmentInfos.get(j).getDcid());
-                if (!(departmentInfos.get(i).getDpid()==null)){
-                        if (departmentInfos.get(i).getDpid().equals(departmentInfos.get(j).getDcid())) {
-                            editor.putString("dpname[" + i + "]", departmentInfos.get(j).getName());
-                            editor.apply();
-                            System.out.println("dpname[" + i + "]" + departmentInfos.get(j).getName());
-                    }
-                } else {
-                    editor.putString("dpname["+i+"]","无");
-                    editor.apply();
-                }
-            }
-        }
     }
 
     @Override

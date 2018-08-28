@@ -4,52 +4,51 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
-import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.greendao.DutyInfoDao;
 import com.oliveoa.pojo.DutyInfo;
+import com.oliveoa.util.EntityManager;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class DutyInfoActivity extends AppCompatActivity {
 
-    private ArrayList<DutyInfo> dutyInfo;
-    private ArrayList<DepartmentInfo> departmentInfo;
-    private int dpindex,dtindex;
+    private DutyInfo dutyInfo;
+    private String dutyname,ppname;
     private String TAG = this.getClass().getSimpleName();
     private TextView tname,tnum,tppid;
+    private DutyInfoDao dutyInfoDao;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dutyinfo);
-
-        dutyInfo = getIntent().getParcelableArrayListExtra("ParcelableDuty");
-        Log.e("dutyInfos",dutyInfo.toString());
-        dtindex = getIntent().getIntExtra("duty_index",dtindex);
-        Log.e("dtindex", String.valueOf(dtindex));
-
-        departmentInfo = getIntent().getParcelableArrayListExtra("ParcelableDepartment");
-        dpindex = getIntent().getIntExtra("department_index",dpindex);
-
-
-        initView();
-
-
-
+        dutyname = getIntent().getStringExtra("dutyname");
+        initData();
 
     }
 
     //初始化
+    public  void initData(){
+        dutyInfoDao = EntityManager.getInstance().dutyInfoDao;
+        dutyInfo = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Name.eq(dutyname)).unique();
+        if(dutyInfo.getPpid()==null){
+            ppname="无";
+        }else{
+            ppname = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Pcid.eq(dutyInfo.getPpid())).unique().getName();
+        }
+
+        initView();
+    }
+
     public void initView() {
         ImageView back = (ImageView)findViewById(R.id.null_back);
         ImageView edit = (ImageView) findViewById(R.id.info_edit);
@@ -60,7 +59,6 @@ public class DutyInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DutyInfoActivity.this, DepartmentActivity.class);
-                intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
                 startActivity(intent);
                 finish();
             }
@@ -76,21 +74,19 @@ public class DutyInfoActivity extends AppCompatActivity {
 
         SharedPreferences pref = getSharedPreferences("duty",MODE_PRIVATE);
         tname = (TextView) findViewById(R.id.tv_duty_name);
-        tname.setText(pref.getString("name["+dtindex+"]",""));
+        tname.setText(dutyInfo.getName());
         tnum = (TextView) findViewById(R.id.tv_num);
-        tnum.setText(pref.getString("limit["+dtindex+"]",""));
+        tnum.setText(dutyInfo.getLimit());
         tppid = (TextView) findViewById(R.id.text_superior);
-        tppid.setText(pref.getString("pname["+dtindex+"]",""));
+        tppid.setText(ppname);
 
     }
 
     //编辑操作
     public void edit() {
         Intent intent = new Intent(DutyInfoActivity.this, EditDutyInfoActivity.class);
-        intent.putParcelableArrayListExtra("ParcelableDepartment",departmentInfo);
-        intent.putParcelableArrayListExtra("ParcelableDuty",dutyInfo);
-        intent.putExtra("dpindex",dpindex);
-        intent.putExtra("dtindex",dtindex);
+        intent.putExtra("pcid",dutyInfo.getPcid());
+        intent.putExtra("index",1);
         startActivity(intent);
         finish();
 

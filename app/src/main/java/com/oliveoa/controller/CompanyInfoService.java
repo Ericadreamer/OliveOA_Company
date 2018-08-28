@@ -22,6 +22,7 @@ public class CompanyInfoService{
 
             try {
                 Log.i("info_Login","知道了session："+s);
+
                 FormBody body = new FormBody.Builder()
                         .build();
                 OkHttpClient client = new OkHttpClient();
@@ -43,6 +44,7 @@ public class CompanyInfoService{
                 java.lang.reflect.Type type = new TypeToken<CompanyLoginJsonBean>() {
                 }.getType();
                 CompanyLoginJsonBean companyloginJsonBean = gson.fromJson(json, type);
+
                 System.out.println("companyloginJsonBean = " + companyloginJsonBean);
 
                 return companyloginJsonBean;
@@ -50,6 +52,7 @@ public class CompanyInfoService{
             } catch (IOException e) {
                 //todo handler IOException
                 //throw new RuntimeException(e);
+                System.out.println("加载错！！！！");
                 e.printStackTrace();
             }
             return null;
