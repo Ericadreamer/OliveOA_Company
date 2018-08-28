@@ -15,7 +15,7 @@ import com.oliveoa.pojo.DutyInfo;
 /** 
  * DAO for table "DUTY_INFO".
 */
-public class DutyInfoDao extends AbstractDao<DutyInfo, Long> {
+public class DutyInfoDao extends AbstractDao<DutyInfo, Void> {
 
     public static final String TABLENAME = "DUTY_INFO";
 
@@ -24,15 +24,14 @@ public class DutyInfoDao extends AbstractDao<DutyInfo, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property _id = new Property(0, Long.class, "_id", true, "_id");
-        public final static Property Pcid = new Property(1, String.class, "pcid", false, "PCID");
-        public final static Property Ppid = new Property(2, String.class, "ppid", false, "PPID");
-        public final static Property Name = new Property(3, String.class, "name", false, "NAME");
-        public final static Property Dcid = new Property(4, String.class, "dcid", false, "DCID");
-        public final static Property Limit = new Property(5, int.class, "limit", false, "LIMIT");
-        public final static Property Orderby = new Property(6, int.class, "orderby", false, "ORDERBY");
-        public final static Property Createtime = new Property(7, String.class, "createtime", false, "CREATETIME");
-        public final static Property Updatetime = new Property(8, String.class, "updatetime", false, "UPDATETIME");
+        public final static Property Pcid = new Property(0, String.class, "pcid", false, "PCID");
+        public final static Property Ppid = new Property(1, String.class, "ppid", false, "PPID");
+        public final static Property Name = new Property(2, String.class, "name", false, "NAME");
+        public final static Property Dcid = new Property(3, String.class, "dcid", false, "DCID");
+        public final static Property Limit = new Property(4, int.class, "limit", false, "LIMIT");
+        public final static Property Orderby = new Property(5, int.class, "orderby", false, "ORDERBY");
+        public final static Property Createtime = new Property(6, String.class, "createtime", false, "CREATETIME");
+        public final static Property Updatetime = new Property(7, String.class, "updatetime", false, "UPDATETIME");
     }
 
 
@@ -48,15 +47,14 @@ public class DutyInfoDao extends AbstractDao<DutyInfo, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"DUTY_INFO\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: _id
-                "\"PCID\" TEXT," + // 1: pcid
-                "\"PPID\" TEXT," + // 2: ppid
-                "\"NAME\" TEXT," + // 3: name
-                "\"DCID\" TEXT," + // 4: dcid
-                "\"LIMIT\" INTEGER NOT NULL ," + // 5: limit
-                "\"ORDERBY\" INTEGER NOT NULL ," + // 6: orderby
-                "\"CREATETIME\" TEXT," + // 7: createtime
-                "\"UPDATETIME\" TEXT);"); // 8: updatetime
+                "\"PCID\" TEXT," + // 0: pcid
+                "\"PPID\" TEXT," + // 1: ppid
+                "\"NAME\" TEXT," + // 2: name
+                "\"DCID\" TEXT," + // 3: dcid
+                "\"LIMIT\" INTEGER NOT NULL ," + // 4: limit
+                "\"ORDERBY\" INTEGER NOT NULL ," + // 5: orderby
+                "\"CREATETIME\" TEXT," + // 6: createtime
+                "\"UPDATETIME\" TEXT);"); // 7: updatetime
     }
 
     /** Drops the underlying database table. */
@@ -69,41 +67,36 @@ public class DutyInfoDao extends AbstractDao<DutyInfo, Long> {
     protected final void bindValues(DatabaseStatement stmt, DutyInfo entity) {
         stmt.clearBindings();
  
-        Long _id = entity.get_id();
-        if (_id != null) {
-            stmt.bindLong(1, _id);
-        }
- 
         String pcid = entity.getPcid();
         if (pcid != null) {
-            stmt.bindString(2, pcid);
+            stmt.bindString(1, pcid);
         }
  
         String ppid = entity.getPpid();
         if (ppid != null) {
-            stmt.bindString(3, ppid);
+            stmt.bindString(2, ppid);
         }
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(4, name);
+            stmt.bindString(3, name);
         }
  
         String dcid = entity.getDcid();
         if (dcid != null) {
-            stmt.bindString(5, dcid);
+            stmt.bindString(4, dcid);
         }
-        stmt.bindLong(6, entity.getLimit());
-        stmt.bindLong(7, entity.getOrderby());
+        stmt.bindLong(5, entity.getLimit());
+        stmt.bindLong(6, entity.getOrderby());
  
         String createtime = entity.getCreatetime();
         if (createtime != null) {
-            stmt.bindString(8, createtime);
+            stmt.bindString(7, createtime);
         }
  
         String updatetime = entity.getUpdatetime();
         if (updatetime != null) {
-            stmt.bindString(9, updatetime);
+            stmt.bindString(8, updatetime);
         }
     }
 
@@ -111,96 +104,86 @@ public class DutyInfoDao extends AbstractDao<DutyInfo, Long> {
     protected final void bindValues(SQLiteStatement stmt, DutyInfo entity) {
         stmt.clearBindings();
  
-        Long _id = entity.get_id();
-        if (_id != null) {
-            stmt.bindLong(1, _id);
-        }
- 
         String pcid = entity.getPcid();
         if (pcid != null) {
-            stmt.bindString(2, pcid);
+            stmt.bindString(1, pcid);
         }
  
         String ppid = entity.getPpid();
         if (ppid != null) {
-            stmt.bindString(3, ppid);
+            stmt.bindString(2, ppid);
         }
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(4, name);
+            stmt.bindString(3, name);
         }
  
         String dcid = entity.getDcid();
         if (dcid != null) {
-            stmt.bindString(5, dcid);
+            stmt.bindString(4, dcid);
         }
-        stmt.bindLong(6, entity.getLimit());
-        stmt.bindLong(7, entity.getOrderby());
+        stmt.bindLong(5, entity.getLimit());
+        stmt.bindLong(6, entity.getOrderby());
  
         String createtime = entity.getCreatetime();
         if (createtime != null) {
-            stmt.bindString(8, createtime);
+            stmt.bindString(7, createtime);
         }
  
         String updatetime = entity.getUpdatetime();
         if (updatetime != null) {
-            stmt.bindString(9, updatetime);
+            stmt.bindString(8, updatetime);
         }
     }
 
     @Override
-    public Long readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
+    public Void readKey(Cursor cursor, int offset) {
+        return null;
     }    
 
     @Override
     public DutyInfo readEntity(Cursor cursor, int offset) {
         DutyInfo entity = new DutyInfo( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // _id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // pcid
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // ppid
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // name
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // dcid
-            cursor.getInt(offset + 5), // limit
-            cursor.getInt(offset + 6), // orderby
-            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // createtime
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // updatetime
+            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // pcid
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // ppid
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // dcid
+            cursor.getInt(offset + 4), // limit
+            cursor.getInt(offset + 5), // orderby
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // createtime
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7) // updatetime
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, DutyInfo entity, int offset) {
-        entity.set_id(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setPcid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setPpid(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setDcid(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setLimit(cursor.getInt(offset + 5));
-        entity.setOrderby(cursor.getInt(offset + 6));
-        entity.setCreatetime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
-        entity.setUpdatetime(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setPcid(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
+        entity.setPpid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setDcid(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setLimit(cursor.getInt(offset + 4));
+        entity.setOrderby(cursor.getInt(offset + 5));
+        entity.setCreatetime(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setUpdatetime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
      }
     
     @Override
-    protected final Long updateKeyAfterInsert(DutyInfo entity, long rowId) {
-        entity.set_id(rowId);
-        return rowId;
+    protected final Void updateKeyAfterInsert(DutyInfo entity, long rowId) {
+        // Unsupported or missing PK type
+        return null;
     }
     
     @Override
-    public Long getKey(DutyInfo entity) {
-        if(entity != null) {
-            return entity.get_id();
-        } else {
-            return null;
-        }
+    public Void getKey(DutyInfo entity) {
+        return null;
     }
 
     @Override
     public boolean hasKey(DutyInfo entity) {
-        return entity.get_id() != null;
+        // TODO
+        return false;
     }
 
     @Override

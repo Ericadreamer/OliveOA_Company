@@ -47,38 +47,13 @@ public class DepartmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department);
+        //departmentInfos = new ArrayList<>();
+        departmentInfos= getIntent().getParcelableArrayListExtra("alldp");
 
+        Log.e(TAG,departmentInfos.toString());
         initData();
     }
     public void initData(){
-        departmentInfoDao = EntityManager.getInstance().departmentInfoDao;
-        departmentInfos = departmentInfoDao.queryBuilder().orderAsc(DepartmentInfoDao.Properties.Orderby).list();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //读取SharePreferences的cookies
-                SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
-                String s = pref.getString("sessionid", "");
-                DutyInfoDao dutyInfoDao = EntityManager.getInstance().getDutyInfoInfo();
-                DutyInfoService dutyInfoService = new DutyInfoService();
-                DBOpreator dbOpreator = new DBOpreator();
-                dutyInfoDao.deleteAll();
-                Log.e(TAG,"  dutyInfoDao.deleteAll()");
-                for (int i = 0; i < departmentInfos.size(); i++) {
-                    DutyInfoJsonBean dutyInfoJsonBean = dutyInfoService.dutyInfo(s, departmentInfos.get(i).getDcid());
-                    if (dutyInfoJsonBean.getStatus() == 0) {
-                        ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
-                        dbOpreator.DutyDaoUpdate(dutyInfos);
-
-                    } else {
-                        Looper.prepare();//解决子线程弹toast问题
-                        Toast.makeText(getApplicationContext(), "网络错误，获取职务信息失败", Toast.LENGTH_SHORT).show();
-                        Looper.loop();// 进入loop中的循环，查看消息队列
-                    }
-                }
-            }
-        });
-
         initView();
     }
     public void initView(){
@@ -105,6 +80,7 @@ public class DepartmentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(DepartmentActivity.this, CreateDepartmentActivity.class);
+                intent.putExtra("index",0);
                 startActivity(intent);
                 finish();
             }

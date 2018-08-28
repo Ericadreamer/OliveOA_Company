@@ -27,7 +27,7 @@ import java.util.TimerTask;
 
 public class DepartmentSelectActivity extends AppCompatActivity {
 
-    private List<DepartmentInfo> departmentInfo;
+    private List<DepartmentInfo> departmentInfos;
     private ImageView back;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
@@ -43,20 +43,13 @@ public class DepartmentSelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_select);
 
-        dname = getIntent().getStringExtra("dname");//被编辑的部门名
+        departmentInfos= getIntent().getParcelableArrayListExtra("alldp");
         index = getIntent().getIntExtra("index",index);//判断是编辑页面0还是添加页面1
 
         initData();
     }
 
     public void initData(){
-        departmentInfoDao = EntityManager.getInstance().departmentInfoDao;
-        if(dname=="") {
-            departmentInfo = departmentInfoDao.queryBuilder().orderAsc(DepartmentInfoDao.Properties.Orderby).list();
-        }else{
-            departmentInfo = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Name.notEq(dname)).list();
-
-        }
        initview();
     }
 
@@ -137,16 +130,18 @@ public class DepartmentSelectActivity extends AppCompatActivity {
                             finish();
                         }
                         if(index==1){ //创建部门选择
-                            DepartmentInfo dp =departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Name.eq(dname)).unique();
-                            DepartmentInfo temp  = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(tname.getText().toString())).unique();
-
+                            departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
+                            DepartmentInfo temp =departmentInfoDao.queryBuilder().unique();
                             if(temp!=null) {
-                                Log.e(TAG,temp.toString()+dp.toString());
-                                dp.setDpid(temp.getDcid());
-                                departmentInfoDao.update(dp);
+                                Log.e(TAG,temp.toString());
+                                for(int i=0;i<departmentInfos.size();i++){
+                                    if(tname.getText().toString().equals(departmentInfos.get(i).getName())){
+                                        temp.setDpid(departmentInfos.get(i).getDcid());
+                                    }
+                                }
+                               departmentInfoDao.deleteAll();
+                                departmentInfoDao.insert(temp);
                             }
-
-
                             Intent intent = new Intent(DepartmentSelectActivity.this, CreateDepartmentActivity.class);
                             intent.putExtra("index", 1);
                             startActivity(intent);
@@ -159,12 +154,12 @@ public class DepartmentSelectActivity extends AppCompatActivity {
 
     //添加ViewItem
     private void addViewItem(View view) {
-        if (departmentInfo == null) {//如果部门列表为0，加载空布局
+        if (departmentInfos == null) {//如果部门列表为0，加载空布局
             View hotelEvaluateView = View.inflate(this, R.layout.activity_null_department, null);
             addDPlistView.addView(hotelEvaluateView);
             //sortHotelViewItem();
         } else {//如果有部门则按数组大小加载布局
-            for(int i = 0;i <departmentInfo.size(); i ++){
+            for(int i = 0;i <departmentInfos.size(); i ++){
                 View hotelEvaluateView = View.inflate(this, R.layout.activity_department_selectitem, null);
                 addDPlistView.addView(hotelEvaluateView);
                 InitDataViewItem();
@@ -184,7 +179,7 @@ public class DepartmentSelectActivity extends AppCompatActivity {
             View childAt = addDPlistView.getChildAt(i);
             tvname = (TextView)childAt.findViewById(R.id.dname);
 
-            tvname.setText(departmentInfo.get(i).getName());
+            tvname.setText(departmentInfos.get(i).getName());
         }
         Log.e(TAG, "部门名称：" + tvname.getText().toString());
     }

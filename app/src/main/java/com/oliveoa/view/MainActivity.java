@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -58,10 +59,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private RadioButton departionbtn,staffbtn,propertybtn,documentbtn;
     ImageView menu;
 
-    private List<EmployeeInfo> employeeInfos;
-    private List<DepartmentInfo> departmentInfos;
-    private List<PropertiesInfo>properties;
-    private List<DutyInfo> dutyInfos;
+    private ArrayList<EmployeeInfo> employeeInfos;
+    private ArrayList<DepartmentInfo> departmentInfos;
+    private ArrayList<PropertiesInfo>properties;
+    private ArrayList<DutyInfo> dutyInfos;
 
     private String TAG = this.getClass().getSimpleName();
 
@@ -313,11 +314,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
                 if (departmentInfoJsonBean.getStatus()==0) {
                     departmentInfos = departmentInfoJsonBean.getData();
-                    DBOpreator dbOpreator = new DBOpreator();
-                    dbOpreator.DepartmentDaoUpdate(departmentInfos);
-
-                    /* departmentInfoDao.insert(departmentInfos.get(i));*/
                     Intent intent = new Intent(MainActivity.this, DepartmentActivity.class);
+                    intent.putParcelableArrayListExtra("alldp",departmentInfos);
                     startActivity(intent);
                     finish();
                 }

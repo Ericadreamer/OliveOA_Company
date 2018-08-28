@@ -15,7 +15,7 @@ import com.oliveoa.pojo.DepartmentInfo;
 /** 
  * DAO for table "DEPARTMENT_INFO".
 */
-public class DepartmentInfoDao extends AbstractDao<DepartmentInfo, Long> {
+public class DepartmentInfoDao extends AbstractDao<DepartmentInfo, Void> {
 
     public static final String TABLENAME = "DEPARTMENT_INFO";
 
@@ -24,16 +24,15 @@ public class DepartmentInfoDao extends AbstractDao<DepartmentInfo, Long> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property _id = new Property(0, Long.class, "_id", true, "_id");
-        public final static Property Dcid = new Property(1, String.class, "dcid", false, "DCID");
-        public final static Property Dpid = new Property(2, String.class, "dpid", false, "DPID");
-        public final static Property Id = new Property(3, String.class, "id", false, "ID");
-        public final static Property Name = new Property(4, String.class, "name", false, "NAME");
-        public final static Property Telephone = new Property(5, String.class, "telephone", false, "TELEPHONE");
-        public final static Property Fax = new Property(6, String.class, "fax", false, "FAX");
-        public final static Property Orderby = new Property(7, int.class, "orderby", false, "ORDERBY");
-        public final static Property Createtime = new Property(8, String.class, "createtime", false, "CREATETIME");
-        public final static Property Updatetime = new Property(9, String.class, "updatetime", false, "UPDATETIME");
+        public final static Property Dcid = new Property(0, String.class, "dcid", false, "DCID");
+        public final static Property Dpid = new Property(1, String.class, "dpid", false, "DPID");
+        public final static Property Id = new Property(2, String.class, "id", false, "ID");
+        public final static Property Name = new Property(3, String.class, "name", false, "NAME");
+        public final static Property Telephone = new Property(4, String.class, "telephone", false, "TELEPHONE");
+        public final static Property Fax = new Property(5, String.class, "fax", false, "FAX");
+        public final static Property Orderby = new Property(6, int.class, "orderby", false, "ORDERBY");
+        public final static Property Createtime = new Property(7, String.class, "createtime", false, "CREATETIME");
+        public final static Property Updatetime = new Property(8, String.class, "updatetime", false, "UPDATETIME");
     }
 
 
@@ -49,16 +48,15 @@ public class DepartmentInfoDao extends AbstractDao<DepartmentInfo, Long> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"DEPARTMENT_INFO\" (" + //
-                "\"_id\" INTEGER PRIMARY KEY AUTOINCREMENT ," + // 0: _id
-                "\"DCID\" TEXT," + // 1: dcid
-                "\"DPID\" TEXT," + // 2: dpid
-                "\"ID\" TEXT," + // 3: id
-                "\"NAME\" TEXT," + // 4: name
-                "\"TELEPHONE\" TEXT," + // 5: telephone
-                "\"FAX\" TEXT," + // 6: fax
-                "\"ORDERBY\" INTEGER NOT NULL ," + // 7: orderby
-                "\"CREATETIME\" TEXT," + // 8: createtime
-                "\"UPDATETIME\" TEXT);"); // 9: updatetime
+                "\"DCID\" TEXT," + // 0: dcid
+                "\"DPID\" TEXT," + // 1: dpid
+                "\"ID\" TEXT," + // 2: id
+                "\"NAME\" TEXT," + // 3: name
+                "\"TELEPHONE\" TEXT," + // 4: telephone
+                "\"FAX\" TEXT," + // 5: fax
+                "\"ORDERBY\" INTEGER NOT NULL ," + // 6: orderby
+                "\"CREATETIME\" TEXT," + // 7: createtime
+                "\"UPDATETIME\" TEXT);"); // 8: updatetime
     }
 
     /** Drops the underlying database table. */
@@ -71,50 +69,45 @@ public class DepartmentInfoDao extends AbstractDao<DepartmentInfo, Long> {
     protected final void bindValues(DatabaseStatement stmt, DepartmentInfo entity) {
         stmt.clearBindings();
  
-        Long _id = entity.get_id();
-        if (_id != null) {
-            stmt.bindLong(1, _id);
-        }
- 
         String dcid = entity.getDcid();
         if (dcid != null) {
-            stmt.bindString(2, dcid);
+            stmt.bindString(1, dcid);
         }
  
         String dpid = entity.getDpid();
         if (dpid != null) {
-            stmt.bindString(3, dpid);
+            stmt.bindString(2, dpid);
         }
  
         String id = entity.getId();
         if (id != null) {
-            stmt.bindString(4, id);
+            stmt.bindString(3, id);
         }
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(5, name);
+            stmt.bindString(4, name);
         }
  
         String telephone = entity.getTelephone();
         if (telephone != null) {
-            stmt.bindString(6, telephone);
+            stmt.bindString(5, telephone);
         }
  
         String fax = entity.getFax();
         if (fax != null) {
-            stmt.bindString(7, fax);
+            stmt.bindString(6, fax);
         }
-        stmt.bindLong(8, entity.getOrderby());
+        stmt.bindLong(7, entity.getOrderby());
  
         String createtime = entity.getCreatetime();
         if (createtime != null) {
-            stmt.bindString(9, createtime);
+            stmt.bindString(8, createtime);
         }
  
         String updatetime = entity.getUpdatetime();
         if (updatetime != null) {
-            stmt.bindString(10, updatetime);
+            stmt.bindString(9, updatetime);
         }
     }
 
@@ -122,107 +115,97 @@ public class DepartmentInfoDao extends AbstractDao<DepartmentInfo, Long> {
     protected final void bindValues(SQLiteStatement stmt, DepartmentInfo entity) {
         stmt.clearBindings();
  
-        Long _id = entity.get_id();
-        if (_id != null) {
-            stmt.bindLong(1, _id);
-        }
- 
         String dcid = entity.getDcid();
         if (dcid != null) {
-            stmt.bindString(2, dcid);
+            stmt.bindString(1, dcid);
         }
  
         String dpid = entity.getDpid();
         if (dpid != null) {
-            stmt.bindString(3, dpid);
+            stmt.bindString(2, dpid);
         }
  
         String id = entity.getId();
         if (id != null) {
-            stmt.bindString(4, id);
+            stmt.bindString(3, id);
         }
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(5, name);
+            stmt.bindString(4, name);
         }
  
         String telephone = entity.getTelephone();
         if (telephone != null) {
-            stmt.bindString(6, telephone);
+            stmt.bindString(5, telephone);
         }
  
         String fax = entity.getFax();
         if (fax != null) {
-            stmt.bindString(7, fax);
+            stmt.bindString(6, fax);
         }
-        stmt.bindLong(8, entity.getOrderby());
+        stmt.bindLong(7, entity.getOrderby());
  
         String createtime = entity.getCreatetime();
         if (createtime != null) {
-            stmt.bindString(9, createtime);
+            stmt.bindString(8, createtime);
         }
  
         String updatetime = entity.getUpdatetime();
         if (updatetime != null) {
-            stmt.bindString(10, updatetime);
+            stmt.bindString(9, updatetime);
         }
     }
 
     @Override
-    public Long readKey(Cursor cursor, int offset) {
-        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
+    public Void readKey(Cursor cursor, int offset) {
+        return null;
     }    
 
     @Override
     public DepartmentInfo readEntity(Cursor cursor, int offset) {
         DepartmentInfo entity = new DepartmentInfo( //
-            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // _id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // dcid
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // dpid
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // id
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // name
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // telephone
-            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // fax
-            cursor.getInt(offset + 7), // orderby
-            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // createtime
-            cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9) // updatetime
+            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // dcid
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // dpid
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // id
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // name
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // telephone
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // fax
+            cursor.getInt(offset + 6), // orderby
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // createtime
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8) // updatetime
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, DepartmentInfo entity, int offset) {
-        entity.set_id(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setDcid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setDpid(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setId(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setName(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setTelephone(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setFax(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
-        entity.setOrderby(cursor.getInt(offset + 7));
-        entity.setCreatetime(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
-        entity.setUpdatetime(cursor.isNull(offset + 9) ? null : cursor.getString(offset + 9));
+        entity.setDcid(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
+        entity.setDpid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setId(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setName(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setTelephone(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setFax(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setOrderby(cursor.getInt(offset + 6));
+        entity.setCreatetime(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setUpdatetime(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
      }
     
     @Override
-    protected final Long updateKeyAfterInsert(DepartmentInfo entity, long rowId) {
-        entity.set_id(rowId);
-        return rowId;
+    protected final Void updateKeyAfterInsert(DepartmentInfo entity, long rowId) {
+        // Unsupported or missing PK type
+        return null;
     }
     
     @Override
-    public Long getKey(DepartmentInfo entity) {
-        if(entity != null) {
-            return entity.get_id();
-        } else {
-            return null;
-        }
+    public Void getKey(DepartmentInfo entity) {
+        return null;
     }
 
     @Override
     public boolean hasKey(DepartmentInfo entity) {
-        return entity.get_id() != null;
+        // TODO
+        return false;
     }
 
     @Override

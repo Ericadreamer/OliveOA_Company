@@ -1,10 +1,13 @@
 package com.oliveoa.jsonbean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.oliveoa.pojo.DepartmentInfo;
 
 import java.util.ArrayList;
 
-public class DepartmentInfoJsonBean {
+public class DepartmentInfoJsonBean{
     private int status;
     private String msg;
     private ArrayList<DepartmentInfo> data;
@@ -47,4 +50,13 @@ public class DepartmentInfoJsonBean {
                 ", data=" + data +
                 '}';
     }
+
+    //创建带参Parcel构造器
+  /*  protected DepartmentInfoJsonBean(Parcel in) {
+        //这里read字段的顺序要与write的顺序一致
+
+        status = in.readInt();
+        msg = in.readString();
+    }*/
+
 }

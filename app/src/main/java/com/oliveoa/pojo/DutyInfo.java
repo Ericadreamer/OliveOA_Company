@@ -10,8 +10,6 @@ import org.greenrobot.greendao.annotation.Keep;
 @Entity
 @Keep
 public class DutyInfo implements Parcelable {
-    @Id(autoincrement = true)
-    private  Long _id ;
     private String pcid;
     private String ppid;
     private String name;
@@ -21,8 +19,8 @@ public class DutyInfo implements Parcelable {
     private String createtime;
     private String updatetime;
 
-    public DutyInfo(Long _id ,String pcid, String ppid, String name, String dcid, int limit, int orderby, String createtime, String updatetime) {
-        this._id=_id;
+    public DutyInfo(String pcid, String ppid, String name, String dcid, int limit, int orderby, String createtime, String updatetime) {
+
         this.pcid = pcid;
         this.ppid = ppid;
         this.name = name;
@@ -36,7 +34,7 @@ public class DutyInfo implements Parcelable {
     //创建带参Parcel构造器
     protected DutyInfo(Parcel in) {
         //这里read字段的顺序要与write的顺序一致
-        _id = in.readLong();
+
         pcid = in.readString();
         ppid = in.readString();
         name = in.readString();
@@ -71,7 +69,7 @@ public class DutyInfo implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeLong(_id);
+
         parcel.writeString(pcid);
         parcel.writeString(ppid);
         parcel.writeString(name);
@@ -82,13 +80,7 @@ public class DutyInfo implements Parcelable {
         parcel.writeString(updatetime);
     }
 
-    public Long get_id() {
-        return _id;
-    }
 
-    public void set_id(Long _id) {
-        this._id = _id;
-    }
 
     public String getPcid() {
         return pcid;
@@ -161,7 +153,6 @@ public class DutyInfo implements Parcelable {
     @Override
     public String toString() {
         return "DutyInfo{" +
-                "_id=" + _id +
                 ", pcid='" + pcid + '\'' +
                 ", ppid='" + ppid + '\'' +
                 ", name='" + name + '\'' +
