@@ -280,27 +280,27 @@ public class MainActivity extends Activity implements View.OnClickListener {
             Resources res = getResources() ;
             RadioButton gwRB = (RadioButton)findViewById(R.id.fileicon) ;
             Drawable gwDrawable = res.getDrawable(R.drawable.liebiao) ;
-            gwDrawable.setBounds(0,0,130,130);//这里就可以控制drawable资源的大小了
+            gwDrawable.setBounds(0,0,120,120);//这里就可以控制drawable资源的大小了
             gwRB.setCompoundDrawables(null,gwDrawable,null,null);
             //部门管理
             RadioButton bmRB = (RadioButton)findViewById(R.id.departionicon) ;
             Drawable bmDrawable = res.getDrawable(R.drawable.gongwenbao) ;
-            bmDrawable.setBounds(0,0,130,130);//这里就可以控制drawable资源的大小了
+            bmDrawable.setBounds(0,0,120,120);//这里就可以控制drawable资源的大小了
             bmRB.setCompoundDrawables(null,bmDrawable,null,null);
             //员工管理
             RadioButton ygRB = (RadioButton)findViewById(R.id.stafficon) ;
             Drawable ygDrawable = res.getDrawable(R.drawable.caihong) ;
-            ygDrawable.setBounds(0,0,130,130);//这里就可以控制drawable资源的大小了
+            ygDrawable.setBounds(0,0,120,120);//这里就可以控制drawable资源的大小了
             ygRB.setCompoundDrawables(null,ygDrawable,null,null);
             //资产管理
             RadioButton zcRB = (RadioButton)findViewById(R.id.moneyicon) ;
             Drawable zcDrawable = res.getDrawable(R.drawable.wenjian) ;
-            zcDrawable.setBounds(0,0,130,130);//这里就可以控制drawable资源的大小了
+            zcDrawable.setBounds(0,0,120,120);//这里就可以控制drawable资源的大小了
             zcRB.setCompoundDrawables(null,zcDrawable,null,null);
             //更多期待
             RadioButton gdRB = (RadioButton)findViewById(R.id.moreicon) ;
             Drawable gdDrawable = res.getDrawable(R.drawable.more) ;
-            gdDrawable.setBounds(0,0,110,110);//这里就可以控制drawable资源的大小了
+            gdDrawable.setBounds(0,0,100,100);//这里就可以控制drawable资源的大小了
             gdRB.setCompoundDrawables(null,gdDrawable,null,null);
 
 
