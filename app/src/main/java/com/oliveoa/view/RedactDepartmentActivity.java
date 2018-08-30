@@ -3,7 +3,10 @@ package com.oliveoa.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,10 +22,12 @@ import android.widget.Toast;
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.greendao.DepartmentInfoDao;
+import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.util.EntityManager;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,7 +37,6 @@ public class RedactDepartmentActivity extends AppCompatActivity {
     private String TAG = this.getClass().getSimpleName();
     private EditText tname,ttelephone,tfax;
     private TextView tdpid,tid;
-    private String id;
     private int index;
     private String dpname;//上级部门
     private DepartmentInfoDao departmentInfoDao;
@@ -40,35 +44,35 @@ public class RedactDepartmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_redact_department);
-        id = getIntent().getStringExtra("id");//dcid
+        dpname = getIntent().getStringExtra("dpname");//上级部门
         index = getIntent().getIntExtra("index",index);//1为部门选择列表，0为详情页
+        departmentInfo = getIntent().getParcelableExtra("dp");
+        Log.e(TAG,departmentInfo.toString());
         initData();
     }
 
     //初始化
     public void initData(){
            departmentInfoDao= EntityManager.getInstance().departmentInfoDao;
-           departmentInfo = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(id)).unique();
-           DepartmentInfo temp = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(departmentInfo.getDpid())).unique();
-           if(temp==null){
-               dpname = "无";
-           }else{
-               dpname = temp.getName();
-           }
-           initView();
+         //如果是从部门选择页面返回
+        if(index==1){
+            departmentInfo = departmentInfoDao.queryBuilder().unique();
+        }
+        initView();
     }
 
     public void initView() {
 
         tid = (TextView) findViewById(R.id.edit_num);
-        tid.setText(departmentInfo.getId());
         tname = (EditText) findViewById(R.id.edit_name);
-        tname.setText(departmentInfo.getName());
         ttelephone = (EditText) findViewById(R.id.edit_tel);
-        ttelephone.setText(departmentInfo.getTelephone());
         tfax = (EditText) findViewById(R.id.edit_fax);
-        tfax.setText(departmentInfo.getFax());
         tdpid = (TextView) findViewById(R.id.edit_superior);
+
+        tid.setText(departmentInfo.getId());
+        tname.setText(departmentInfo.getName());
+        ttelephone.setText(departmentInfo.getTelephone());
+        tfax.setText(departmentInfo.getFax());
         tdpid.setText(dpname);
 
         ImageView back = (ImageView)findViewById(R.id.null_back);
@@ -85,9 +89,7 @@ public class RedactDepartmentActivity extends AppCompatActivity {
                 dialog.setNegativeButton("是", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentActivity.class);
-                        startActivity(intent);
-                        finish();
+                        back();
                     }
                 });
                 dialog.setPositiveButton("否", new DialogInterface.OnClickListener() {
@@ -110,42 +112,109 @@ public class RedactDepartmentActivity extends AppCompatActivity {
         tdpid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (departmentInfoDao.queryBuilder().count() > 0)
-                    departmentSelect();
-                else{
-                    Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
-                }
+                departmentSelect();
             }
         });
         dpselect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (departmentInfoDao.queryBuilder().count()  > 0)
-                    departmentSelect();
-                else{
-                    Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
-                }
+                departmentSelect();
             }
         });
 
     }
 
+    //返回部门列表操作
+    public void back(){
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+
+        Handler mHandler = new Handler(handlerThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
+                if (departmentInfoJsonBean.getStatus()==0) {
+                    ArrayList<DepartmentInfo> departmentInfos = departmentInfoJsonBean.getData();
+                    Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentActivity.class);
+                    intent.putParcelableArrayListExtra("alldp",departmentInfos);
+                    startActivity(intent);
+                    finish();
+                }
+
+                Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
+            }
+        };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
+    }
     //上级部门选择
     public void departmentSelect(){
-        Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentSelectActivity.class);
-        intent.putExtra("index",0);
-        startActivity(intent);
-        finish();
+        final DepartmentInfo t = new DepartmentInfo() ;
+        t.setId(tid.getText().toString().trim());
+        t.setName(tname.getText().toString().trim());
+        t.setTelephone(ttelephone.getText().toString().trim());
+        t.setFax(tfax.getText().toString().trim());
+        t.setDpid(departmentInfo.getDpid());
+        t.setDcid(departmentInfo.getDcid());
+        t.setCreatetime(departmentInfo.getCreatetime());
+        t.setOrderby(departmentInfo.getOrderby());
+        t.setUpdatetime(departmentInfo.getUpdatetime());
+
+        //Log.e(TAG,t.toString());
+
+        departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
+        departmentInfoDao.deleteAll();
+        departmentInfoDao.insert(t);
+
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+
+        Handler mHandler = new Handler(handlerThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
+                if (departmentInfoJsonBean.getStatus()==0) {
+                    ArrayList<DepartmentInfo> departmentInfos = departmentInfoJsonBean.getData();
+                    if(departmentInfos.size()==0){
+                        Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Intent intent = new Intent(RedactDepartmentActivity.this, DepartmentSelectActivity.class);
+                        intent.putParcelableArrayListExtra("alldp", departmentInfos);
+                        intent.putExtra("index", 0);//判断是编辑页面0还是添加页面1
+                        startActivity(intent);
+                        finish();
+                    }
+                }else{
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(),departmentInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+
+                Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
+            }
+        };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
     }
 
     //保存编辑
     public void save(){
-        SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
-       // departmentInfo.get(index).setId(tid.getText().toString().trim());
+
+        departmentInfo.setId(tid.getText().toString().trim());
         departmentInfo.setName(tname.getText().toString().trim());
         departmentInfo.setTelephone(ttelephone.getText().toString().trim());
         departmentInfo.setFax(tfax.getText().toString().trim());
-
+        Log.e(TAG,departmentInfo.toString());
 
         Log.e("departmentInfo111",departmentInfo.toString());
 

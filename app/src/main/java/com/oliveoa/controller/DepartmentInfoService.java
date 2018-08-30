@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.oliveoa.common.Const;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
+import com.oliveoa.jsonbean.OneDepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
 import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
@@ -185,8 +186,9 @@ public class DepartmentInfoService {
         return null;
 
     }
+
     //删除部门
-    public StatusAndMsgJsonBean deleteduty (String s, String dcid) {
+    public StatusAndMsgJsonBean deletedepartment (String s, String dcid) {
         try {
             Log.i("info_Login","知道了session："+s);
             FormBody body = new FormBody.Builder()
@@ -223,12 +225,13 @@ public class DepartmentInfoService {
 
     }
 
-    //获取部门信息
-    public DepartmentInfoJsonBean getdepartmentinfo (String s) {
+    //获取单个部门信息
+    public OneDepartmentInfoJsonBean getdepartmentinfo (String s,String dcid) {
 
         try {
             Log.i("info_Login","知道了session："+s);
             FormBody body = new FormBody.Builder()
+                    .add("dcid",dcid)
                     .build();
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -244,9 +247,9 @@ public class DepartmentInfoService {
             String json = response.body().string();
             Gson gson = new Gson();
             System.out.println(json);
-            java.lang.reflect.Type type = new TypeToken<DepartmentInfoJsonBean>() {
+            java.lang.reflect.Type type = new TypeToken<OneDepartmentInfoJsonBean>() {
             }.getType();
-            DepartmentInfoJsonBean departmentinfoJsonBean = gson.fromJson(json, type);
+            OneDepartmentInfoJsonBean departmentinfoJsonBean = gson.fromJson(json, type);
             System.out.println("getdepartmentinfo = " + departmentinfoJsonBean);
 
             return departmentinfoJsonBean;

@@ -26,38 +26,33 @@ import java.util.TimerTask;
 public class DutySelectActivity extends AppCompatActivity {
 
 
-    private List<DutyInfo> dutyInfo;
+    private List<DutyInfo> dutyInfos;
     private ImageView back;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
     private LinearLayout addDTlistView;
-    private String dname;
+    private String dtname;
     private TextView tvname;
     private DutyInfoDao dutyInfoDao;
     private int index;
-    private String id;
+    private DutyInfo temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_duty_select);
 
-        dname = getIntent().getStringExtra("dname");//被编辑的职务名
+        dutyInfos= getIntent().getParcelableArrayListExtra("alldt");
         index = getIntent().getIntExtra("index",index);//判断是编辑页面0还是添加页面1
-
+        Log.d(TAG,"index="+index+"dutyInfos="+dutyInfos.toString());
         initData();
     }
 
     public void initData(){
         dutyInfoDao = EntityManager.getInstance().dutyInfoDao;
-        dutyInfo = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Name.notEq(dname)).list();
-
-        DutyInfo temp = dutyInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Name.eq(dname)).unique();
-        if(temp==null){
-            id = null;
-        }else{
-            id= temp.getPcid();
-        }
+        temp = dutyInfoDao.queryBuilder().unique();
+        Log.d(TAG,"temp="+temp.toString());
+        initview();
     }
 
     public void initview(){
@@ -81,14 +76,16 @@ public class DutySelectActivity extends AppCompatActivity {
 
                         if(index==0) {
                             Intent intent = new Intent(DutySelectActivity.this,EditDutyInfoActivity.class);
-                            intent.putExtra("id",id );//pcid
+                            intent.putExtra("dtname","无" );//上级部门名
                             intent.putExtra("index", 0);
+                            intent.putExtra("dt",temp);
                             startActivity(intent);
                             finish();
                         }
                         if(index==1){
                             Intent intent = new Intent(DutySelectActivity.this, AddDutyActivity.class);
                             intent.putExtra("index", 1);
+                            intent.putExtra("dtname","无");
                             startActivity(intent);
                             finish();
                         }
@@ -120,23 +117,53 @@ public class DutySelectActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     if(index==0) {  //编辑职务选择
-                          DutyInfo dt = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Name.eq(dname)).unique();
-                          dt.setPpid(dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Pcid.eq(tname.getText().toString())).unique().getPcid());
-                          dutyInfoDao.insertOrReplace(dt);
-                          Intent intent = new Intent(DutySelectActivity.this, EditDutyInfoActivity.class);
-                          intent.putExtra("id",id );//pcid
-                          intent.putExtra("index", 0);
-                          startActivity(intent);
-                          finish();
-                    }
-                    if(index==1){ //创建部门选择
-                        DutyInfo dt = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Name.eq(dname)).unique();
-                        dt.setPpid(dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Pcid.eq(tname.getText().toString())).unique().getPcid());
-                        dutyInfoDao.insertOrReplace(dt);
+                        if(temp!=null) {
+                            Log.e(TAG,temp.toString());
+                            if(tname.getText().toString().equals(temp.getName())) {
+                                Toast.makeText(getApplicationContext(), "请选择除"+tname.getText().toString()+"以外的其他职务", Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            for (int i = 0; i < dutyInfos.size(); i++) {
+                                Log.e(TAG, dutyInfos.get(i).getName() + tname.getText().toString());
+                                if (tname.getText().toString().equals(dutyInfos.get(i).getName())) {
+                                    temp.setPpid(dutyInfos.get(i).getPcid());
+                                    Log.e(TAG, dutyInfos.get(i).getPcid());
+                                    break;
+                                }
+                            }
+                            dutyInfoDao.deleteAll();
+                            dutyInfoDao.insert(temp);
+                            Log.e(TAG, dutyInfoDao.queryBuilder().unique().toString());
+                        }
                         Intent intent = new Intent(DutySelectActivity.this, EditDutyInfoActivity.class);
                         intent.putExtra("index", 1);
+                        intent.putExtra("dp", temp);
+                        intent.putExtra("dpname", tname.getText().toString());
                         startActivity(intent);
-                        finish(); }
+                        finish();
+                    }
+                    if(index==1) { //创建部门选择
+                        if (temp != null) {
+                            Log.e(TAG, temp.toString());
+
+                            for (int i = 0; i < dutyInfos.size(); i++) {
+                                Log.e(TAG, dutyInfos.get(i).getName() +","+ tname.getText().toString());
+                                if (tname.getText().toString().equals(dutyInfos.get(i).getName())) {
+                                    temp.setPpid(dutyInfos.get(i).getPcid());
+                                    Log.e(TAG, dutyInfos.get(i).getPcid());
+                                    break;
+                                }
+                            }
+                            dutyInfoDao.deleteAll();
+                            dutyInfoDao.insert(temp);
+                            Log.e(TAG, dutyInfoDao.queryBuilder().unique().toString());
+                        }
+                        Intent intent = new Intent(DutySelectActivity.this, AddDutyActivity.class);
+                        intent.putExtra("index", 1);
+                        intent.putExtra("dtname", tname.getText().toString());
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             });
         }
@@ -144,8 +171,8 @@ public class DutySelectActivity extends AppCompatActivity {
 
     //添加ViewItem
     private void addViewItem(View view) {
-        if (dutyInfo!=null) {//如果有职务则按数组大小加载布局
-            for(int i = 0;i <dutyInfo.size(); i ++){
+        if (dutyInfos!=null) {//如果有职务则按数组大小加载布局
+            for(int i = 0;i <dutyInfos.size(); i ++){
                 View hotelEvaluateView = View.inflate(this, R.layout.activity_duty_selectitem, null);
                 addDTlistView.addView(hotelEvaluateView);
                 InitDataViewItem();
@@ -166,7 +193,7 @@ public class DutySelectActivity extends AppCompatActivity {
             View childAt = addDTlistView.getChildAt(i);
             tvname = (TextView)childAt.findViewById(R.id.dname);
 
-            tvname.setText(dutyInfo.get(i).getName());
+            tvname.setText(dutyInfos.get(i).getName());
         }
         Log.e(TAG, "职务名称：" + tvname.getText().toString());
     }

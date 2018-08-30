@@ -3,7 +3,10 @@ package com.oliveoa.view;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,11 +21,15 @@ import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.controller.DutyInfoService;
+import com.oliveoa.greendao.DepartmentInfoDao;
 import com.oliveoa.greendao.DutyInfoDao;
+import com.oliveoa.jsonbean.DutyInfoJsonBean;
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
+import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.util.EntityManager;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,12 +39,14 @@ public class EditDutyInfoActivity extends AppCompatActivity {
 
     private EditText tname,tlimit;
     private DutyInfo dutyInfo;
+    private DepartmentInfo departmentInfo;
     private DutyInfoDao dutyInfoDao;
+    private DepartmentInfoDao departmentInfoDao;
     private String TAG = this.getClass().getSimpleName();
-    private int index,pcid;
+    private int index;
     private TextView tppid;
     private ImageView dutynext;
-    private String ppname;
+    private String dtname,dpname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +54,23 @@ public class EditDutyInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit_duty_info);
 
         index = getIntent().getIntExtra("index",index);//1为详情页，0为职务选择页
-        pcid = getIntent().getIntExtra("pcid",pcid);
-
+        dtname = getIntent().getStringExtra("dtname");
+        dutyInfo = getIntent().getParcelableExtra("dt");
+        dpname = getIntent().getStringExtra("dpname");
         initData();
     }
 
     //初始化
     public void initData(){
-        dutyInfoDao = EntityManager.getInstance().dutyInfoDao;
-        dutyInfo = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Pcid.eq(pcid)).unique();
-        ppname = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Pcid.eq(dutyInfo.getPpid())).unique().getName();
+        dutyInfoDao = EntityManager.getInstance().getDutyInfoInfo();
+
+        departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
+        departmentInfo = departmentInfoDao.queryBuilder().unique();
+
+        if(index==1){
+            dutyInfo = dutyInfoDao.queryBuilder().unique();
+        }
+
         initView();
     }
 
@@ -66,12 +82,12 @@ public class EditDutyInfoActivity extends AppCompatActivity {
         tlimit.setText(dutyInfo.getLimit());
 
 
-        ImageView back = (ImageView)findViewById(R.id.null_back);
+        final ImageView back = (ImageView)findViewById(R.id.null_back);
         ImageView save = (ImageView)findViewById(R.id.info_save);
 
         dutynext = (ImageView)findViewById(R.id.duty_select);
         tppid =(TextView)findViewById(R.id.tv_superior);
-        tppid.setText(ppname);
+        tppid.setText(dtname);
 
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
@@ -83,10 +99,7 @@ public class EditDutyInfoActivity extends AppCompatActivity {
                 dialog.setNegativeButton("是", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent intent = new Intent(EditDutyInfoActivity.this,DepartmentInfoActivity.class);
-                        intent.putExtra("dutyname",dutyInfo.getName());
-                        startActivity(intent);
-                        finish();
+                       back();
                     }
                 });
                 dialog.setPositiveButton("否", new DialogInterface.OnClickListener() {
@@ -109,30 +122,100 @@ public class EditDutyInfoActivity extends AppCompatActivity {
         tppid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (dutyInfoDao.queryBuilder().count()>0)
-                    dutySelect();
-                else{
-                    Toast.makeText(getApplicationContext(), "当前无更多职务，无法选择，请创建新职务！", Toast.LENGTH_SHORT).show();
-                }
+               dutySelect();
             }
         });
         dutynext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (dutyInfoDao.queryBuilder().count()>0)
-                    dutySelect();
-                else{
-                    Toast.makeText(getApplicationContext(), "当前无更多职务，无法选择，请创建新职务！", Toast.LENGTH_SHORT).show();
-                }
+                dutySelect();
             }
         });
     }
 
+    //返回部门信息页面
+    public void back(){
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+
+        Handler mHandler = new Handler(handlerThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+                DutyInfoService dutyInfoService = new DutyInfoService();
+                DutyInfoJsonBean dutyInfoJsonBean=dutyInfoService.dutyInfo(s,departmentInfo.getDcid());
+                if (dutyInfoJsonBean.getStatus()==0) {
+                    ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
+                    Intent intent = new Intent(EditDutyInfoActivity.this, DepartmentInfoActivity.class);
+                    intent.putExtra("dp",departmentInfo);
+                    intent.putExtra("dpname",dpname);
+                    intent.putParcelableArrayListExtra("alldt",dutyInfos);
+                    startActivity(intent);
+                    finish();
+                }
+
+                Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
+            }
+        };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
+
+    }
+
+    //职务选择页面跳转
     public void dutySelect(){
-        Intent intent = new Intent(EditDutyInfoActivity.this, DutySelectActivity.class);
-        intent.putExtra("index",0);
-        startActivity(intent);
-        finish();
+        final DutyInfo t = new DutyInfo();
+        t.setName(tname.getText().toString().trim());
+        t.setLimit(Integer.parseInt(tlimit.getText().toString().trim()));
+        t.setPcid(dutyInfo.getPcid());
+        t.setPpid(dutyInfo.getPpid());
+        t.setDcid(dutyInfo.getDcid());
+        t.setCreatetime(dutyInfo.getCreatetime());
+        t.setOrderby(dutyInfo.getOrderby());
+        t.setUpdatetime(dutyInfo.getUpdatetime());
+
+        //dutyInfoDao = EntityManager.getInstance().getDutyInfoInfo();
+        dutyInfoDao.deleteAll();
+        dutyInfoDao.insert(t);
+
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+
+        Handler mHandler = new Handler(handlerThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+                DutyInfoService dutyInfoService = new DutyInfoService();
+                DutyInfoJsonBean dutyInfoJsonBean=dutyInfoService.dutyInfo(s,departmentInfo.getDcid());
+                if (dutyInfoJsonBean.getStatus()==0) {
+                    ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
+                    if(dutyInfos.size()==0){
+                        Toast.makeText(getApplicationContext(), "当前无更多职务，无法选择，请创建新职务！", Toast.LENGTH_SHORT).show();
+                    }else {
+                        Intent intent = new Intent(EditDutyInfoActivity.this, DutySelectActivity.class);
+                        intent.putExtra("index", 0);
+                        intent.putExtra("alldt", dutyInfos);
+                        startActivity(intent);
+                        finish();
+                    }
+                }else{
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(),dutyInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+
+                Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
+            }
+        };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
+
     }
 
     //保存编辑
@@ -140,8 +223,6 @@ public class EditDutyInfoActivity extends AppCompatActivity {
         if (isNumstr(tlimit.getText().toString().trim())) {
             dutyInfo.setName(tname.getText().toString().trim());
             dutyInfo.setLimit(Integer.parseInt(tlimit.getText().toString().trim()));
-
-            Log.e("dutyInfo111", dutyInfo.toString());
 
             if (TextUtils.isEmpty(dutyInfo.getName())) {
                 Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();

@@ -34,9 +34,8 @@ public class DepartmentSelectActivity extends AppCompatActivity {
     private LinearLayout addDPlistView;
     private int index;
     private TextView tvname;
-    private String dname;
     private DepartmentInfoDao departmentInfoDao;
-    private String id;
+    private DepartmentInfo temp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +49,9 @@ public class DepartmentSelectActivity extends AppCompatActivity {
     }
 
     public void initData(){
-       initview();
+        departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
+        temp = departmentInfoDao.queryBuilder().unique();
+        initview();
     }
 
     public void initview(){
@@ -73,13 +74,15 @@ public class DepartmentSelectActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if(index==0) {
                             Intent intent = new Intent(DepartmentSelectActivity.this, RedactDepartmentActivity.class);
-                            intent.putExtra("id",id );//dcid
+                            intent.putExtra("dpname", "无");
                             intent.putExtra("index", 0);
+                            intent.putExtra("dp",temp);
                             startActivity(intent);
                             finish();
                         }
                         if(index==1){
                             Intent intent = new Intent(DepartmentSelectActivity.this, CreateDepartmentActivity.class);
+                            intent.putExtra("dpname", "无");
                             intent.putExtra("index", 1);
                             startActivity(intent);
                             finish();
@@ -113,37 +116,54 @@ public class DepartmentSelectActivity extends AppCompatActivity {
             item.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                         Log.e(TAG,tname.getText().toString());
+                        // Log.e(TAG,tname.getText().toString());
                         if(index==0)  {  //编辑部门选择
-                            DepartmentInfo dp =departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Name.eq(dname)).unique();
-                            DepartmentInfo temp  = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(tname.getText().toString())).unique();
-                            Log.e(TAG,temp.toString());
                             if(temp!=null) {
-                                dp.setDpid(temp.getDcid());
-                            }
-                            departmentInfoDao.update(dp);
+                                Log.e(TAG,temp.toString());
+                                if(tname.getText().toString().equals(temp.getName())) {
+                                    Toast.makeText(getApplicationContext(), "请选择除"+tname.getText().toString()+"以外的其他部门", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                for(int i=0;i<departmentInfos.size();i++){
+                                    Log.e(TAG,departmentInfos.get(i).getName()+tname.getText().toString());
+                                    if(tname.getText().toString().equals(departmentInfos.get(i).getName())){
+                                        temp.setDpid(departmentInfos.get(i).getDcid());
+                                        Log.e(TAG,departmentInfos.get(i).getDcid());
+                                        break;
+                                    }
+                                }
 
-                            Intent intent = new Intent(DepartmentSelectActivity.this, RedactDepartmentActivity.class);
-                            intent.putExtra("id",id );//dcid
-                            intent.putExtra("index", 0);
+                                departmentInfoDao.deleteAll();
+                                departmentInfoDao.insert(temp);
+                                Log.e(TAG,departmentInfoDao.queryBuilder().unique().toString());
+                            }
+                            Intent intent = new Intent(DepartmentSelectActivity.this,RedactDepartmentActivity.class);
+                            intent.putExtra("index", 1);
+                            intent.putExtra("dp", temp);
+                            intent.putExtra("dpname", tname.getText().toString());
                             startActivity(intent);
                             finish();
                         }
                         if(index==1){ //创建部门选择
-                            departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
-                            DepartmentInfo temp =departmentInfoDao.queryBuilder().unique();
                             if(temp!=null) {
                                 Log.e(TAG,temp.toString());
+
                                 for(int i=0;i<departmentInfos.size();i++){
+                                    Log.e(TAG,departmentInfos.get(i).getName()+tname.getText().toString());
                                     if(tname.getText().toString().equals(departmentInfos.get(i).getName())){
                                         temp.setDpid(departmentInfos.get(i).getDcid());
+                                        Log.e(TAG,departmentInfos.get(i).getDcid());
+                                        break;
                                     }
                                 }
+
                                departmentInfoDao.deleteAll();
                                 departmentInfoDao.insert(temp);
+                                Log.e(TAG,departmentInfoDao.queryBuilder().unique().toString());
                             }
                             Intent intent = new Intent(DepartmentSelectActivity.this, CreateDepartmentActivity.class);
                             intent.putExtra("index", 1);
+                            intent.putExtra("dpname", tname.getText().toString());
                             startActivity(intent);
                             finish();
                         }

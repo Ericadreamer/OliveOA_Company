@@ -2,7 +2,11 @@ package com.oliveoa.view;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,14 +19,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
 import com.oliveoa.greendao.DepartmentInfoDao;
 import com.oliveoa.greendao.DutyInfoDao;
+import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.util.EntityManager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,37 +38,48 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
     private DepartmentInfo departmentInfo;
     private List<DutyInfo> dutyInfo;
-    private String id,dname;
+    private String dpname;
     private String TAG = this.getClass().getSimpleName();
     //装在所有动态添加的Item的LinearLayout容器
     private LinearLayout addDutylistView;
     private TextView tname,tnum;
     private DepartmentInfoDao departmentInfoDao;
     private DutyInfoDao dutyInfoDao;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    //在这里可以进行UI操作
+                    addDutylistView.removeView((View) msg.obj);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_department_info);
-        id = getIntent().getStringExtra("id");//部门索引
-        Log.e("Tid",id);
+
+        departmentInfo = getIntent().getParcelableExtra("dp");
+        dpname = getIntent().getStringExtra("dpname");
+        dutyInfo = getIntent().getParcelableArrayListExtra("alldt");
+        Log.e(TAG,"dp:::"+dpname);
         initData();
       }
 
     //初始化
     public void initData(){
-        departmentInfoDao = EntityManager.getInstance().departmentInfoDao;
-        departmentInfo = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(id)).unique();
-        Log.e("department::::",departmentInfo.toString());
+        //方便添加职务用到dp传值
+        departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
+        departmentInfoDao.deleteAll();
+        departmentInfoDao.insert(departmentInfo);
 
-
-        if(departmentInfo.getDpid()==null){
-            dname ="无";
-        }else{
-            dname=  departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(departmentInfo.getDpid())).unique().getName();
-        }
-
-        dutyInfoDao = EntityManager.getInstance().dutyInfoDao;
-        dutyInfo = dutyInfoDao.queryBuilder().where(DutyInfoDao.Properties.Dcid.eq(id)).list();
+        dutyInfoDao = EntityManager.getInstance().getDutyInfoInfo();
 
         initView();
     }
@@ -80,9 +98,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DepartmentInfoActivity.this, DepartmentActivity.class);
-                startActivity(intent);
-                finish();
+                back();
             }
         });
 
@@ -109,13 +125,44 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         TextView tfax = (TextView) findViewById(R.id.text_fax);
         tfax.setText(departmentInfo.getFax());
         TextView tdpid = (TextView) findViewById(R.id.text_superior);
-        tdpid.setText(dname);
+        tdpid.setText(dpname);
+    }
+
+   //返回部门列表操作
+    public void back(){
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+
+        Handler mHandler = new Handler(handlerThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
+                if (departmentInfoJsonBean.getStatus()==0) {
+                    ArrayList<DepartmentInfo> departmentInfos = departmentInfoJsonBean.getData();
+                    Intent intent = new Intent(DepartmentInfoActivity.this, DepartmentActivity.class);
+                    intent.putParcelableArrayListExtra("alldp",departmentInfos);
+                    startActivity(intent);
+                    finish();
+                }
+
+                Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
+            }
+        };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
     }
 
     //编辑部门操作
     public void edit() {
         Intent intent = new Intent(DepartmentInfoActivity.this, RedactDepartmentActivity.class);
-        intent.putExtra("id",id);
+        intent.putExtra("dp",departmentInfo);
+        intent.putExtra("dpname",dpname);
+        intent.putExtra("index",0);
         startActivity(intent);
         finish();
 
@@ -126,14 +173,47 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
         DutyInfo dt = new DutyInfo();
         dt.setDcid(departmentInfo.getDcid());
+        dt.setPpid("");
+        dutyInfoDao.deleteAll();
         dutyInfoDao.insert(dt);
 
         Intent intent = new Intent(DepartmentInfoActivity.this, AddDutyActivity.class);
         intent.putExtra("index",0);
-
+        intent.putExtra("dtname","");//上级职务
+        intent.putExtra("dpname",dpname);//上级部门
         startActivity(intent);
         finish();
 
+    }
+
+    //删除职务操作
+    public void dutydelete(final String pcid, final View childAt){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+                DutyInfoService dutyInfoService = new DutyInfoService();
+                StatusAndMsgJsonBean statusAndMsgJsonBean = dutyInfoService.deleteduty(s,pcid);
+                Log.d("delete", statusAndMsgJsonBean.getMsg() + "");
+                if (statusAndMsgJsonBean.getStatus() == 0) {
+                    //新建一个Message对象，存储需要发送的消息
+                    Message message=new Message();
+                    message.what=1;
+                    message.obj = childAt;
+                    //然后将消息发送出去
+                    handler.sendMessage(message);
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(), "删除成功！点击返回键返回首页", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+
+                } else {
+                    Looper.prepare();
+                    Toast.makeText(getApplicationContext(), statusAndMsgJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+            }
+        }).start();
     }
 
     /**
@@ -151,43 +231,14 @@ public class DepartmentInfoActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     //从LinearLayout容器中删除当前点击到的ViewItem
                     tname = (TextView)childAt.findViewById(R.id.duty_name);
-                    int i ; final int f;
                     String dutyname = tname.getText().toString().trim();
                     Log.i("dutyname=",dutyname);
-                    for (i=0;i<dutyInfo.size();i++) {
-                        if(dutyname.equals(dutyInfo.get(i).getName())){
+                    for (int j=0;j<dutyInfo.size();j++) {
+                        if(dutyname.equals(dutyInfo.get(j).getName())){
+                            dutydelete(dutyInfo.get(j).getPcid(),childAt);
                             break;
                         }
                     }
-                    f=i;
-
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
-                            String s = pref.getString("sessionid", "");
-
-                            DutyInfoService dutyInfoService = new DutyInfoService();
-                            StatusAndMsgJsonBean statusAndMsgJsonBean = dutyInfoService.deleteduty(s,dutyInfo.get(f).getPcid());
-                            Log.d("delete", statusAndMsgJsonBean.getMsg() + "");
-                            if (statusAndMsgJsonBean.getStatus() == 0) {
-                                dutyInfo.remove(dutyInfo.get(f));
-                                dutyInfoDao.deleteAll();
-                                for(int i=0;i<dutyInfo.size();i++){
-                                    dutyInfoDao.insertOrReplace(dutyInfo.get(i));
-                                }
-
-                                Looper.prepare();
-                                Toast.makeText(getApplicationContext(), "删除成功！点击返回键返回部门列表", Toast.LENGTH_SHORT).show();
-                                Looper.loop();
-                                addDutylistView.removeView(childAt);
-                            } else {
-                                Looper.prepare();
-                                Toast.makeText(getApplicationContext(), statusAndMsgJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
-                                Looper.loop();
-                            }
-                        }
-                    }).start();
                 }
 
             });
@@ -200,11 +251,28 @@ public class DepartmentInfoActivity extends AppCompatActivity {
                     tname = (TextView)childAt.findViewById(R.id.duty_name);
 
                     String dutyname = tname.getText().toString().trim();
+                    String dtname = "";
+                    for(int j =0;j<dutyInfo.size();j++){
+                        if(dutyname.equals(dutyInfo.get(j).getName())){
+                            for(int k=0;k<dutyInfo.size();k++){
+                                if(dutyInfo.get(j).getPpid().equals(dutyInfo.get(k).getPcid())){
+                                    dtname = dutyInfo.get(k).getName();
+                                    break;
+                                }
+                            }
+                            if(dtname==""){
+                                dtname="无";
+                            }
+                            Intent intent = new Intent(DepartmentInfoActivity.this, DutyInfoActivity.class);
+                            intent.putExtra("dtname",dtname);
+                            intent.putExtra("dpname",dpname);
+                            intent.putExtra("dt",dutyInfo.get(j));
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
 
-                    Intent intent = new Intent(DepartmentInfoActivity.this, DutyInfoActivity.class);
-                    intent.putExtra("dutyname",dutyname);
-                    startActivity(intent);
-                    finish();
+
                 }
             });
         }
@@ -273,4 +341,6 @@ public class DepartmentInfoActivity extends AppCompatActivity {
             System.exit(0);
         }
     }
+
+
 }

@@ -48,31 +48,23 @@ public class CreateDepartmentActivity extends AppCompatActivity {
     private TextView tdpid;
     private ImageView save,back,dpselect;
     private int index;
-    private DepartmentInfo dp;
+    private DepartmentInfo dp;//获取表中数据
     private String dpname;//上级部门
     private DepartmentInfoDao departmentInfoDao;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_department);
-
+        dpname = getIntent().getStringExtra("dpname");
         index =getIntent().getIntExtra("index",index);//1为部门选择列表，0为部门列表
+        Log.e(TAG, String.valueOf(index)+":::"+dpname);
         initData();
 
     }
     private  void initData(){
-        departmentInfoDao= EntityManager.getInstance().departmentInfoDao;
-        //如果是从部门选择页面返回
-        if(index==1){
-            dp = departmentInfoDao.queryBuilder().unique();
-            if(dp==null){
-                dpname = "无";
-            }else{
-                dpname = dp.getName();
-            }
-
-        }
-
+        departmentInfoDao= EntityManager.getInstance().getDepartmentInfo();
+        dp = departmentInfoDao.queryBuilder().unique();
+        Log.e(TAG,dp.toString());
         initView();
     }
 
@@ -108,27 +100,8 @@ public class CreateDepartmentActivity extends AppCompatActivity {
                 dialog.setNegativeButton("是", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
-                                String s = pref.getString("sessionid", "");
-                                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
-                                DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
-                                if (departmentInfoJsonBean.getStatus() == 0) {
-                                    ArrayList<DepartmentInfo> departmentInfos = departmentInfoJsonBean.getData();
-                                    Intent intent = new Intent(CreateDepartmentActivity.this, DepartmentActivity.class);
-                                    intent.putParcelableArrayListExtra("alldp", departmentInfos);
-                                    startActivity(intent);
-                                    finish();
-                                } else {
-                                    Looper.prepare();
-                                    Toast.makeText(getApplicationContext(), departmentInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
-                                    Looper.loop();
-                                }
-                            }
-                        });
-
+                        Log.e(TAG,"点击了确定返回部门列表");
+                        back();
                     }
                 });
                 dialog.setPositiveButton("否", new DialogInterface.OnClickListener() {
@@ -162,6 +135,36 @@ public class CreateDepartmentActivity extends AppCompatActivity {
             });
   }
 
+     public void back(){
+
+         HandlerThread handlerThread = new HandlerThread("HandlerThread");
+         handlerThread.start();
+
+         Handler mHandler = new Handler(handlerThread.getLooper()){
+             @Override
+             public void handleMessage(Message msg) {
+                 super.handleMessage(msg);
+                 SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
+                 String s = pref.getString("sessionid", "");
+                 DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                 DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
+                 if (departmentInfoJsonBean.getStatus() == 0) {
+                     ArrayList<DepartmentInfo> departmentInfos = departmentInfoJsonBean.getData();
+                     Intent intent = new Intent(CreateDepartmentActivity.this, DepartmentActivity.class);
+                     intent.putParcelableArrayListExtra("alldp", departmentInfos);
+                     startActivity(intent);
+                     finish();
+                 } else {
+                     Looper.prepare();
+                     Toast.makeText(getApplicationContext(), departmentInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                     Looper.loop();
+                 }
+             }
+     };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
+     }
     /**
      *  跳转部门选择列表
      *  1、新建t暂存表单数据
@@ -174,6 +177,7 @@ public class CreateDepartmentActivity extends AppCompatActivity {
         t.setName(tname.getText().toString().trim());
         t.setTelephone(ttelephone.getText().toString().trim());
         t.setFax(tfax.getText().toString().trim());
+        t.setDpid(dp.getDpid());
         Log.e(TAG,t.toString());
 
         departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
@@ -218,15 +222,13 @@ public class CreateDepartmentActivity extends AppCompatActivity {
     }
     //保存编辑
     public void save(){
-        SharedPreferences pref = getSharedPreferences("department", MODE_PRIVATE);
 
-        dp = new DepartmentInfo();
         dp.setId(tid.getText().toString().trim());
         dp.setName(tname.getText().toString().trim());
         dp.setTelephone(ttelephone.getText().toString().trim());
         dp.setFax(tfax.getText().toString().trim());
-        dp.setDpid(pref.getString("dpid["+index+"]",""));
 
+        Log.e(TAG,dp.toString());
         if (TextUtils.isEmpty(dp.getId())||TextUtils.isEmpty(dp.getName())||TextUtils.isEmpty(dp.getTelephone())||TextUtils.isEmpty(dp.getFax())) {
             Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
         } else {
