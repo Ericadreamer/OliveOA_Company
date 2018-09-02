@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com.oliveoa.view/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f0f0f0"
     android:layout_gravity="center_vertical"
-    android:gravity="center"
-    tools:context=".RedactDepartmentActivity">
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -90,6 +87,7 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_marginRight="20dp"
+                            android:layout_marginLeft="@dimen/dp_20"
                             android:layout_weight="1"
                             android:background="@null"
                             android:gravity="center_vertical|end"
@@ -100,7 +98,7 @@
                     </LinearLayout>
 
                     //物品总量
-                    <LinearLayout
+                 <!--   <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
                         android:background="@color/colorWhite"
@@ -130,7 +128,7 @@
                             android:textColor="@color/textcolor"
                             android:textColorHint="#898989"
                             android:textSize="@dimen/activity_companyinfo_text" />
-                    </LinearLayout>
+                    </LinearLayout>-->
 
                     //物品描述
                     <LinearLayout
@@ -226,7 +224,7 @@
                             android:textColor="@color/textcolor"
                             android:textColorHint="#898989"
                             android:textSize="@dimen/activity_companyinfo_text"
-                            android:text="技术部主管"/>
+                            android:text="技术部主管" />
 
 
                         <ImageView

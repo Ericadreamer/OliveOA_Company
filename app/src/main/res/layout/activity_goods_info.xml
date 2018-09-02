@@ -96,7 +96,7 @@
                             android:textSize="@dimen/activity_companyinfo_text" />
                     </LinearLayout>
 
-                    //物品总量
+                    //物品数量情况
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="45dp"
@@ -113,7 +113,7 @@
                             android:layout_marginLeft="20dp"
                             android:textColor="#101010"
                             android:textSize="@dimen/activity_companyinfo_text"
-                            android:text="物品总量" />
+                            android:text="借用量/总量" />
 
                         <TextView
                             android:id="@+id/goods_quantity"
@@ -155,16 +155,15 @@
 
                             <TextView
                                 android:id="@+id/goods_description"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_marginRight="20dp"
                                 android:layout_marginLeft="20dp"
                                 android:background="@null"
-                                android:gravity="center_vertical|end"
-                                android:singleLine="true"
                                 android:textColor="@color/textcolor"
                                 android:textColorHint="#898989"
                                 android:textSize="16dp"
+                                android:layout_marginTop="@dimen/dp_10"
                                 android:layout_marginBottom="@dimen/dp_10"/>
                         </LinearLayout>
                         <!--<TextView

@@ -109,7 +109,6 @@ public class EmployeeInfoService {
             Log.i("info_Login","知道了session："+s);
             Log.d("addinfo",employee.toString());
             FormBody body = new FormBody.Builder()
-                    .add("eid",employee.getEid())
                     .add("dcid",employee.getDcid())
                     .add("pcid",employee.getPcid())
                     .add("id",employee.getId())

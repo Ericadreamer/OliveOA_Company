@@ -6,6 +6,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.oliveoa.common.Const;
 import com.oliveoa.jsonbean.GoodInfoJsonBean;
+import com.oliveoa.jsonbean.OneDepartmentInfoJsonBean;
+import com.oliveoa.jsonbean.OneGoodInfoJsonBean;
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
 import com.oliveoa.pojo.PropertiesInfo;
 
@@ -104,11 +106,9 @@ public class GoodInfoService {
             Log.i("info_Login","知道了session："+s);
             Log.d("addinfo",property.toString());
             FormBody body = new FormBody.Builder()
-                    .add("gid",property.getGid())
                     .add("name",property.getName())
                     .add("describe",property.getDescribe())
                     .add("total",property.getTotal())
-                    .add("remaining",property.getRemaining())
                     .add("pcid",property.getPcid())
                     .build();
             Log.d("addinfobody",body.toString());
@@ -141,6 +141,7 @@ public class GoodInfoService {
         return null;
 
     }
+
     //删除物品
     public StatusAndMsgJsonBean deleteproperty (String s, String gid) {
         try {
@@ -179,4 +180,39 @@ public class GoodInfoService {
 
     }
 
+    //根据id获取物品信息
+    public OneGoodInfoJsonBean getpropertiesbyid(String s,String gid){
+        try {
+            Log.i("info_Login","知道了session："+s);
+            FormBody body = new FormBody.Builder()
+                    .add("gid",gid)
+                    .build();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Cookie",s)
+                    .url(Const.GOODS_SEARCHBYID)
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            //System.out.println(response.body().string());
+
+
+            String json = response.body().string();
+            Gson gson = new Gson();
+            System.out.println(json);
+            java.lang.reflect.Type type = new TypeToken<OneGoodInfoJsonBean>() {
+            }.getType();
+            OneGoodInfoJsonBean oneGoodInfoJsonBean = gson.fromJson(json, type);
+            System.out.println("onegoodinfoJsonBean = " +oneGoodInfoJsonBean);
+
+            return oneGoodInfoJsonBean;
+
+        } catch (IOException e) {
+            //todo handler IOException
+            //throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -23,19 +24,26 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
 import com.oliveoa.controller.CompanyInfoService;
 import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
+import com.oliveoa.controller.EmployeeInfoService;
+import com.oliveoa.controller.GoodInfoService;
 import com.oliveoa.controller.LoginService;
 import com.oliveoa.greendao.CompanyInfoDao;
 import com.oliveoa.greendao.DepartmentInfoDao;
 import com.oliveoa.greendao.DutyInfoDao;
+import com.oliveoa.greendao.EmployeeInfoDao;
 import com.oliveoa.jsonbean.CompanyLoginJsonBean;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
+import com.oliveoa.jsonbean.EmployeeInfoJsonBean;
+import com.oliveoa.jsonbean.GoodInfoJsonBean;
 import com.oliveoa.jsonbean.LogoutJsonBean;
 import com.oliveoa.pojo.CompanyInfo;
 import com.oliveoa.pojo.DepartmentInfo;
@@ -45,6 +53,7 @@ import com.oliveoa.pojo.PropertiesInfo;
 import com.oliveoa.util.DBOpreator;
 import com.oliveoa.util.EntityManager;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +74,23 @@ public class MainActivity extends Activity implements View.OnClickListener {
     private ArrayList<DutyInfo> dutyInfos;
 
     private String TAG = this.getClass().getSimpleName();
+    private RelativeLayout pacmanIndicator_layout;
+    private AVLoadingIndicatorView avLoadingIndicatorView;
+    private Handler mHandler1 = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 2:
+                    //在这里可以进行UI操作
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +105,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
             drawerLayout = (DrawerLayout) findViewById(R.id.activity_na);
             navigationView = (NavigationView) findViewById(R.id.nav);
             menu= (ImageView) findViewById(R.id.main_menu);
+            pacmanIndicator_layout = (RelativeLayout)findViewById(R.id.pacmanIndicator_layout);
+
+            //newton_cradle_loading = (NewtonCradleLoading) findViewById(R.id.newton_cradle_loading);
+            //newton_cradle_loading.setVisibility(View.GONE);
+
             View headerView = navigationView.getHeaderView(0);//获取头布局
             menu.setOnClickListener(this);
             //设置菜单图标为默认原图颜色
@@ -120,6 +151,12 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 }
             });
     }
+
+    /**
+     *   MethodName： companyinfo()
+     *   Description： 公司资料
+     *   @Author： Erica
+     */
     public void companyinfo(){
 
         new Thread(new Runnable() {
@@ -148,6 +185,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
         }).start();
     }
 
+    /**
+     *   MethodName： updatepassword()
+     *   Description： 修改密码
+     *   @Author： Erica
+     */
     public void updatepassword(){
         new Thread(new Runnable() {
             @Override
@@ -175,6 +217,11 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     }
 
+    /**
+     *   MethodName： logout()
+     *   Description： 登出系统
+     *   @Author： Erica
+     */
     private void logout() {
         new Thread(new Runnable() {
             @Override
@@ -214,6 +261,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 break;
         }
     }
+
 
     private void initWindow() {//初始化窗口属性，让状态栏和导航栏透明
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -318,6 +366,8 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     intent.putParcelableArrayListExtra("alldp",departmentInfos);
                     startActivity(intent);
                     finish();
+                }else{
+                    Toast.makeText(getApplicationContext(), departmentInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
                 }
 
                 Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
@@ -330,17 +380,96 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     //员工管理
     private void employeeinfo() {
-       /* Intent intent = new Intent(MainActivity.this,EmployeelistActivity.class);
-        startActivity(intent);
-        finish();*/
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+        pacmanIndicator_layout.setVisibility(View.VISIBLE);
+
+        avLoadingIndicatorView = (AVLoadingIndicatorView)findViewById(R.id.avi);
+        avLoadingIndicatorView.show();
+        Handler mHandler = new Handler(handlerThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+
+                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
+
+                EmployeeInfoService employeeInfoService = new EmployeeInfoService();
+                EmployeeInfoDao employeeInfoDao = EntityManager.getInstance().getEmployeeInfoDao();
+
+
+                if (departmentInfoJsonBean.getStatus()==0) {
+                    departmentInfos = departmentInfoJsonBean.getData();
+                    employeeInfoDao.deleteAll();
+                    for(int i= 0;i<departmentInfos.size();i++){
+
+                        EmployeeInfoJsonBean employeeInfoJsonBean = employeeInfoService.employeeinfo(s,departmentInfos.get(i).getDcid());
+                        if(employeeInfoJsonBean.getStatus()==0){
+                            employeeInfos = employeeInfoJsonBean.getData();
+                            for(int j =0;j<employeeInfos.size();j++){
+                                employeeInfoDao.insert(employeeInfos.get(j));
+                            }
+                        }else{
+                            Toast.makeText(getApplicationContext(), employeeInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    mHandler1.sendEmptyMessage(2);
+                    Intent intent = new Intent(MainActivity.this, EmployeelistActivity.class);
+                    intent.putParcelableArrayListExtra("alldp",departmentInfos);
+                    //intent.putParcelableArrayListExtra("allep",employeeInfos);
+                    startActivity(intent);
+                    finish();
+
+                }else{
+                    Toast.makeText(getApplicationContext(), departmentInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                }
+
+                Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
+            }
+        };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
+
     }
 
     //资产管理
     private void propertyinfo() {
         //Toast.makeText(getApplicationContext(), "资产管理", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(MainActivity.this,GoodsActivity.class);
-        startActivity(intent);
-        finish();
+
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+
+        Handler mHandler = new Handler(handlerThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+
+                GoodInfoService goodInfoService = new GoodInfoService();
+                GoodInfoJsonBean goodInfoJsonBean = goodInfoService.properties(s);
+                if(goodInfoJsonBean.getStatus()==0){
+                    ArrayList<PropertiesInfo> propertiesInfos = goodInfoJsonBean.getData();
+
+                    Intent intent = new Intent(MainActivity.this,GoodsActivity.class);
+                    intent.putExtra("allpp",propertiesInfos);
+                    startActivity(intent);
+                    finish();
+
+                }else{
+                    Toast.makeText(getApplicationContext(),goodInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                }
+
+
+                Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
+            }
+        };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
     }
 
     @Override

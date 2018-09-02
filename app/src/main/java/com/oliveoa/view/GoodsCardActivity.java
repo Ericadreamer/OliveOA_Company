@@ -22,7 +22,7 @@ public class GoodsCardActivity extends AppCompatActivity {
 
         goodsName = (TextView) findViewById(R.id.goods_name);
         goodsDescription = (TextView) findViewById(R.id.goods_description);
-        goodsRecord = (TextView) findViewById(R.id.goods_record);
+        //goodsRecord = (TextView) findViewById(R.id.goods_record);
         btn_delete = (ImageButton) findViewById(R.id.goods_delete);
 
         Intent intent=getIntent();
@@ -30,7 +30,7 @@ public class GoodsCardActivity extends AppCompatActivity {
         Goods item= (Goods) intent.getSerializableExtra("Goods");
         goodsName.setText(item.getgName());
         goodsDescription.setText(item.getgDescription());
-        goodsRecord.setText(item.getgRecord());
+       // goodsRecord.setText(item.getgRecord());
 
 
     }

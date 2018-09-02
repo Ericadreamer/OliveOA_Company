@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com.oliveoa.view/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f0f0f0"
     android:layout_gravity="center_vertical"
-    android:gravity="center"
-    tools:context=".RedactDepartmentActivity">
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:windowSoftInputMode="adjustResize">
+        android:orientation="vertical">
 
-        //标题栏
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,14 +28,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="资产管理"
+                android:text="员工管理"
                 android:textAlignment="center"
                 android:layout_weight="1"
                 android:textColor="#ffffff"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:layout_gravity="center_vertical" />
-
             <ImageView
                 android:id="@+id/add"
                 android:layout_width="20dp"
@@ -50,46 +44,33 @@
                 android:layout_gravity="center_vertical"
                 android:layout_margin="20dp"/>
 
-
-
         </LinearLayout>
 
-        <!--<android.support.design.widget.CoordinatorLayout
-            android:id="@+id/main_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">-->
+        <ImageView
+            android:id="@+id/null_depart"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/image_null"
+            android:layout_gravity="center"
+            android:layout_marginTop="120dp"
+            />
 
-       <!-- <android.support.design.widget.AppBarLayout
-            android:id="@+id/appbar"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            android:layout_height="20dp"
+            android:text="还没有员工信息哦,"
+            android:textAlignment="center"
+            android:textColor="@color/textcolor"/>
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
--->
-
-        //物品显示
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <!--<ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <LinearLayout
-                android:id="@+id/goods_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"/>
-        </ScrollView>-->
+            android:layout_height="20dp"
+            android:text="点击右上角添加员工吧"
+            android:textAlignment="center"
+            android:textColor="@color/textcolor"/>
 
 
 
     </LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>

@@ -163,7 +163,7 @@
                         android:layout_marginRight="@dimen/dp_20"
                         android:layout_gravity="center_vertical"
                         android:src="@drawable/ic_next"
-                        android:onClick="onLinkagePicker"/>
+                       />
                 </LinearLayout>
             </LinearLayout>
             <LinearLayout
@@ -223,7 +223,7 @@
                     android:layout_marginLeft="20dp"
                     android:textColor="#101010"
                     android:textSize="@dimen/activity_companyinfo_text"
-                    android:text="出生年月" />
+                    android:text="请选择出生年月" />
 
                 <TextView
                     android:id="@+id/content_birth"

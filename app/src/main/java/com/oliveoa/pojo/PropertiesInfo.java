@@ -1,11 +1,14 @@
 package com.oliveoa.pojo;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Keep;
 
 @Entity
 @Keep
-public class PropertiesInfo {
+public class PropertiesInfo implements Parcelable {
     private String gid;
     private String name;
     private String describe;
@@ -85,4 +88,49 @@ public class PropertiesInfo {
                 ", pcid='" + pcid + '\'' +
                 '}';
     }
+
+    //创建带参Parcel构造器
+    protected PropertiesInfo(Parcel in) {
+        //这里read字段的顺序要与write的顺序一致
+
+        gid= in.readString();
+        name = in.readString();
+        describe = in.readString();
+        total = in.readString();
+        remaining = in.readString();
+        pcid = in.readString();
+    }
+
+    //创建常量Creator，并实现该接口的两个方法
+    public static final Parcelable.Creator<PropertiesInfo> CREATOR = new Creator<PropertiesInfo>() {
+        @Override
+        public PropertiesInfo createFromParcel(Parcel in) {
+            return new PropertiesInfo(in);
+        }
+
+        @Override
+        public PropertiesInfo[] newArray(int size) {
+            return new PropertiesInfo[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+        parcel.writeString(gid);
+        parcel.writeString(name);
+        parcel.writeString(describe);
+        parcel.writeString(total);
+        parcel.writeString(remaining);
+        parcel.writeString(pcid);
+    }
+    public static Creator<PropertiesInfo> getCREATOR() {
+        return CREATOR;
+    }
+
 }

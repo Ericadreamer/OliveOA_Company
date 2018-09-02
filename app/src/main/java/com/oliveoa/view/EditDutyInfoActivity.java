@@ -53,7 +53,7 @@ public class EditDutyInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_duty_info);
 
-        index = getIntent().getIntExtra("index",index);//1为详情页，0为职务选择页
+        index = getIntent().getIntExtra("index",index);//0为详情页，1为职务选择页
         dtname = getIntent().getStringExtra("dtname");
         dutyInfo = getIntent().getParcelableExtra("dt");
         dpname = getIntent().getStringExtra("dpname");

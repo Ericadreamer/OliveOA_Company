@@ -3,83 +3,83 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
-<android.support.v7.widget.CardView
-    android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    android:layout_height="130dp"
-    tools:targetApi="lollipop"
-    android:clickable="true"
-    android:stateListAnimator="@drawable/selector_elevation"
-    android:layout_marginLeft="@dimen/dp_4"
-    android:layout_marginRight="@dimen/dp_4"
-    android:layout_marginBottom="@dimen/dp_2"
-    android:foreground="?android:attr/selectableItemBackground"
-    app:cardCornerRadius="@dimen/dp_8"
-    app:cardUseCompatPadding="true"
-    app:cardPreventCornerOverlap="false"
-    android:visibility="visible">
-
-    <LinearLayout
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#fff">
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_marginRight="@dimen/dp_4"
+        android:clickable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:stateListAnimator="@drawable/selector_elevation"
+        android:visibility="visible"
+        app:cardCornerRadius="@dimen/dp_10"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        android:layout_marginBottom="0px"
+        tools:targetApi="lollipop">
 
         //物品名称
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/to_info"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:src="@drawable/image_goods"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"/>
 
         <LinearLayout
-            android:layout_width="@dimen/dp_220"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="#fff"
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/goods_name"
-                android:layout_width="match_parent"
-                android:layout_height="25dp"
-                android:text="打印机"
-                android:textColor="#000"
-                android:layout_marginTop="14dp"
-                android:textSize="16dp"/>
+            <ImageView
+                android:id="@+id/to_info"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:src="@drawable/image_goods" />
 
-            <TextView
-                android:id="@+id/goods_description"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:text="打印公司文件"
-                android:textColor="@color/LoginPrimaryDark"
-                android:textSize="14dp"/>
+            <LinearLayout
+                android:layout_width="@dimen/dp_220"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/goods_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:text="打印机"
+                    android:textColor="#000"
+                    android:textSize="16dp"
+                    android:singleLine="true"/>
+
+                <TextView
+                    android:id="@+id/goods_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:text="打印公司文件"
+                    android:textColor="@color/LoginPrimaryDark"
+                    android:textSize="14dp"
+                    android:singleLine="true"/>
+
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/goods_delete"
+                android:layout_width="@dimen/dp_30"
+                android:layout_height="@dimen/dp_30"
+                android:layout_gravity="center"
+                android:background="#0000"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_delete" />
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/goods_delete"
-            android:layout_width="@dimen/dp_30"
-            android:layout_height="@dimen/dp_30"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_delete"
-            android:background="#0000"
-            android:scaleType="centerInside" />
-
-    </LinearLayout>
-
         //横线
-        <View
+        <!--<View
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_1"
             android:gravity="center_vertical"
@@ -109,8 +109,9 @@
                 android:textColor="#101010"
                 android:textSize="16sp"
                 android:text="那只喵借用未还"/>
-        </LinearLayout>
-    </LinearLayout>
+        </LinearLayout>-->
 
-</android.support.v7.widget.CardView>
+
+    </android.support.v7.widget.CardView>
+
 </LinearLayout>

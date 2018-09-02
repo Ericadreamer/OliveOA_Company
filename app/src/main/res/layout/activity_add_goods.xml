@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com.oliveoa.view/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#f0f0f0"
     android:layout_gravity="center_vertical"
-    android:gravity="center"
-    tools:context=".RedactDepartmentActivity">
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -75,7 +72,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/duty_name"
+                    android:id="@+id/goods_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
@@ -85,7 +82,7 @@
                     android:text="物品名称" />
 
                 <EditText
-                    android:id="@+id/edit_duty_name"
+                    android:id="@+id/edit_goods_name"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="20dp"
@@ -119,7 +116,7 @@
                     android:text="物品总量" />
 
                 <EditText
-                    android:id="@+id/edit_name"
+                    android:id="@+id/quantity"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginRight="20dp"
@@ -130,6 +127,7 @@
                     android:textColor="@color/textcolor"
                     android:textColorHint="#898989"
                     android:textSize="@dimen/activity_companyinfo_text"
+                    android:inputType="number"
                     android:hint="请输入物品总量"/>
             </LinearLayout>
 
@@ -158,41 +156,13 @@
                         android:text="物品描述" />
 
                     <com.oliveoa.util.LinesEditView
+                        android:id="@+id/description"
                         android:layout_margin="10dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         />
                 </LinearLayout>
-                <!--<TextView
-                    android:id="@+id/goods_description"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="#101010"
-                    android:textSize="@dimen/activity_companyinfo_text"
-                    android:text="物品描述" />
 
-                <EditText
-                    android:id="@+id/edit_description"
-                    android:layout_width="0dp"
-                    android:layout_height="@dimen/dp_142"
-                    android:layout_marginTop="@dimen/dp_10"
-                    android:background="@null"
-                    android:singleLine="true"
-                    android:gravity="top"
-                    android:maxLength="200"
-                    android:paddingBottom="@dimen/dp_27"
-                    android:paddingLeft="@dimen/dp_27"
-                    android:paddingRight="@dimen/dp_27"
-                    android:paddingTop="@dimen/dp_10"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:textColor="@color/textcolor"
-                    android:textColorHint="#898989"
-                    android:textSize="@dimen/activity_companyinfo_text"
-                    android:hint="请输入物品描述"/>-->
             </LinearLayout>
 
             //管理岗位
@@ -226,7 +196,7 @@
                     android:textColor="@color/textcolor"
                     android:textColorHint="#898989"
                     android:textSize="@dimen/activity_companyinfo_text"
-                    android:text="技术部主管"/>
+                    android:text="请选择管理岗位" />
 
                 <ImageView
                     android:id="@+id/next"

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,9 +76,10 @@ public class LinesEditView extends LinearLayout {
         }
 
         id_et_input.addTextChangedListener(mTextWatcher);
-        id_et_input.setHint(hintText);
+        id_et_input.setHint("请输入物品描述");
+        //id_et_input.setHint(hintText);
         id_et_input.setHintTextColor(hintTextColor);
-        id_et_input.setText("dsadsadsadas");
+        //id_et_input.setText(contentText);
         id_et_input.setTextColor(contentTextColor);
         id_et_input.setTextSize(TypedValue.COMPLEX_UNIT_PX, contentTextSize);
         id_et_input.setHeight((int) contentViewHeight);
@@ -206,6 +208,7 @@ public class LinesEditView extends LinearLayout {
     }
 
     public String getContentText() {
+       System.out.println(" id_et_input.getText().toString()"+id_et_input.getText().toString());
         if (id_et_input != null) {
             contentText = id_et_input.getText() == null ? "" : id_et_input.getText().toString();
         }

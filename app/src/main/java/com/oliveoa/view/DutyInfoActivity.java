@@ -126,7 +126,7 @@ public class DutyInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(DutyInfoActivity.this, EditDutyInfoActivity.class);
         intent.putExtra("dtname",dtname);
         intent.putExtra("dpname",dpname);
-        intent.putExtra("index",1);
+        intent.putExtra("index",0);
         intent.putExtra("dt",dutyInfo);
         startActivity(intent);
         finish();

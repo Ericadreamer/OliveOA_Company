@@ -7,21 +7,15 @@ import org.greenrobot.greendao.annotation.Keep;
 public class Goods {
     private String gName;
     private String gDescription;
-    private String gRecord;
+    private String ggid;
 
-
-    public String getgRecord() {
-        return gRecord;
+    public Goods() {
     }
 
-    public void setgRecord(String gRecord) {
-        this.gRecord = gRecord;
-    }
-
-    public Goods(String gName, String gDescription,String gRecord) {
+    public Goods(String gName, String gDescription, String ggid) {
         this.gName = gName;
         this.gDescription = gDescription;
-        this.gRecord = gRecord;
+        this.ggid = ggid;
     }
 
     public String getgName() {
@@ -40,4 +34,21 @@ public class Goods {
         this.gDescription = gDescription;
     }
 
+    public String getGgid() {
+        return ggid;
+    }
+
+    public void setGgid(String ggid) {
+        this.ggid = ggid;
+    }
+
+    @Override
+    public String toString() {
+        return "Goods{" +
+                "gName='" + gName + '\'' +
+                ", gDescription='" + gDescription + '\'' +
+                ", ggid='" + ggid + '\'' +
+                '}';
+    }
 }
+
