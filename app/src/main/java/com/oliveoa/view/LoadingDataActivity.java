@@ -44,8 +44,8 @@ public class LoadingDataActivity extends AppCompatActivity {
     }
     public void initdata(){
 
-        DataCleanManager dataCleanManager = new DataCleanManager();
-        dataCleanManager.cleanDatabases();
+       /* DataCleanManager dataCleanManager = new DataCleanManager();
+        dataCleanManager.cleanDatabases();*/
 
         DaoManager.getInstance().getSession().clear();
 

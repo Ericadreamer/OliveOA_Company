@@ -241,6 +241,9 @@ public class AddDutyActivity extends AppCompatActivity {
                         SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
                         String s = pref.getString("sessionid", "");
 
+                        if(tppid.getText().toString().trim().equals("无")||tppid.getText().toString().trim().equals("")){
+                            dt.setPpid("");
+                        }
                         DutyInfoService dutyInfoService = new DutyInfoService();
                             StatusAndMsgJsonBean statusAndMsgJsonBean = dutyInfoService.addduty(s, dt);
                             // Log.d("add", statusAndMsgJsonBean.getMsg() + "");

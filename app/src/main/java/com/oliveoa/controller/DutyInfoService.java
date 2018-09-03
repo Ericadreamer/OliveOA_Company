@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.oliveoa.common.Const;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
+import com.oliveoa.jsonbean.OneDutyInfoJsonBean;
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
 import com.oliveoa.jsonbean.UpdateDepartmentInfoJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
@@ -180,5 +181,41 @@ public class DutyInfoService {
 
     }
 
+    //根据pcid获取指定职务信息
+    public OneDutyInfoJsonBean getoneduty(String s, String pcid) {
+
+        try {
+            Log.i("info_Login","知道了session："+s);
+            FormBody body = new FormBody.Builder()
+                    .add("pcid",pcid)
+                    .build();
+            OkHttpClient client = new OkHttpClient();
+            Request request = new Request.Builder()
+                    .addHeader("Cookie",s)
+                    .url(Const.DUTY_SEARCHBYID)
+                    .post(body)
+                    .build();
+
+            Response response = client.newCall(request).execute();
+            //System.out.println(response.body().string());
+
+
+            String json = response.body().string();
+            Gson gson = new Gson();
+            System.out.println(json);
+            java.lang.reflect.Type type = new TypeToken<OneDutyInfoJsonBean>() {
+            }.getType();
+            OneDutyInfoJsonBean oneDutyInoJsonBean = gson.fromJson(json, type);
+            System.out.println("OneDutyInfoJsonBean = " + oneDutyInoJsonBean);
+
+            return oneDutyInoJsonBean;
+
+        } catch (IOException e) {
+            //todo handler IOException
+            //throw new RuntimeException(e);
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

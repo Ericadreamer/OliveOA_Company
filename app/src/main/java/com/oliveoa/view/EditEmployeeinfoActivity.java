@@ -19,6 +19,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.util.EntityManager;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -71,7 +73,23 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
     private int index;
     private String TAG = this.getClass().getSimpleName();
     private EmployeeInfoDao employeeInfoDao;
+    private RelativeLayout pacmanIndicator_layout;
+    private AVLoadingIndicatorView avLoadingIndicatorView;
+    private Handler mHandler1 = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 2:
+                    //在这里可以进行UI操作
 
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +119,7 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
     public void initview() {
         back = (ImageView) findViewById(R.id.info_back);
         save = (ImageView) findViewById(R.id.info_save);
+        pacmanIndicator_layout = (RelativeLayout)findViewById(R.id.pacmanIndicator_layout);
 
         dpcid = (TextView) findViewById(R.id.content_dpcid);
         sex = (TextView) findViewById(R.id.content_sex);
@@ -119,7 +138,23 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                  back();
+                AlertDialog.Builder dialog = new AlertDialog.Builder(EditEmployeeinfoActivity.this);
+                dialog.setTitle("提示");
+                dialog.setMessage("是否确定退出编辑,直接返回员工列表页面？");
+                dialog.setCancelable(false);
+                dialog.setNegativeButton("是", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        back();
+                    }
+                });
+                dialog.setPositiveButton("否", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                });
+                dialog.show();
                 //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
             }
         });
@@ -133,35 +168,58 @@ public class EditEmployeeinfoActivity extends AppCompatActivity {
 
     }
     public void back(){
-        new Thread(new Runnable() {
+        HandlerThread handlerThread = new HandlerThread("HandlerThread");
+        handlerThread.start();
+        pacmanIndicator_layout.setVisibility(View.VISIBLE);
+
+        avLoadingIndicatorView = (AVLoadingIndicatorView)findViewById(R.id.avi);
+        avLoadingIndicatorView.show();
+        Handler mHandler = new Handler(handlerThread.getLooper()){
             @Override
-            public void run() {
-                //读取SharePreferences的cookies
-                SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
-                String s = pref.getString("sessionid", "");
+            public void handleMessage(Message msg) {
+                super.handleMessage(msg);
+                SharedPreferences pref = getSharedPreferences("data",MODE_PRIVATE);
+                String s = pref.getString("sessionid","");
+
+                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                DepartmentInfoJsonBean departmentInfoJsonBean = departmentInfoService.departmentInfo(s);
 
                 EmployeeInfoService employeeInfoService = new EmployeeInfoService();
-                EmployeeInfoJsonBean employeeInfoJsonBean = employeeInfoService.employeeinfo(s,employeeInfo.getDcid());
-                if(employeeInfoJsonBean.getStatus()==0){
-                    ArrayList<EmployeeInfo> employeeInfos = employeeInfoJsonBean.getData();
-                    for(int i = 0;i<employeeInfos.size();i++){
-                        if(employeeInfos.get(i).getEid().equals(employeeInfo.getEid())){
-                            Intent intent = new Intent(EditEmployeeinfoActivity.this, EmployeeinfoActivity.class);
-                            intent.putExtra("ep",employeeInfos.get(i));
-                            intent.putExtra("dname",dname);
-                            intent.putExtra("pname",pname);
-                            startActivity(intent);
-                            finish();
+                EmployeeInfoDao employeeInfoDao = EntityManager.getInstance().getEmployeeInfoDao();
+
+
+                if (departmentInfoJsonBean.getStatus()==0) {
+                    departmentInfos = departmentInfoJsonBean.getData();
+                    employeeInfoDao.deleteAll();
+                    for(int i= 0;i<departmentInfos.size();i++){
+
+                        EmployeeInfoJsonBean employeeInfoJsonBean = employeeInfoService.employeeinfo(s,departmentInfos.get(i).getDcid());
+                        if(employeeInfoJsonBean.getStatus()==0){
+                            employeeInfos = employeeInfoJsonBean.getData();
+                            for(int j =0;j<employeeInfos.size();j++){
+                                employeeInfoDao.insert(employeeInfos.get(j));
+                            }
+                        }else{
+                            Toast.makeText(getApplicationContext(), employeeInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
                         }
                     }
+                    mHandler1.sendEmptyMessage(2);
+                    Intent intent = new Intent(EditEmployeeinfoActivity.this, EmployeelistActivity.class);
+                    intent.putParcelableArrayListExtra("alldp",departmentInfos);
+                    //intent.putParcelableArrayListExtra("allep",employeeInfos);
+                    startActivity(intent);
+                    finish();
 
                 }else{
-                    Looper.prepare();
-                    Toast.makeText(getApplicationContext(), employeeInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
-                    Looper.loop();
+                    Toast.makeText(getApplicationContext(), departmentInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
                 }
+
+                Log.d(TAG,"uiThread2------"+Thread.currentThread());//子线程
             }
-        }).start();
+        };
+
+        Log.d(TAG,"uiThread1------"+Thread.currentThread());//主线程
+        mHandler.sendEmptyMessage(1);
     }
 
 

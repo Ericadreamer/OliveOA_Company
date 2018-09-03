@@ -25,6 +25,7 @@ import com.oliveoa.greendao.PropertiesInfoDao;
 import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
 import com.oliveoa.jsonbean.OneDepartmentInfoJsonBean;
+import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.PropertiesInfo;
@@ -141,7 +142,8 @@ public class DutySelectActivity extends AppCompatActivity {
     private void back() {
      if(index==0) {
          Intent intent = new Intent(DutySelectActivity.this,EditDutyInfoActivity.class);
-         intent.putExtra("dtname","无" );//上级部门名
+         intent.putExtra("dpname","无" );//部门名
+         intent.putExtra("dtname","无" );//上级职务名
          intent.putExtra("index", 1);
          intent.putExtra("dt",temp);
          startActivity(intent);
@@ -453,6 +455,7 @@ public class DutySelectActivity extends AppCompatActivity {
         *   @Author： Erica
         */
     private void EditDtSelect(TextView tname) {
+        String dpname =null;
         if(temp!=null) {
             Log.e(TAG,temp.toString());
             if(tname.getText().toString().equals(temp.getName())) {
@@ -470,11 +473,18 @@ public class DutySelectActivity extends AppCompatActivity {
             dutyInfoDao.deleteAll();
             dutyInfoDao.insert(temp);
             Log.e(TAG, dutyInfoDao.queryBuilder().unique().toString());
+
+            DepartmentInfoDao departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
+            DepartmentInfo departmentInfo = departmentInfoDao.queryBuilder().unique();
+            if(departmentInfo!=null){
+                dpname = departmentInfo.getName();
+            }
         }
         Intent intent = new Intent(DutySelectActivity.this, EditDutyInfoActivity.class);
         intent.putExtra("index", 1);
         intent.putExtra("dp", temp);
-        intent.putExtra("dpname", tname.getText().toString());
+        intent.putExtra("dtname", tname.getText().toString());
+        intent.putExtra("dpname",dpname);
         startActivity(intent);
         finish();
     }

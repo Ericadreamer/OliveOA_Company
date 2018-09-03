@@ -227,6 +227,9 @@ public class RedactDepartmentActivity extends AppCompatActivity {
                     SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
                     String s = pref.getString("sessionid", "");
 
+                    if(tdpid.getText().toString().trim().equals("无")||tdpid.getText().toString().trim().equals("")){
+                        departmentInfo.setDpid("");
+                    }
                     DepartmentInfoService departmentInfoService = new DepartmentInfoService();
                     UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = departmentInfoService.updatedepartmentinfo(s, departmentInfo);
                     Log.d("update", updateDepartmentInfoJsonBean.getMsg() + "");

@@ -137,6 +137,13 @@ public class DepartmentSelectActivity extends AppCompatActivity {
      */
     private void back() {
         if(index==0) {
+            if(temp!=null) {
+                Log.e(TAG,temp.toString());
+                temp.setDpid("");
+                departmentInfoDao.deleteAll();
+                departmentInfoDao.insert(temp);
+                Log.e(TAG,departmentInfoDao.queryBuilder().unique().toString());
+            }
             Intent intent = new Intent(DepartmentSelectActivity.this, RedactDepartmentActivity.class);
             intent.putExtra("dpname", "无");
             intent.putExtra("index", 1);
@@ -145,6 +152,13 @@ public class DepartmentSelectActivity extends AppCompatActivity {
             finish();
         }
         if(index==1){
+            if(temp!=null) {
+                Log.e(TAG,temp.toString());
+                temp.setDpid("");
+                departmentInfoDao.deleteAll();
+                departmentInfoDao.insert(temp);
+                Log.e(TAG,departmentInfoDao.queryBuilder().unique().toString());
+            }
             Intent intent = new Intent(DepartmentSelectActivity.this, CreateDepartmentActivity.class);
             intent.putExtra("dpname", "无");
             intent.putExtra("index", 1);

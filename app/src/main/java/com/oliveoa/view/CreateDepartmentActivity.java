@@ -243,6 +243,9 @@ public class CreateDepartmentActivity extends AppCompatActivity {
                     Log.d("checkid", isexist.getMsg() + "");
 
                     if(isexist.getStatus()==0) {
+                        if(tdpid.getText().toString().trim().equals("无")||tdpid.getText().toString().trim().equals("")){
+                            dp.setDpid("");
+                        }
                         UpdateDepartmentInfoJsonBean updateDepartmentInfoJsonBean = departmentInfoService.adddepartment(s, dp);
                         Log.d("update", updateDepartmentInfoJsonBean.getMsg() + "");
 

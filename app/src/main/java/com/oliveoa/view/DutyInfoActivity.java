@@ -82,7 +82,7 @@ public class DutyInfoActivity extends AppCompatActivity {
         tname = (TextView) findViewById(R.id.tv_duty_name);
         tname.setText(dutyInfo.getName());
         tnum = (TextView) findViewById(R.id.tv_num);
-        tnum.setText(dutyInfo.getLimit());
+        tnum.setText(String.valueOf(dutyInfo.getLimit()));
         tppid = (TextView) findViewById(R.id.text_superior);
         tppid.setText(dtname);
 
@@ -124,8 +124,8 @@ public class DutyInfoActivity extends AppCompatActivity {
     //编辑操作
     public void edit() {
         Intent intent = new Intent(DutyInfoActivity.this, EditDutyInfoActivity.class);
-        intent.putExtra("dtname",dtname);
         intent.putExtra("dpname",dpname);
+        intent.putExtra("dtname",dtname);
         intent.putExtra("index",0);
         intent.putExtra("dt",dutyInfo);
         startActivity(intent);

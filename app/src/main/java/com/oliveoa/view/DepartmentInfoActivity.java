@@ -252,17 +252,24 @@ public class DepartmentInfoActivity extends AppCompatActivity {
 
                     String dutyname = tname.getText().toString().trim();
                     String dtname = "";
+                    Log.e(TAG,"alldt:"+dutyInfo);
                     for(int j =0;j<dutyInfo.size();j++){
                         if(dutyname.equals(dutyInfo.get(j).getName())){
-                            for(int k=0;k<dutyInfo.size();k++){
-                                if(dutyInfo.get(j).getPpid().equals(dutyInfo.get(k).getPcid())){
-                                    dtname = dutyInfo.get(k).getName();
-                                    break;
+                            if(dutyInfo.get(j).getPpid()!=null) {
+                                for (int k = 0; k < dutyInfo.size(); k++) {
+                                    if (dutyInfo.get(j).getPpid().equals(dutyInfo.get(k).getPcid())) {
+                                        dtname = dutyInfo.get(k).getName();
+                                        break;
+                                    }
                                 }
+                                if (dtname == "") {
+                                    dtname = "无";
+                                }
+                            }else{
+                                dtname = "无";
                             }
-                            if(dtname==""){
-                                dtname="无";
-                            }
+                            Log.e(TAG,"dtname="+dtname);
+                            Log.e(TAG,"dutyInfo.get(j)="+dutyInfo.get(j));
                             Intent intent = new Intent(DepartmentInfoActivity.this, DutyInfoActivity.class);
                             intent.putExtra("dtname",dtname);
                             intent.putExtra("dpname",dpname);

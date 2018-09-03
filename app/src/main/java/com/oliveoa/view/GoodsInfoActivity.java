@@ -40,7 +40,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
 
         propertiesInfo = getIntent().getParcelableExtra("pp");
         dname = getIntent().getStringExtra("dname");
-        pname = getIntent().getStringExtra("panme");
+        pname = getIntent().getStringExtra("pname");
         Log.e(TAG,propertiesInfo.toString());
         Log.e(TAG,"dname="+dname+"pname="+pname);
         initView();
@@ -84,7 +84,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
          tname.setText(propertiesInfo.getName());
          tdescription.setText(propertiesInfo.getDescribe());
          tquantity.setText(String.format("%s/%s", propertiesInfo.getRemaining(), propertiesInfo.getTotal()));
-         tduty.setText("");
+         tduty.setText(dname+":"+pname);
     }
 
     private void back() {

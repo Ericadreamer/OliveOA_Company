@@ -165,8 +165,8 @@
 
         <com.wang.avi.AVLoadingIndicatorView
             android:id="@+id/avi"
-            android:layout_width="@dimen/dp_90"
-            android:layout_height="@dimen/dp_90"
+            android:layout_width="@dimen/dp_80"
+            android:layout_height="@dimen/dp_80"
             app:indicatorName="PacmanIndicator"
             />
     </RelativeLayout>

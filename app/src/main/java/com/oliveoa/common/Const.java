@@ -26,6 +26,7 @@ public class Const {
     public static  final  String DUTY_SEARCH = HOSTPATH + "/oliveoa/manage/position/get_position.do";
     public static  final  String DUTY_UPDATE = HOSTPATH + "/oliveoa/manage/position/update_position.do";
     public static  final  String DUTY_DELETE = HOSTPATH +"/oliveoa/manage/position/delete_position.do";
+    public static  final  String DUTY_SEARCHBYID =HOSTPATH +"/oliveoa/manage/position/get_position_details.do";
 
     public static  final  String EMPLOYEE_INFO_ADD = HOSTPATH + "/oliveoa/manage/employees/add_employee.do";
     public static  final  String EMPLOYEE_INFO_GETBYPOSITON = HOSTPATH + "/oliveoa/manage/employees/get_employees_by_position.do";

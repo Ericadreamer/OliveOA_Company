@@ -21,10 +21,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.controller.DepartmentInfoService;
+import com.oliveoa.controller.DutyInfoService;
 import com.oliveoa.controller.GoodInfoService;
 import com.oliveoa.jsonbean.GoodInfoJsonBean;
+import com.oliveoa.jsonbean.OneDepartmentInfoJsonBean;
+import com.oliveoa.jsonbean.OneDutyInfoJsonBean;
 import com.oliveoa.jsonbean.OneGoodInfoJsonBean;
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
+import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.Goods;
 import com.oliveoa.pojo.PropertiesInfo;
 import com.oliveoa.view.AddGoodsActivity;
@@ -121,11 +126,25 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.ViewHolder> 
                         OneGoodInfoJsonBean oneGoodInfoJsonBean = goodInfoService.getpropertiesbyid(s,mGoodsList.get(j).getGgid());
                         if(oneGoodInfoJsonBean.getStatus()==0){
                             PropertiesInfo propertiesInfo =oneGoodInfoJsonBean.getData();
-                            Intent intent=new Intent(mContext,GoodsInfoActivity.class);
-                            intent.putExtra("pp",propertiesInfo);
-                            intent.putExtra("pname","");
-                            intent.putExtra("dname","");
-                            mContext.startActivity(intent);
+                            DutyInfoService dutyInfoService = new DutyInfoService();
+                            OneDutyInfoJsonBean oneDutyInfoJsonBean = dutyInfoService.getoneduty(s,propertiesInfo.getPcid());
+                            if(oneDutyInfoJsonBean.getStatus()==0){
+                                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
+                                OneDepartmentInfoJsonBean oneDepartmentInfoJsonBean =departmentInfoService.getdepartmentinfo(s,oneDutyInfoJsonBean.getData().getDcid());
+                                if(oneDepartmentInfoJsonBean.getStatus()==0){
+                                    Intent intent=new Intent(mContext,GoodsInfoActivity.class);
+                                    intent.putExtra("pp",propertiesInfo);
+                                    intent.putExtra("pname",oneDutyInfoJsonBean.getData().getName());
+                                    intent.putExtra("dname",oneDepartmentInfoJsonBean.getData().getName());
+                                    mContext.startActivity(intent);
+                                }else{
+                                    Toast.makeText(mContext,"获取该物品的管理部门失败", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }else{
+                                Toast.makeText(mContext,"获取该物品的管理岗位失败", Toast.LENGTH_SHORT).show();
+                            }
+
                         }else{
                             Toast.makeText(mContext,oneGoodInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
                         }

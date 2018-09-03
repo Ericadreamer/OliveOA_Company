@@ -46,17 +46,16 @@ public class EditDutyInfoActivity extends AppCompatActivity {
     private int index;
     private TextView tppid;
     private ImageView dutynext;
-    private String dtname,dpname;
+    private String dpname,dtname;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_duty_info);
-
-        index = getIntent().getIntExtra("index",index);//0为详情页，1为职务选择页
-        dtname = getIntent().getStringExtra("dtname");
-        dutyInfo = getIntent().getParcelableExtra("dt");
         dpname = getIntent().getStringExtra("dpname");
+        index = getIntent().getIntExtra("index",index);//0为详情页，1为职务选择页
+        dutyInfo = getIntent().getParcelableExtra("dt");
+        dtname = getIntent().getStringExtra("dtname");
         initData();
     }
 
@@ -79,7 +78,7 @@ public class EditDutyInfoActivity extends AppCompatActivity {
         tname = (EditText) findViewById(R.id.edit_duty_name);
         tname.setText(dutyInfo.getName());
         tlimit = (EditText) findViewById(R.id.edit_num);
-        tlimit.setText(dutyInfo.getLimit());
+        tlimit.setText(String.valueOf(dutyInfo.getLimit()));
 
 
         final ImageView back = (ImageView)findViewById(R.id.null_back);
@@ -148,6 +147,7 @@ public class EditDutyInfoActivity extends AppCompatActivity {
                 DutyInfoJsonBean dutyInfoJsonBean=dutyInfoService.dutyInfo(s,departmentInfo.getDcid());
                 if (dutyInfoJsonBean.getStatus()==0) {
                     ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
+                    Log.e(TAG,dutyInfos.toString());
                     Intent intent = new Intent(EditDutyInfoActivity.this, DepartmentInfoActivity.class);
                     intent.putExtra("dp",departmentInfo);
                     intent.putExtra("dpname",dpname);
@@ -228,15 +228,16 @@ public class EditDutyInfoActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "信息不得为空！", Toast.LENGTH_SHORT).show();
             } else if (dutyInfo.getLimit() <= 0) {
                 Toast.makeText(getApplicationContext(), "职务限制人数不得小于1人，请输入人数", Toast.LENGTH_SHORT).show();
-            } else if (checkdutyname(dutyInfo.getName())) {
-                Toast.makeText(getApplicationContext(), "该职务名称已存在，请重新输入", Toast.LENGTH_SHORT).show();
-            } else {
+            }  else {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
                         String s = pref.getString("sessionid", "");
-
+                        if(tppid.getText().toString().trim().equals("无")||tppid.getText().toString().trim().equals("")){
+                            dutyInfo.setPpid("");
+                        }
+                        Log.e(TAG,"duty=="+dutyInfo.toString());
                         DutyInfoService dutyInfoService = new DutyInfoService();
                         StatusAndMsgJsonBean statusAndMsgJsonBean = dutyInfoService.updatedutyinfo(s, dutyInfo);
                         Log.d("update", statusAndMsgJsonBean.getMsg() + "");
