@@ -147,7 +147,7 @@ public class EmployeelistActivity extends AppCompatActivity {
                 final String name_str = name.getText().toString().trim();
                 AlertDialog.Builder builder = new AlertDialog.Builder(EmployeelistActivity.this);
                 builder.setTitle("警告");
-                builder.setMessage("您生在试图删除" + name_str + "这名职员，确定删除吗？");
+                builder.setMessage("您正在试图删除" + name_str + "这名职员，确定删除吗？");
                 builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

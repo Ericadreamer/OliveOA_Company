@@ -32,7 +32,6 @@ public class DutyInfoService {
                     .build();
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
-                    .addHeader("Cookie",s)
                     .url(Const.DUTY_SEARCH)
                     .post(body)
                     .build();
