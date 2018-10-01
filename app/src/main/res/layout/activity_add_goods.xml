@@ -66,34 +66,44 @@
             //物品名称
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_height="wrap_content"
                 android:background="@color/colorWhite"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/goods_name"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="#101010"
-                    android:textSize="@dimen/activity_companyinfo_text"
-                    android:text="物品名称" />
+                    android:layout_marginTop="@dimen/dp_12"
+                    android:layout_marginBottom="@dimen/dp_12">
 
-                <EditText
-                    android:id="@+id/edit_goods_name"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="20dp"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:gravity="center_vertical|end"
-                    android:singleLine="true"
-                    android:textColor="@color/textcolor"
-                    android:textColorHint="#898989"
-                    android:textSize="@dimen/activity_companyinfo_text"
-                    android:hint="请输入物品名称"/>
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="20dp"
+                        android:textColor="#101010"
+                        android:textSize="@dimen/activity_companyinfo_text"
+                        android:text="物品名称" />
+
+                    <EditText
+                        android:id="@+id/goods_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="center_vertical|end"
+                        android:ellipsize="end"
+                        android:lineSpacingExtra="4dp"
+                        android:textColor="@color/textcolor"
+                        android:textColorHint="#898989"
+                        android:hint="请输入物品名称"
+                        android:textSize="@dimen/activity_companyinfo_text"
+                        android:layout_marginLeft="@dimen/dp_26"/>
+                </LinearLayout>
             </LinearLayout>
 
             //物品总量

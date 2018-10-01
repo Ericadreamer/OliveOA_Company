@@ -303,15 +303,14 @@
             <TextView
                 android:id="@+id/content_address"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="20dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
                 android:background="@null"
-                android:gravity="center_vertical|end"
-                android:singleLine="true"
-                android:text=""
                 android:textColor="@color/textcolor"
-                android:textColorHint="#898989"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_20"
                 android:textSize="@dimen/activity_companyinfo_text" />
         </LinearLayout>
         <LinearLayout
@@ -337,12 +336,13 @@
                 android:id="@+id/content_intro"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginRight="20dp"
+                android:layout_marginLeft="20dp"
                 android:background="@null"
-                android:layout_margin="20dp"
-                android:text="这是一家很厉害的公司."
                 android:textColor="@color/textcolor"
-                android:textColorHint="#898989"
+                android:lineSpacingExtra="4dp"
+                android:layout_marginTop="@dimen/dp_10"
+                android:layout_marginBottom="@dimen/dp_20"
                 android:textSize="@dimen/activity_companyinfo_text"
                 />
         </LinearLayout>
