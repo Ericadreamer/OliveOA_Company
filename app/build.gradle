@@ -25,7 +25,7 @@ android {
         daoPackage 'com.oliveoa.greendao'
         targetGenDir 'src/main/java'
     }
-   /* android.applicationVariants.all { variant ->
+    /* android.applicationVariants.all { variant ->
         variant.outputs.each { output ->
             output.outputFile = new File(output.outputFile.parent,"OliveOA_Company -v" +
                     defaultConfig.versionName + "-" + defaultConfig.versionCode + ".apk" );
@@ -61,13 +61,13 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.github.zzz40500:android-shapeLoadingView:1.0.3.2'
-    implementation ('com.github.gzu-liyujiang.AndroidPicker:WheelPicker:1.5.6') {
+    implementation('com.github.gzu-liyujiang.AndroidPicker:WheelPicker:1.5.6') {
         exclude group: 'com.android.support'
     }
-    implementation ('com.github.gzu-liyujiang.AndroidPicker:FilePicker:1.5.6') {
+    implementation('com.github.gzu-liyujiang.AndroidPicker:FilePicker:1.5.6') {
         exclude group: 'com.android.support'
     }
-    implementation ('com.github.gzu-liyujiang.AndroidPicker:ColorPicker:1.5.6') {
+    implementation('com.github.gzu-liyujiang.AndroidPicker:ColorPicker:1.5.6') {
         exclude group: 'com.android.support'
     }
     implementation 'com.contrarywind:Android-PickerView:4.1.3'

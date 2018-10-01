@@ -28,14 +28,14 @@
         <activity
             android:name="com.oliveoa.view.MainActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme">
-        </activity>
+            android:theme="@style/HomeTheme" />
         <activity
             android:name="com.oliveoa.view.LoginActivity"
             android:exported="true"
             android:theme="@style/LoginTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -142,13 +142,24 @@
             android:theme="@style/HomeTheme" />
         <activity
             android:name="com.oliveoa.view.GoodsCardActivity"
-            android:parentActivityName="com.oliveoa.view.GoodsActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme"/>
+            android:parentActivityName="com.oliveoa.view.GoodsActivity"
+            android:theme="@style/HomeTheme" />
         <activity
             android:name="com.oliveoa.view.LoadingDataActivity"
             android:exported="true"
-            android:theme="@style/HomeTheme"/>
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.DocumentManagementActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity
+            android:name="com.oliveoa.view.DocumentInfoActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme" />
+        <activity android:name="com.oliveoa.view.ReadInfoActivity"
+            android:exported="true"
+            android:theme="@style/HomeTheme"></activity>
     </application>
 
 </manifest>

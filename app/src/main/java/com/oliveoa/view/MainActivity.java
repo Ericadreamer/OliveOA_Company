@@ -150,7 +150,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                     break;
                     case 3://点击图片会议跳转
                     {
-                        Toast.makeText(getApplicationContext(), "公文查看", Toast.LENGTH_SHORT).show();
+                        documentinfo();
                     }
                     break;
 
@@ -523,6 +523,13 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
         Log.d(TAG, "uiThread1------" + Thread.currentThread());//主线程
         mHandler.sendEmptyMessage(1);
+    }
+
+    //公文管理
+    private void documentinfo() {
+        Intent intent = new Intent(MainActivity.this, DocumentManagementActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     @Override
