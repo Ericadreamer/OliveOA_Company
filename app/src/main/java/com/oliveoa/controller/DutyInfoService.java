@@ -149,7 +149,7 @@ public class DutyInfoService {
             FormBody body = new FormBody.Builder()
                     .add("pcid",pcid)
                     .build();
-            Log.d("deleteinfobody",body.toString());
+           // Log.d("deleteinfobody",body.toString());
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -162,7 +162,7 @@ public class DutyInfoService {
 
             String json = response.body().string();
             Gson gson = new Gson();
-            System.out.println(json);
+            //System.out.println(json);
 
             java.lang.reflect.Type type = new TypeToken<StatusAndMsgJsonBean>() {
             }.getType();

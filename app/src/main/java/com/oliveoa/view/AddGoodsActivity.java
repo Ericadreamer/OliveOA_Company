@@ -68,15 +68,24 @@ public class AddGoodsActivity extends AppCompatActivity {
         linesEditView = new LinesEditView(AddGoodsActivity.this);
         textAreaView =(LinesEditView)findViewById(R.id.description);
         einput = textAreaView.findViewById(R.id.id_et_input);
-
+        if(  einput==null){
+            System.out.println("  einput==null");
+        }
         back = (ImageView)findViewById(R.id.back);
         save = (ImageView)findViewById(R.id.save);
         next = (ImageView)findViewById(R.id.next);
 
-        tname = (EditText)findViewById(R.id.edit_goods_name);
+        tname = (EditText)findViewById(R.id.goods_name);
+        if(tname==null){
+            System.out.println("tname==null");
+        }
         tquantity = (EditText)findViewById(R.id.quantity);
+        if( tquantity==null){
+            System.out.println(" tquantity==null");
+        }
         tpname = (TextView)findViewById(R.id.show);
 
+        initData();
 
         //点击事件
         back.setOnClickListener(new View.OnClickListener() {  //点击返回键，返回主页
@@ -109,7 +118,7 @@ public class AddGoodsActivity extends AppCompatActivity {
             }
         });
 
-        initData();
+
     }
 
     private void back() {

@@ -70,6 +70,23 @@ public class EmployeelistActivity extends AppCompatActivity {
     private DepartmentInfo departmentInfo;
 
     private String dname,pname;
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case 1:
+                    Item temp =(Item)msg.obj;
+                    Log.i(TAG,temp.toString());
+                    iData.get(msg.arg1).remove(temp);
+                    Log.i(TAG,iData.toString());
+                    listAdapter();
+                    break;
+                    default:
+                        break;
+            }
+        }
+    };
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_employeelist);
@@ -127,7 +144,12 @@ public class EmployeelistActivity extends AppCompatActivity {
 
             iData.add(lData);
         }
+            listAdapter();
+    }
+    }
 
+    private void listAdapter() {
+        Log.i(TAG,iData.toString());
         myAdapter = new MyBaseExpandableListAdapter(gData, iData, mContext);
         exlist_staff.setAdapter(myAdapter);
         exlist_staff.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -141,21 +163,37 @@ public class EmployeelistActivity extends AppCompatActivity {
             }
         });
         exlist_staff.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
-                                           int arg2, long arg3) {
-                final TextView name = (TextView) arg1.findViewById(R.id.tv_name);
-                final String name_str = name.getText().toString().trim();
-                AlertDialog.Builder builder = new AlertDialog.Builder(EmployeelistActivity.this);
-                builder.setTitle("警告");
-                builder.setMessage("您正在试图删除" + name_str + "这名职员，确定删除吗？");
-                builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        /*deleteEmployee(name_str);*/
-                    }
-                });
-                builder.setNegativeButton("取消", null);
-                builder.show();
+            public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                           final int position, long id) {
+                int PACKED_POSITION_TYPE_CHILD = 1;
+                if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_CHILD)
+                {
+                    long packedPosition = ((ExpandableListView) parent).getExpandableListPosition(position);
+                    //当前Group下标
+                    final int groupPosition = ExpandableListView.getPackedPositionGroup(packedPosition);
+                    //当前GroupChild
+                    final int childPosition = ExpandableListView.getPackedPositionChild(packedPosition);
+
+                    //Log.i(TAG,iData.toString());
+                    Log.i(TAG, "groupPosition\\"+groupPosition);
+                    Log.i(TAG, "childPosition\\"+childPosition);
+                    Log.i(TAG, "gdata(groupPosition)\\"+gData.get(groupPosition).getgName());
+                    Log.i(TAG, "idata(childPosition)\\"+iData.get(groupPosition).get(childPosition).toString());
+
+                    final TextView name = (TextView) view.findViewById(R.id.tv_name);
+                    final String name_str = name.getText().toString().trim();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(EmployeelistActivity.this);
+                    builder.setTitle("警告");
+                    builder.setMessage("您正在试图删除" + name_str + "这名职员，确定删除吗？");
+                    builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            deleteEmployee(iData,iData.get(groupPosition).get(childPosition).getiEid(),iData.get(groupPosition).get(childPosition),groupPosition);
+                        }
+                    });
+                    builder.setNegativeButton("取消", null);
+                    builder.show();
+                }
                 return true;
             }
         });
@@ -166,13 +204,10 @@ public class EmployeelistActivity extends AppCompatActivity {
                 //Log.i("" + EmployeelistActivity.this, "group " + groupPosition);
                 Log.i(TAG,"GroupSize="+gData.get(groupPosition).getgName()+"_________ChildSize="+iData.get(groupPosition).size());
                 if(iData.get(groupPosition).size()==0)
-                   Toast.makeText(getApplicationContext(), "提示：没有员工在"+gData.get(groupPosition).getgName()+"门哦！", Toast.LENGTH_SHORT).show();
+                   Toast.makeText(getApplicationContext(), "提示：没有员工在"+gData.get(groupPosition).getgName()+"哦！", Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
-
-    }
-
     }
 
     /**
@@ -245,32 +280,23 @@ public class EmployeelistActivity extends AppCompatActivity {
 
     }
 
-    /*public void  deleteEmployee(String name_str){
-        final String name = name_str;
-      *//*  final EmployeeDAOImpl employeeDAO = new EmployeeDAOImpl(EmployeelistActivity.this);*//*
-
-       // Log.e("departmentSize", String.valueOf(departmentInfo.size()));
-        Log.e("employeeSize", String.valueOf(employeeInfo.size()));
-        Log.e("employeeInfo", employeeInfo.toString());
+    public void  deleteEmployee(final ArrayList<ArrayList<Item>> iData, final String eid, final Item temp,final int grouppositon){
         new Thread(new Runnable() {
             @Override
             public void run() {
-            for(int i=0;i<departmentInfo.size();i++) {
-                employeeInfo = employeeDAO.getEmployees(departmentInfo.get(i).getDcid());
-                for (int j = 0; j < employeeInfo.size(); j++) {
-                    Log.e("employeeName", employeeInfo.get(j).getName());
-                    if (employeeInfo.get(j).getName().equals(name)) {
                         //读取SharePreferences的cookies
                         SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
                         String s = pref.getString("sessionid", "");
 
                         EmployeeInfoService employeeInfoService = new EmployeeInfoService();
-                        StatusAndMsgJsonBean statusAndMsgJsonBean = employeeInfoService.deleteemployee(s, employeeInfo.get(i).getEid());
-
+                        StatusAndMsgJsonBean statusAndMsgJsonBean = employeeInfoService.deleteemployee(s, eid);
 
                         if (statusAndMsgJsonBean.getStatus() == 0) {
-                            employeeDAO.deleteEmployee(employeeInfo.get(j).getEid());
-                            employeeInfo.remove(employeeInfo.get(j));
+                            Message msg = new Message();
+                            msg.obj=temp;
+                            msg.what =1;
+                            msg.arg1 =grouppositon;
+                            handler.sendMessage(msg);
 
                             Looper.prepare();//解决子线程弹toast问题
                             Toast.makeText(getApplicationContext(), "删除成功！", Toast.LENGTH_SHORT).show();
@@ -281,14 +307,10 @@ public class EmployeelistActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "网络错误，获取部门信息失败", Toast.LENGTH_SHORT).show();
                             Looper.loop();// 进入loop中的循环，查看消息队列
                         }
-                    }
-                }
-            }
             }
         }).start();
     }
 
-*/
 
     /**
      *  对于这种include下还包含着expendlistview，expendlistview下又有两个xml文件，尝试直接在本Activity用findviewbyid获取item_exlist_iten.xml里的button

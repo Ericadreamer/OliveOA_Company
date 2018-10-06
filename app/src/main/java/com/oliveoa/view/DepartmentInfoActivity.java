@@ -180,7 +180,7 @@ public class DepartmentInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(DepartmentInfoActivity.this, AddDutyActivity.class);
         intent.putExtra("index",0);
         intent.putExtra("dtname","");//上级职务
-        intent.putExtra("dpname",dpname);//上级部门
+        //intent.putExtra("dpname",dpname);//上级部门
         startActivity(intent);
         finish();
 

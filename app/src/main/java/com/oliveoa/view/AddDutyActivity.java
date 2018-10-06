@@ -20,10 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DutyInfoService;
 import com.oliveoa.greendao.DepartmentInfoDao;
 import com.oliveoa.greendao.DutyInfoDao;
+import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.DutyInfoJsonBean;
+import com.oliveoa.jsonbean.OneDepartmentInfoJsonBean;
 import com.oliveoa.jsonbean.StatusAndMsgJsonBean;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.DutyInfo;
@@ -154,18 +157,24 @@ public class AddDutyActivity extends AppCompatActivity {
                 SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
                 String s = pref.getString("sessionid", "");
                 //获取被点击一项的职务信息
+                DepartmentInfoService departmentInfoService = new DepartmentInfoService();
                 DutyInfoService dutyInfoService = new DutyInfoService();
-                DutyInfoJsonBean dutyInfoJsonBean = dutyInfoService.dutyInfo(s, departmentInfo.getDcid());
-                if (dutyInfoJsonBean.getStatus() == 0) {
-                    ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
-                    Intent intent = new Intent(AddDutyActivity.this, DepartmentInfoActivity.class);
-                    intent.putExtra("dp", departmentInfo);
-                    intent.putExtra("dpname", dpname);
-                    intent.putParcelableArrayListExtra("alldt", dutyInfos);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), dutyInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                OneDepartmentInfoJsonBean oneDepartmentInfoJsonBean = departmentInfoService.getdepartmentinfo(s,departmentInfo.getDpid());
+                if(oneDepartmentInfoJsonBean.getStatus()==0) {
+                    DutyInfoJsonBean dutyInfoJsonBean = dutyInfoService.dutyInfo(s, departmentInfo.getDcid());
+                    if (dutyInfoJsonBean.getStatus() == 0) {
+                        ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
+                        Intent intent = new Intent(AddDutyActivity.this, DepartmentInfoActivity.class);
+                        intent.putExtra("dp", departmentInfo);
+                        intent.putExtra("dpname",oneDepartmentInfoJsonBean.getData().getName() );
+                        intent.putParcelableArrayListExtra("alldt", dutyInfos);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), dutyInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                    }
+                }else{
+                    Toast.makeText(getApplicationContext(), oneDepartmentInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
                 }
                 Log.d(TAG, "uiThread2------" + Thread.currentThread());//子线程
             }
@@ -241,21 +250,44 @@ public class AddDutyActivity extends AppCompatActivity {
                         SharedPreferences pref = getSharedPreferences("data", MODE_PRIVATE);
                         String s = pref.getString("sessionid", "");
 
+                        Boolean flag =false;
                         if(tppid.getText().toString().trim().equals("无")||tppid.getText().toString().trim().equals("")){
                             dt.setPpid("");
                         }
                         DutyInfoService dutyInfoService = new DutyInfoService();
-                            StatusAndMsgJsonBean statusAndMsgJsonBean = dutyInfoService.addduty(s, dt);
-                            // Log.d("add", statusAndMsgJsonBean.getMsg() + "");
-                            if (statusAndMsgJsonBean.getStatus() == 0) {
-                                Looper.prepare();
-                                Toast.makeText(getApplicationContext(), "创建成功！点击返回键返回部门列表", Toast.LENGTH_SHORT).show();
-                                Looper.loop();
+                        DutyInfoJsonBean dutyInfoJsonBean = dutyInfoService.dutyInfo(s, departmentInfo.getDcid());
+                        if (dutyInfoJsonBean.getStatus() == 0) {
+                            ArrayList<DutyInfo> dutyInfos = dutyInfoJsonBean.getData();
+                            if (dutyInfos.size() == 0) {
+                               // Toast.makeText(getApplicationContext(), "当前无更多部门，无法选择，请创建新部门！", Toast.LENGTH_SHORT).show();
                             } else {
-                                Looper.prepare();
-                                Toast.makeText(getApplicationContext(), statusAndMsgJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
-                                Looper.loop();
+                                 for (int i=0;i<dutyInfos.size();i++){
+                                     if(dutyInfos.get(i).getName().equals(dt.getName())){
+                                         flag = true;
+                                         Looper.prepare();
+                                         Toast.makeText(getApplicationContext(), "该职务已存在，请创建新职务！", Toast.LENGTH_SHORT).show();
+                                         Looper.loop();
+                                     }
+                                 }
                             }
+                            if(flag==false) {
+                                StatusAndMsgJsonBean statusAndMsgJsonBean = dutyInfoService.addduty(s, dt);
+                                // Log.d("add", statusAndMsgJsonBean.getMsg() + "");
+                                if (statusAndMsgJsonBean.getStatus() == 0) {
+                                    Looper.prepare();
+                                    Toast.makeText(getApplicationContext(), "创建成功！点击返回键返回部门列表", Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                } else {
+                                    Looper.prepare();
+                                    Toast.makeText(getApplicationContext(), statusAndMsgJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                                    Looper.loop();
+                                }
+                            }
+                        } else {
+                            Looper.prepare();
+                            Toast.makeText(getApplicationContext(), dutyInfoJsonBean.getMsg(), Toast.LENGTH_SHORT).show();
+                            Looper.loop();
+                        }
                     }
                 }).start();
             }
