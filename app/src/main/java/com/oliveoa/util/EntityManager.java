@@ -6,7 +6,10 @@ import com.oliveoa.greendao.DaoManager;
 import com.oliveoa.greendao.DepartmentInfoDao;
 import com.oliveoa.greendao.DutyInfoDao;
 import com.oliveoa.greendao.EmployeeInfoDao;
+import com.oliveoa.greendao.OfficialDocumentDao;
+import com.oliveoa.greendao.OfficialDocumentIssuedDao;
 import com.oliveoa.greendao.PropertiesInfoDao;
+import com.oliveoa.pojo.OfficialDocumentCirculread;
 
 
 public class EntityManager {
@@ -16,7 +19,8 @@ public class EntityManager {
     public DutyInfoDao dutyInfoDao;
     public EmployeeInfoDao employeeInfoDao;
     public PropertiesInfoDao propertiesInfoDao;
-
+    public OfficialDocumentDao officialDocumentDao;
+    public OfficialDocumentIssuedDao officialDocumentIssuedDao;
 
     /*
      * 创建CompanyInfo表实例

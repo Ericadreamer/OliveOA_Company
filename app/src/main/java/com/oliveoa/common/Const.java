@@ -40,4 +40,7 @@ public class Const {
     public static  final  String GOODS_SEARCHBYID = HOSTPATH +"/oliveoa/manage/goods/get_goods_by_gid.do";
     public static  final  String GOODS_UPDATE = HOSTPATH +"/oliveoa/manage/goods/update_goods.do";
     public static  final  String GOODS_DELETE = HOSTPATH +"/oliveoa/manage/goods/delete_goods.do";
+
+    public static final  String DOCUMENTFLOW_GETALL = HOSTPATH+"/oliveoa/documentflow/get_document_list.do";//获取全部公文
+    public static final  String DOCUMENTFLOW_GETDETAILS = HOSTPATH+"/oliveoa/documentflow/get_document_details.do";//获取公文详情
 }

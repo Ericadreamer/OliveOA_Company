@@ -1,13 +1,19 @@
 package com.oliveoa.view;
 
 import android.content.DialogInterface;
+import android.content.EntityIterator;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +25,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.common.StatusAndMsgAndDataHttpResponseObject;
+import com.oliveoa.controller.DepartmentInfoService;
+import com.oliveoa.controller.DocumentService;
+import com.oliveoa.controller.EmployeeInfoService;
+import com.oliveoa.greendao.DepartmentInfoDao;
+import com.oliveoa.greendao.EmployeeInfoDao;
+import com.oliveoa.jsonbean.DepartmentInfoJsonBean;
+import com.oliveoa.jsonbean.EmployeeInfoJsonBean;
+import com.oliveoa.jsonbean.OfficialDocumentInfoJsonBean;
+import com.oliveoa.pojo.DepartmentInfo;
+import com.oliveoa.pojo.EmployeeInfo;
+import com.oliveoa.pojo.OfficialDocument;
+import com.oliveoa.pojo.OfficialDocumentCirculread;
+import com.oliveoa.pojo.OfficialDocumentIssued;
+import com.oliveoa.util.EntityManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -30,13 +53,48 @@ public class DocumentInfoActivity extends AppCompatActivity {
     private RecyclerView mContentRv;
     private Button btn_download;
 
+    private OfficialDocument officialDocument;
+    private ArrayList<OfficialDocumentIssued> list;
+    private ArrayList<OfficialDocumentCirculread> officialDocumentCirculreads;
+
+    private DepartmentInfoDao departmentInfoDao;
+    private EmployeeInfoDao employeeInfoDao;
+
+    private String TAG = this.getClass().getSimpleName();
+   /* private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            list = (ArrayList<OfficialDocumentIssued>) msg.obj;
+            switch (msg.what){
+                case 1:
+                    //在这里可以进行UI操作
+                    if(list!=null&list.size()!=0){
+                        mContentRv = (RecyclerView) findViewById(R.id.rv_content);
+                        mContentRv.setLayoutManager(new LinearLayoutManager(DocumentInfoActivity.this));
+                        mContentRv.setAdapter(new DocumentInfoActivity.ContentInfoAdapter(list));
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    };*/
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_document_info);
 
+        officialDocument = getIntent().getParcelableExtra("info");
+        list = getIntent().getParcelableArrayListExtra("issue");
+        officialDocumentCirculreads = getIntent().getParcelableArrayListExtra("read");
+        Log.i(TAG,officialDocument.toString());
+        Log.i(TAG,list.toString());
+        Log.i(TAG,officialDocumentCirculreads.toString());
         initView();
-        initData();
 
     }
 
@@ -52,11 +110,10 @@ public class DocumentInfoActivity extends AppCompatActivity {
         tissueStatus = (TextView) findViewById(R.id.issue_status);
         tissueAdvise = (TextView) findViewById(R.id.issue_advise);
 
-        mContentRv = (RecyclerView) findViewById(R.id.rv_content);
-        mContentRv.setLayoutManager(new LinearLayoutManager(this));
-        mContentRv.setAdapter(new ContentInfoAdapter());
-
         btn_download = (Button) findViewById(R.id.download);
+
+        initData();
+
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,19 +155,68 @@ public class DocumentInfoActivity extends AppCompatActivity {
 
     private class ContentInfoAdapter extends RecyclerView.Adapter<ContentInfoAdapter.ContentHolder>{
 
+        private ArrayList<OfficialDocumentIssued> documentIssueds;
+        private DepartmentInfo departmentInfo;
+
+        public ContentInfoAdapter(ArrayList<OfficialDocumentIssued> documentIssueds) {
+            this.documentIssueds = documentIssueds;
+        }
         @Override
         public ContentInfoAdapter.ContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             return new ContentHolder(LayoutInflater.from(DocumentInfoActivity.this).inflate(R.layout.item_receive_department, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(ContentInfoAdapter.ContentHolder holder, int position) {
+        public void onBindViewHolder(final ContentInfoAdapter.ContentHolder holder, final int position) {
+            departmentInfo = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(documentIssueds.get(position).getDcid())).unique();
+            if(departmentInfo!=null) {
+                holder.treceivePerson.setText(departmentInfo.getName());
+            }
+            switch (documentIssueds.get(position).getIsreceive()){
+                case -2:
+                    holder.treceiveStatus.setText("待签收");
+                    holder.treceiveStatus.setTextColor(getResources().getColor(R.color.tv_gray_deep));
+                    break;
+                case -1:
+                    holder.treceiveStatus.setText("不同意");
+                    holder.treceiveStatus.setTextColor(getResources().getColor(R.color.errorParimary));
+                    break;
+                case 1:
+                    holder.treceiveStatus.setText("同意");
+                    holder.treceiveStatus.setTextColor(getResources().getColor(R.color.passParimary));
+                    break;
+                case 0:
+                    holder.treceiveStatus.setText("正在签收");
+                    holder.treceiveStatus.setTextColor(getResources().getColor(R.color.tv_gray_deep));
+                    break;
+                default:
+                    break;
+
+            }
+            holder.receiveDepartment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Toast.makeText(getApplicationContext(),"你点击了"+holder.itemContent.getText().toString(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, holder.treceivePerson.getText().toString().trim() + "----" + documentIssueds.get(position).toString());
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            info(position);
+                        }
+                    }).start();
+                }
+            });
 
         }
-
+        public void info(int position) {
+            Intent intent = new Intent(DocumentInfoActivity.this, ReadInfoActivity.class);
+            intent.putParcelableArrayListExtra("read",officialDocumentCirculreads);
+            startActivity(intent);
+            finish();
+        }
         @Override
         public int getItemCount() {
-            return 100;
+            return documentIssueds.size();
         }
 
         class ContentHolder extends RecyclerView.ViewHolder{
@@ -128,7 +234,90 @@ public class DocumentInfoActivity extends AppCompatActivity {
 
     }
 
+
+
     public void initData() {
+        departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
+        employeeInfoDao = EntityManager.getInstance().getEmployeeInfoDao();
+
+        DepartmentInfo departmentInfo = new DepartmentInfo();
+        EmployeeInfo employeeInfo = new EmployeeInfo();
+
+        employeeInfo = employeeInfoDao.queryBuilder().where(EmployeeInfoDao.Properties.Eid.eq(officialDocument.getDraftEid())).unique();
+        if(employeeInfo!=null) {
+            tdraftPerson.setText(employeeInfo.getName());
+        }else{
+            tdraftPerson.setText("");
+        }
+
+        employeeInfo = employeeInfoDao.queryBuilder().where(EmployeeInfoDao.Properties.Eid.eq(officialDocument.getNuclearDraftEid())).unique();
+        if(employeeInfo!=null) {
+            tnuclearPerson.setText(employeeInfo.getName());
+        }else{
+            tnuclearPerson.setText("");
+        }
+
+        employeeInfo = employeeInfoDao.queryBuilder().where(EmployeeInfoDao.Properties.Eid.eq(officialDocument.getIssuedEid())).unique();
+        if(employeeInfo!=null) {
+            tissuePerson.setText(employeeInfo.getName());
+        }else{
+            tissuePerson.setText("");
+        }
+
+        ttitle.setText(officialDocument.getTitle());
+        tcontent.setText(officialDocument.getContent());
+        tnuclearAdvise.setText(officialDocument.getNuclearDraftOpinion());
+        tissueAdvise.setText(officialDocument.getIssuedOpinion());
+
+        switch (officialDocument.getNuclearDraftIsapproved()){
+            case -2:
+                tnuclearStatus.setText("待核稿");
+                tnuclearStatus.setTextColor(getResources().getColor(R.color.tv_gray_deep));
+                break;
+            case -1:
+                tnuclearStatus.setText("不同意");
+                tnuclearStatus.setTextColor(getResources().getColor(R.color.errorParimary));
+                break;
+            case 1:
+                tnuclearStatus.setText("同意");
+                tnuclearStatus.setTextColor(getResources().getColor(R.color.passParimary));
+                break;
+            case 0:
+                tnuclearStatus.setText("正在核稿");
+                tnuclearStatus.setTextColor(getResources().getColor(R.color.tv_gray_deep));
+                break;
+            default:
+                break;
+
+        }
+
+        switch (officialDocument.getIssuedIsapproved()){
+            case -2:
+                tissueStatus.setText("待签发");
+                tissueStatus.setTextColor(getResources().getColor(R.color.tv_gray_deep));
+                break;
+            case -1:
+                tissueStatus.setText("不同意");
+                tissueStatus.setTextColor(getResources().getColor(R.color.errorParimary));
+                break;
+            case 1:
+                tissueStatus.setText("同意");
+                tissueStatus.setTextColor(getResources().getColor(R.color.passParimary));
+                break;
+            case 0:
+                tissueStatus.setText("正在签发");
+                tissueStatus.setTextColor(getResources().getColor(R.color.tv_gray_deep));
+                break;
+            default:
+                break;
+
+        }
+
+        if(list!=null&&list.size()!=0) {
+            mContentRv = (RecyclerView) findViewById(R.id.rv_content);
+            mContentRv.setLayoutManager(new LinearLayoutManager(DocumentInfoActivity.this));
+            mContentRv.setAdapter(new DocumentInfoActivity.ContentInfoAdapter(list));
+        }
 
     }
 

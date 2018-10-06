@@ -7,6 +7,7 @@
     <color name="LoginPrimaryDark">#373c3e</color>
     <color name="LoginAccent">#808080</color>
     <color name="errorParimary">#e60515</color>
+    <color name="passParimary">#148112</color>
     <color name="colorWhite">#fff</color>
     <color name="colorline">#f17807</color>
     <color name="bodyline">#bab9b9</color>
