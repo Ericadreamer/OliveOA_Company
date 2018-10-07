@@ -1,10 +1,15 @@
 package com.oliveoa.view;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.EntityIterator;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
@@ -21,10 +26,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.erica.oliveoa_company.R;
+import com.oliveoa.common.Const;
 import com.oliveoa.common.StatusAndMsgAndDataHttpResponseObject;
 import com.oliveoa.controller.DepartmentInfoService;
 import com.oliveoa.controller.DocumentService;
@@ -40,7 +47,14 @@ import com.oliveoa.pojo.OfficialDocument;
 import com.oliveoa.pojo.OfficialDocumentCirculread;
 import com.oliveoa.pojo.OfficialDocumentIssued;
 import com.oliveoa.util.EntityManager;
+import com.wang.avi.AVLoadingIndicatorView;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
@@ -61,26 +75,41 @@ public class DocumentInfoActivity extends AppCompatActivity {
     private EmployeeInfoDao employeeInfoDao;
 
     private String TAG = this.getClass().getSimpleName();
-   /* private Handler handler = new Handler(){
+    private Context mContext;
+
+    DownloadService.DownloadBinder downloadBinder;
+
+    //private String url ="http://1.199.93.153/imtt.dd.qq.com/16891/5FE88135737E977CCCE1A4DAC9FAFFCB.apk";
+
+    private ServiceConnection connection = new ServiceConnection() {
         @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            list = (ArrayList<OfficialDocumentIssued>) msg.obj;
-            switch (msg.what){
-                case 1:
-                    //在这里可以进行UI操作
-                    if(list!=null&list.size()!=0){
-                        mContentRv = (RecyclerView) findViewById(R.id.rv_content);
-                        mContentRv.setLayoutManager(new LinearLayoutManager(DocumentInfoActivity.this));
-                        mContentRv.setAdapter(new DocumentInfoActivity.ContentInfoAdapter(list));
-                    }
-                    break;
-                default:
-                    break;
-            }
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            downloadBinder = (DownloadService.DownloadBinder) service;
         }
 
-    };*/
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+    };
+   // private RelativeLayout pacmanIndicator_layout;
+   // private AVLoadingIndicatorView avLoadingIndicatorView;
+
+    private String fileName;
+    private String path;
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == 2) {
+                fileName = (String)msg.obj;
+                Log.i(TAG,fileName+"==="+path);
+                downloadBinder.startDownload(
+                        Environment.getExternalStorageDirectory() + "/OliveOA_Company/OfficialsDocument/",
+                        fileName,
+                        path,
+                        (int) System.currentTimeMillis());
+            }
+        }
+    };
 
 
     @Override
@@ -88,12 +117,20 @@ public class DocumentInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_document_info);
 
+        mContext = this;
         officialDocument = getIntent().getParcelableExtra("info");
         list = getIntent().getParcelableArrayListExtra("issue");
         officialDocumentCirculreads = getIntent().getParcelableArrayListExtra("read");
         Log.i(TAG,officialDocument.toString());
         Log.i(TAG,list.toString());
         Log.i(TAG,officialDocumentCirculreads.toString());
+
+        path = Const.DOCUMENTFLOW_DOWNLOAD + officialDocument.getOdid();
+        //path = "http://1.199.93.153/imtt.dd.qq.com/16891/5FE88135737E977CCCE1A4DAC9FAFFCB.apk";
+        Intent intent = new Intent(mContext, DownloadService.class);
+        bindService(intent, connection, BIND_AUTO_CREATE);
+        initView();
+
         initView();
 
     }
@@ -111,8 +148,12 @@ public class DocumentInfoActivity extends AppCompatActivity {
         tissueAdvise = (TextView) findViewById(R.id.issue_advise);
 
         btn_download = (Button) findViewById(R.id.download);
-
+      /*  pacmanIndicator_layout = (RelativeLayout) findViewById(R.id.pacmanIndicator_layout);
+        pacmanIndicator_layout.setVisibility(View.VISIBLE);
+        avLoadingIndicatorView = (AVLoadingIndicatorView) findViewById(R.id.avi);
+        avLoadingIndicatorView.show();*/
         initData();
+       // avLoadingIndicatorView.hide();
 
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -149,9 +190,40 @@ public class DocumentInfoActivity extends AppCompatActivity {
         });
     }
 
-    public void download() {
+    private void download() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                URL murl = null;
+                String fileName ="";
+                try {
+                    //获取文件名
+                    murl = new URL(path);
+                    URLConnection con = murl.openConnection();
+                    fileName = con.getHeaderField("Content-Disposition");
+                    fileName = new String(fileName.getBytes("ISO-8859-1"), "GBK");
+                    fileName = URLDecoder.decode(fileName.substring(fileName.indexOf("filename=") + 9), "UTF-8");
+                    Log.i(getClass().getSimpleName(), "文件名为：" + fileName);
+                    Log.i(getPackageName(),"size="+con.getHeaderField("Content-Length"));
+                    Log.i(getPackageName(),"size="+con.getContentLength());
+
+                    Message msg = handler.obtainMessage();
+                    msg.what = 2;
+                    msg.obj = fileName;
+                    handler.sendMessage(msg);
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
 
     }
+
 
     private class ContentInfoAdapter extends RecyclerView.Adapter<ContentInfoAdapter.ContentHolder>{
 
@@ -210,6 +282,8 @@ public class DocumentInfoActivity extends AppCompatActivity {
         }
         public void info(int position) {
             Intent intent = new Intent(DocumentInfoActivity.this, ReadInfoActivity.class);
+            intent.putExtra("info",officialDocument);
+            intent.putParcelableArrayListExtra("issue",list);
             intent.putParcelableArrayListExtra("read",officialDocumentCirculreads);
             startActivity(intent);
             finish();

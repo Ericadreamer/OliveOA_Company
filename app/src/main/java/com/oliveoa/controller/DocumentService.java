@@ -64,7 +64,7 @@ public class DocumentService {
 
             Request request = new Request.Builder()
                     .addHeader("Cookie",s)
-                    .url(Const.DOCUMENTFLOW_GETDETAILS)
+                    .url(Const.DOCUMENTFLOW_GETALL)
                     .post(body)
                     .build();
             Response response = client.newCall(request).execute();

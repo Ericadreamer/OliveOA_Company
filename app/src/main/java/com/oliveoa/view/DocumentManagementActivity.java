@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +35,7 @@ import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.EmployeeInfo;
 import com.oliveoa.pojo.OfficialDocument;
 import com.oliveoa.util.EntityManager;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,11 @@ public class DocumentManagementActivity extends AppCompatActivity {
     private TextView ttitle,tcontext,tvtip;
     private List<OfficialDocumentInfoJsonBean> list;
     private String TAG = this.getClass().getSimpleName();
+
+    private RelativeLayout pacmanIndicator_layout;
+    private AVLoadingIndicatorView avLoadingIndicatorView;
+    private ScrollView scrollView;
+
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -57,9 +65,13 @@ public class DocumentManagementActivity extends AppCompatActivity {
                         mContentRv = (RecyclerView) findViewById(R.id.rv_content);
                         mContentRv.setLayoutManager(new LinearLayoutManager(DocumentManagementActivity.this));
                         mContentRv.setAdapter(new DocumentManagementActivity.ContentAdapter(list));
+                        avLoadingIndicatorView.hide();
+                        pacmanIndicator_layout.setVisibility(View.GONE);
                     }else{
                         tvtip.setVisibility(View.VISIBLE);
                     }
+                    break;
+                case 2:
                     break;
                 default:
                     break;
@@ -81,7 +93,26 @@ public class DocumentManagementActivity extends AppCompatActivity {
         ttitle = (TextView) findViewById(R.id.title);
         tcontext = (TextView) findViewById(R.id.content);
         tvtip = (TextView)findViewById(R.id.tvtip);
+        scrollView = (ScrollView)findViewById(R.id.listview);
+
+        pacmanIndicator_layout = (RelativeLayout) findViewById(R.id.pacmanIndicator_layout);
+        pacmanIndicator_layout.setVisibility(View.VISIBLE);
+        avLoadingIndicatorView = (AVLoadingIndicatorView) findViewById(R.id.avi);
+        avLoadingIndicatorView.show();
+      /*  Timer timer=new Timer();
+        TimerTask task=new TimerTask()
+        {
+            @Override
+            public void run(){
+               Message msg =new Message();
+               msg.what = 2;
+               handler.sendMessage(msg);
+            }
+        };
+        timer.schedule(task,5000);//此处的Delay可以是3*1000，代表三秒*/
         initData();
+
+
         back =(ImageView)findViewById(R.id.info_back);
 
         back.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +148,13 @@ public class DocumentManagementActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     //Toast.makeText(getApplicationContext(),"你点击了"+holder.itemContent.getText().toString(), Toast.LENGTH_SHORT).show();
                     Log.e(TAG, holder.tvtitle.getText().toString().trim() + "----" + documents.get(position).getOfficialDocument().toString());
+                    scrollView.setVisibility(View.GONE);
+                    pacmanIndicator_layout = (RelativeLayout) findViewById(R.id.pacmanIndicator_layout);
+                    pacmanIndicator_layout.setVisibility(View.VISIBLE);
+                    avLoadingIndicatorView = (AVLoadingIndicatorView) findViewById(R.id.avi);
+                    avLoadingIndicatorView.setVisibility(View.VISIBLE);
+                    avLoadingIndicatorView.show();
+
                     new Thread(new Runnable() {
                         @Override
                         public void run() {

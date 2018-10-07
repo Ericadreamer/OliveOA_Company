@@ -21,6 +21,7 @@ import com.oliveoa.greendao.DepartmentInfoDao;
 import com.oliveoa.greendao.EmployeeInfoDao;
 import com.oliveoa.pojo.DepartmentInfo;
 import com.oliveoa.pojo.EmployeeInfo;
+import com.oliveoa.pojo.OfficialDocument;
 import com.oliveoa.pojo.OfficialDocumentCirculread;
 import com.oliveoa.pojo.OfficialDocumentIssued;
 import com.oliveoa.util.EntityManager;
@@ -33,7 +34,10 @@ public class ReadInfoActivity extends AppCompatActivity {
     private TextView treadPerson, treadStatus, treadReport;
     private ImageView back;
 
+    private OfficialDocument officialDocument;
+    private ArrayList<OfficialDocumentIssued> list;
     private ArrayList<OfficialDocumentCirculread> officialDocumentCirculreads;
+
     private RecyclerView mContentRv;
     private EmployeeInfoDao employeeInfoDao;
     private String TAG = this.getClass().getSimpleName();
@@ -43,8 +47,14 @@ public class ReadInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_read_info);
 
+        officialDocument = getIntent().getParcelableExtra("info");
+        list = getIntent().getParcelableArrayListExtra("issue");
         officialDocumentCirculreads = getIntent().getParcelableArrayListExtra("read");
+        Log.i(TAG,officialDocument.toString());
+        Log.i(TAG,list.toString());
         Log.i(TAG,officialDocumentCirculreads.toString());
+
+
 
         initView();
     }
@@ -52,14 +62,17 @@ public class ReadInfoActivity extends AppCompatActivity {
     public void initView() {
         back = (ImageView) findViewById(R.id.info_back);
 
-        treadPerson = (TextView) findViewById(R.id.read_person);
+       /* treadPerson = (TextView) findViewById(R.id.read_person);
         treadStatus = (TextView) findViewById(R.id.read_status);
-        treadReport = (TextView) findViewById(R.id.read_advise);
+        treadReport = (TextView) findViewById(R.id.read_advise);*/
         initData();
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ReadInfoActivity.this,DocumentInfoActivity.class);
+                intent.putExtra("info",officialDocument);
+                intent.putParcelableArrayListExtra("issue",list);
+                intent.putParcelableArrayListExtra("read",officialDocumentCirculreads);
                 startActivity(intent);
                 finish();
                 //Toast.makeText(mContext, "你点击了返回", Toast.LENGTH_SHORT).show();
@@ -107,11 +120,11 @@ public class ReadInfoActivity extends AppCompatActivity {
                     break;
 
             }
-            treadReport.setText(documents.get(position).getReport());
+            holder.treport.setText(documents.get(position).getReport());
             holder.listitem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(ReadInfoActivity.this,"你点击了"+holder.tPerson.getText().toString(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(ReadInfoActivity.this,"你点击了"+holder.tPerson.getText().toString(), Toast.LENGTH_SHORT).show();
                     Log.e(TAG, holder.tPerson.getText().toString().trim() + "----" + documents.get(position).toString());
                     new Thread(new Runnable() {
                         @Override

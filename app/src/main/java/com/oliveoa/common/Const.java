@@ -43,4 +43,6 @@ public class Const {
 
     public static final  String DOCUMENTFLOW_GETALL = HOSTPATH+"/oliveoa/documentflow/get_document_list.do";//获取全部公文
     public static final  String DOCUMENTFLOW_GETDETAILS = HOSTPATH+"/oliveoa/documentflow/get_document_details.do";//获取公文详情
+    public static final  String DOCUMENTFLOW_DOWNLOAD = HOSTPATH+"/oliveoa/documentflow/download.do?odid=";//下载文件接口
+
 }
