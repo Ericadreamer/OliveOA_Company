@@ -178,11 +178,13 @@ public class DocumentManagementActivity extends AppCompatActivity {
             EmployeeInfoService employeeInfoService = new EmployeeInfoService();
             EmployeeInfoDao employeeInfoDao = EntityManager.getInstance().getEmployeeInfoDao();
             employeeInfoDao.deleteAll();
-
+            DepartmentInfoDao departmentInfoDao = EntityManager.getInstance().getDepartmentInfo();
+            departmentInfoDao.deleteAll();
             if (departmentInfoJsonBean.getStatus() == 0) {
                 departmentInfos = departmentInfoJsonBean.getData();
                 employeeInfoDao.deleteAll();
                 for (int i = 0; i < departmentInfos.size(); i++) {
+                    departmentInfoDao.insert(departmentInfos.get(i));
                     EmployeeInfoJsonBean employeeInfoJsonBean = employeeInfoService.employeeinfo(s, departmentInfos.get(i).getDcid());
                     if (employeeInfoJsonBean.getStatus() == 0) {
                         employeeInfos = employeeInfoJsonBean.getData();

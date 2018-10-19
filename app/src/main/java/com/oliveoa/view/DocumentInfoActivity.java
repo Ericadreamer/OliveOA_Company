@@ -131,7 +131,6 @@ public class DocumentInfoActivity extends AppCompatActivity {
         bindService(intent, connection, BIND_AUTO_CREATE);
         initView();
 
-        initView();
 
     }
 
@@ -230,6 +229,7 @@ public class DocumentInfoActivity extends AppCompatActivity {
         private ArrayList<OfficialDocumentIssued> documentIssueds;
         private DepartmentInfo departmentInfo;
 
+
         public ContentInfoAdapter(ArrayList<OfficialDocumentIssued> documentIssueds) {
             this.documentIssueds = documentIssueds;
         }
@@ -243,6 +243,7 @@ public class DocumentInfoActivity extends AppCompatActivity {
             departmentInfo = departmentInfoDao.queryBuilder().where(DepartmentInfoDao.Properties.Dcid.eq(documentIssueds.get(position).getDcid())).unique();
             if(departmentInfo!=null) {
                 holder.treceivePerson.setText(departmentInfo.getName());
+                Log.i(TAG,"name="+departmentInfo.getName());
             }
             switch (documentIssueds.get(position).getIsreceive()){
                 case -2:
@@ -265,6 +266,7 @@ public class DocumentInfoActivity extends AppCompatActivity {
                     break;
 
             }
+
             holder.receiveDepartment.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
